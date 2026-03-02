@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EstadoProyecto {
+  EN_CURSO
+  ADVERTENCIA
+  EN_RIESGO
+  FINALIZADO
+}
+
+enum EstadoCompromiso {
+  PENDIENTE
+  CUMPLIDO
+  NO_CUMPLIDO
+  REPROGRAMADO
+}
+
+enum EstadoEntregable {
+  PENDIENTE
+  ADVERTENCIA
+  URGENTE
+  VENCIDO
+  COMPLETADO
+}
+
+enum Rol {
+  ADMIN
+  SOCIO
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       Rol      @default(SOCIO)
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  // Relaciones con proyectos
+  proyectosLider  Proyecto[] @relation("LiderProyecto")
+  proyectosSocio2 Proyecto[] @relation("Socio2Proyecto")
+
+  // Relaciones operativas (para trazabilidad real)
+  compromisos Compromiso[]
+  entregables Entregable[]
+}
+
+model Categoria {
+  id        String   @id @default(uuid())
+  nombre    String   @unique
+  color     String
+  activa    Boolean  @default(true)
+  orden     Int
+  createdAt DateTime @default(now())
+
+  proyectos Proyecto[]
+}
+
+model Proyecto {
+  id          String         @id @default(uuid())
+  nombre      String
+  descripcion String
+  fechaInicio DateTime
+  fechaFin    DateTime
+  estado      EstadoProyecto @default(EN_CURSO)
+  createdAt   DateTime       @default(now())
+
+  categoriaId String
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+
+  liderId String
+  lider   Usuario @relation("LiderProyecto", fields: [liderId], references: [id])
+
+  socio2Id String
+  socio2   Usuario @relation("Socio2Proyecto", fields: [socio2Id], references: [id])
+
+  compromisos Compromiso[]
+  entregables Entregable[]
+
+  historial HistorialProyecto[]
+}
+
+model Compromiso {
+  id            String           @id @default(uuid())
+  descripcion   String
+  fechaOriginal DateTime
+  fechaActual   DateTime
+  estado        EstadoCompromiso @default(PENDIENTE)
+  comentario    String?
+  createdAt     DateTime         @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+
+  responsableId String?
+  responsable   Usuario? @relation(fields: [responsableId], references: [id])
+}
+
+model Entregable {
+  id           String           @id @default(uuid())
+  nombre       String
+  descripcion  String
+  fechaEntrega DateTime
+  estado       EstadoEntregable @default(PENDIENTE)
+  createdAt    DateTime         @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+
+  responsableId String?
+  responsable   Usuario? @relation(fields: [responsableId], references: [id])
+}
+
+model HistorialProyecto {
+  id      String   @id @default(uuid())
+  accion  String
+  detalle String
+  fecha   DateTime @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+}
