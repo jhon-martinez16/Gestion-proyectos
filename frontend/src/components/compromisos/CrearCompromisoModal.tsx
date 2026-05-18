@@ -6,9 +6,10 @@ interface Props {
   proyectoId: string
   onClose: () => void
   compromiso?: any
+  reunionId?: string
 }
 
-export default function CompromisoModal({ proyectoId, onClose, compromiso }: Props) {
+export default function CompromisoModal({ proyectoId, onClose, compromiso, reunionId }: Props) {
   const [descripcion, setDescripcion] = useState(compromiso?.descripcion || "")
   const [fecha, setFecha] = useState(compromiso ? compromiso.fechaActual.split("T")[0] : "")
   const [responsables, setResponsables] = useState<any[]>([])
@@ -18,7 +19,7 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso }: Pro
   useEffect(() => {
     const loadUsuarios = async () => {
       try {
-        const res = await api.get("/usuarios")
+        const res = await api.get("/usuarios/asignables")
         setResponsables(res.data)
       } catch (err) {
         console.error(err)
@@ -62,6 +63,7 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso }: Pro
           fecha,
           proyectoId,
           responsableId,
+          ...(reunionId ? { reunionId } : {}),
         })
       }
       onClose()

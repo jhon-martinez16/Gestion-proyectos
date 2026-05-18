@@ -15,8 +15,12 @@ export class AuthService {
       where: { email },
     })
 
-    if (!user || !user.activo) {
+    if (!user) {
       throw new UnauthorizedException('Credenciales inválidas')
+    }
+
+    if (!user.activo) {
+      throw new UnauthorizedException('Usuario inactivo')
     }
 
     const valid = await bcrypt.compare(password, user.password)
@@ -29,6 +33,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       rol: user.rol,
+      nombre: user.nombre,
     }
 
     return {

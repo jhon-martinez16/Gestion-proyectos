@@ -44,7 +44,12 @@ export default function Login() {
 
     } catch (err: any) {
       if (err.response?.status === 401) {
-        setError("Correo o contraseña incorrectos")
+        const msg: string = err.response?.data?.message ?? ""
+        if (msg.toLowerCase().includes("inactivo")) {
+          setError("Usuario inactivo. Contacte al administrador.")
+        } else {
+          setError("Correo o contraseña incorrectos.")
+        }
       } else {
         setError("Error del servidor. Intente nuevamente.")
       }

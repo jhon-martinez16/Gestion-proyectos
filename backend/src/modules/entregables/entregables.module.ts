@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common'
 import { EntregablesService } from './entregables.service'
 import { EntregablesController } from './entregables.controller'
+import { EntregablesScheduler } from './entregables.scheduler'
 import { CommonModule } from 'src/common/common.module'
 
 @Module({
   imports: [CommonModule],
   controllers: [EntregablesController],
-  providers: [EntregablesService],
+  providers: [EntregablesService, EntregablesScheduler],
 })
 export class EntregablesModule {}

@@ -71,9 +71,15 @@ export class UsuariosService {
   async actualizar(id: string, dto: ActualizarUsuarioDto) {
     await this.obtenerPorId(id)
 
+    const data: Record<string, unknown> = {}
+    if (dto.nombre) data.nombre = dto.nombre.trim()
+    if (dto.email) data.email = dto.email.toLowerCase()
+    if (dto.password) data.password = await bcrypt.hash(dto.password, 10)
+
     return this.prisma.usuario.update({
       where: { id },
-      data: dto,
+      data,
+      select: { id: true, nombre: true, email: true, rol: true, activo: true, createdAt: true },
     })
   }
 
@@ -83,6 +89,14 @@ export class UsuariosService {
     return this.prisma.usuario.update({
       where: { id },
       data: { activo: false },
+    })
+  }
+
+  async listarParaAsignar() {
+    return this.prisma.usuario.findMany({
+      where: { activo: true },
+      select: { id: true, nombre: true },
+      orderBy: { nombre: 'asc' },
     })
   }
 }

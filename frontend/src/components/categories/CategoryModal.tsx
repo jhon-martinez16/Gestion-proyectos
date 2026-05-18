@@ -2,30 +2,40 @@ import { useState } from "react"
 import Modal from "../ui/Modal"
 import { api } from "../../services/api"
 
-interface Props {
-  onClose: () => void
+interface Categoria {
+  id: string
+  nombre: string
+  color: string
 }
 
-export default function CategoryModal({ onClose }: Props) {
-  const [nombre, setNombre] = useState("")
-  const [color, setColor] = useState("#F58220")
+interface Props {
+  onClose: () => void
+  categoria?: Categoria
+}
+
+export default function CategoryModal({ onClose, categoria }: Props) {
+  const editando = !!categoria
+  const [nombre, setNombre] = useState(categoria?.nombre ?? "")
+  const [color, setColor] = useState(categoria?.color ?? "#F58220")
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async () => {
-    if (!nombre.trim()) return
+    setError(null)
+    if (!nombre.trim()) { setError("El nombre es obligatorio."); return }
 
     try {
       setLoading(true)
 
-      await api.post("/categorias", {
-        nombre,
-        color,
-        orden: 1,
-      })
+      if (editando) {
+        await api.patch(`/categorias/${categoria!.id}`, { nombre, color })
+      } else {
+        await api.post("/categorias", { nombre, color })
+      }
 
       onClose()
-    } catch (error) {
-      console.error("Error creando categoría", error)
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Error al guardar la categoría.")
     } finally {
       setLoading(false)
     }
@@ -36,15 +46,13 @@ export default function CategoryModal({ onClose }: Props) {
       <div className="space-y-6">
 
         <h2 className="text-2xl font-bold text-[#0B355A]">
-          Nueva Categoría
+          {editando ? "Editar Categoría" : "Nueva Categoría"}
         </h2>
 
         <div className="space-y-4">
 
           <div>
-            <label className="text-sm text-gray-600">
-              Nombre
-            </label>
+            <label className="text-sm text-gray-600">Nombre</label>
             <input
               type="text"
               placeholder="Ej: Ambiental"
@@ -55,9 +63,7 @@ export default function CategoryModal({ onClose }: Props) {
           </div>
 
           <div>
-            <label className="text-sm text-gray-600">
-              Color
-            </label>
+            <label className="text-sm text-gray-600">Color</label>
             <input
               type="color"
               className="w-full h-12 rounded-xl border border-gray-200 mt-1"
@@ -68,12 +74,16 @@ export default function CategoryModal({ onClose }: Props) {
 
         </div>
 
+        {error && (
+          <p className="text-sm text-red-500 font-medium">{error}</p>
+        )}
+
         <button
           onClick={handleSubmit}
           disabled={loading}
           className="w-full bg-[#F58220] hover:bg-[#d96f18] text-white py-3 rounded-xl font-semibold transition disabled:opacity-50"
         >
-          {loading ? "Creando..." : "Crear Categoría"}
+          {loading ? "Guardando..." : editando ? "Guardar cambios" : "Crear Categoría"}
         </button>
 
       </div>

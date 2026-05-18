@@ -32,6 +32,34 @@ enum EstadoEntregable {
 enum Rol {
   ADMIN
   SOCIO
+  ADMINISTRATIVO
+}
+
+enum EstadoFactura {
+  PENDIENTE
+  APROBADA
+  PAGADA
+  RECHAZADA
+}
+
+enum EtapaProyecto {
+  PROPUESTA
+  KICK_OFF
+  EN_EJECUCION
+  CIERRE
+}
+
+enum TipoFeedback {
+  POSITIVO
+  NEGATIVO
+  MEJORA
+}
+
+enum PagoEstado {
+  PENDIENTE
+  RECIBIDO
+  VENCIDO
+  PARCIAL
 }
 
 model Usuario {
@@ -43,13 +71,12 @@ model Usuario {
   activo    Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  // Relaciones con proyectos
   proyectosLider  Proyecto[] @relation("LiderProyecto")
   proyectosSocio2 Proyecto[] @relation("Socio2Proyecto")
 
-  // Relaciones operativas (para trazabilidad real)
-  compromisos Compromiso[]
-  entregables Entregable[]
+  compromisos     Compromiso[]
+  entregables     Entregable[]
+  notificaciones  NotificacionInterna[] @relation("DestinoNotificacion")
 }
 
 model Categoria {
@@ -64,13 +91,21 @@ model Categoria {
 }
 
 model Proyecto {
-  id          String         @id @default(uuid())
-  nombre      String
-  descripcion String
-  fechaInicio DateTime
-  fechaFin    DateTime
-  estado      EstadoProyecto @default(EN_CURSO)
-  createdAt   DateTime       @default(now())
+  id                String         @id @default(uuid())
+  nombre            String
+  descripcion       String
+  fechaInicio       DateTime
+  fechaFin          DateTime
+  estado            EstadoProyecto @default(EN_CURSO)
+  etapa             EtapaProyecto  @default(PROPUESTA)
+  contratoFirmado   Boolean        @default(false)
+  kickoffRealizado  Boolean        @default(false)
+  kickoffFecha      DateTime?
+  propuestaAprobada Boolean        @default(false)
+  requierePoliza    Boolean        @default(false)
+  requiereContrato  Boolean        @default(true)
+  polizaContratada  Boolean        @default(false)
+  createdAt         DateTime       @default(now())
 
   categoriaId String
   categoria   Categoria @relation(fields: [categoriaId], references: [id])
@@ -81,10 +116,66 @@ model Proyecto {
   socio2Id String
   socio2   Usuario @relation("Socio2Proyecto", fields: [socio2Id], references: [id])
 
-  compromisos Compromiso[]
-  entregables Entregable[]
+  compromisos          Compromiso[]
+  entregables          Entregable[]
+  historial            HistorialProyecto[]
+  reuniones            ReunionSeguimiento[]
+  facturas             Factura[]
+  feedbacks            FeedbackInterno[]
+  pagosCliente         PagoCliente[]
+  nota                 NotaProyecto?
+  notificaciones       NotificacionInterna[]
+  cronogramaVersiones  CronogramaVersion[]
+}
 
-  historial HistorialProyecto[]
+model Factura {
+  id                    String        @id @default(uuid())
+  numero                String
+  concepto              String
+  monto                 Decimal
+  estado                EstadoFactura @default(PENDIENTE)
+  fechaEmision          DateTime
+  fechaPago             DateTime?
+  observaciones         String?
+  comprobantePagoPath   String?
+  fechaProgramadaPago   DateTime?
+  pagoEjecutado         Boolean       @default(false)
+  fechaPagoEjecutado    DateTime?
+  confirmacionFinanciera Boolean      @default(false)
+  createdAt             DateTime      @default(now())
+
+  proyectoId  String
+  proyecto    Proyecto   @relation(fields: [proyectoId], references: [id])
+
+  proveedorId String?
+  proveedor   Proveedor? @relation(fields: [proveedorId], references: [id])
+}
+
+model Proveedor {
+  id        String   @id @default(uuid())
+  nombre    String
+  nit       String   @unique
+  email     String?
+  telefono  String?
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  facturas Factura[]
+}
+
+model ReunionSeguimiento {
+  id              String    @id @default(uuid())
+  fecha           DateTime
+  objetivos       String
+  proximospasos   String?
+  calidadAprobada Boolean   @default(false)
+  proximaReunion  DateTime?
+  createdAt       DateTime  @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+
+  compromisos Compromiso[]
 }
 
 model Compromiso {
@@ -101,15 +192,22 @@ model Compromiso {
 
   responsableId String?
   responsable   Usuario? @relation(fields: [responsableId], references: [id])
+
+  reunionId String?
+  reunion   ReunionSeguimiento? @relation(fields: [reunionId], references: [id])
 }
 
 model Entregable {
-  id           String           @id @default(uuid())
-  nombre       String
-  descripcion  String
-  fechaEntrega DateTime
-  estado       EstadoEntregable @default(PENDIENTE)
-  createdAt    DateTime         @default(now())
+  id                      String           @id @default(uuid())
+  nombre                  String
+  descripcion             String
+  fechaEntrega            DateTime
+  estado                  EstadoEntregable @default(PENDIENTE)
+  revisionInternaAprobada Boolean          @default(false)
+  clienteAprobado         Boolean          @default(false)
+  observacionesCliente    String?
+  fechaAprobacionCliente  DateTime?
+  createdAt               DateTime         @default(now())
 
   proyectoId String
   proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
@@ -123,6 +221,72 @@ model HistorialProyecto {
   accion  String
   detalle String
   fecha   DateTime @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+}
+
+model FeedbackInterno {
+  id              String       @id @default(uuid())
+  tipo            TipoFeedback
+  descripcion     String
+  accionesTomadas String?
+  creadoPor       String
+  createdAt       DateTime     @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+}
+
+model PagoCliente {
+  id               String     @id @default(uuid())
+  numeroCuota      Int
+  descripcion      String
+  montoEsperado    Decimal
+  montoRecibido    Decimal?
+  fechaEsperada    DateTime
+  fechaRecibido    DateTime?
+  estado           PagoEstado @default(PENDIENTE)
+  comprobantePath  String?
+  observaciones    String?
+  createdAt        DateTime   @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+}
+
+model NotaProyecto {
+  id          String   @id @default(uuid())
+  contenido   String
+  creadoPorId String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  proyectoId String   @unique
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+}
+
+model NotificacionInterna {
+  id        String   @id @default(uuid())
+  mensaje   String
+  leida     Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  usuarioDestinoId String
+  usuarioDestino   Usuario  @relation("DestinoNotificacion", fields: [usuarioDestinoId], references: [id])
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+}
+
+model CronogramaVersion {
+  id                 String    @id @default(uuid())
+  version            Int
+  descripcionCambios String
+  aprobadoCliente    Boolean   @default(false)
+  fechaAprobacion    DateTime?
+  creadoPorId        String
+  createdAt          DateTime  @default(now())
 
   proyectoId String
   proyecto   Proyecto @relation(fields: [proyectoId], references: [id])

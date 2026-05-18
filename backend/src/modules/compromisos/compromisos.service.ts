@@ -1,16 +1,8 @@
-import {
-  Injectable,
-  BadRequestException,
-} from '@nestjs/common'
+import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import {
-  EstadoCompromiso,
-} from '@prisma/client'
+import { EstadoCompromiso } from '@prisma/client'
 import { CrearCompromisoDto } from './dto/crear-compromiso.dto'
-import {
-  ResolverCompromisoDto,
-  DecisionCompromiso,
-} from './dto/resolver-compromiso.dto'
+import { ResolverCompromisoDto, DecisionCompromiso } from './dto/resolver-compromiso.dto'
 import { EvaluadorProyectoService } from 'src/common/services/evaluador-proyecto.service'
 
 @Injectable()
@@ -20,8 +12,25 @@ export class CompromisosService {
     private evaluador: EvaluadorProyectoService,
   ) {}
 
-  //  CREAR COMPROMISO
-  async crear(dto: CrearCompromisoDto) {
+  private registrarHistorial(proyectoId: string, accion: string, detalle: string) {
+    return this.prisma.historialProyecto.create({
+      data: { proyectoId, accion, detalle },
+    })
+  }
+
+  private async verificarAccesoProyecto(proyectoId: string, usuario: { id: string; rol: string }) {
+    if (usuario.rol === 'ADMIN' || usuario.rol === 'ADMINISTRATIVO') return
+    const proyecto = await this.prisma.proyecto.findUnique({
+      where: { id: proyectoId },
+      select: { liderId: true, socio2Id: true },
+    })
+    if (!proyecto || (proyecto.liderId !== usuario.id && proyecto.socio2Id !== usuario.id)) {
+      throw new ForbiddenException('Solo puedes operar en proyectos donde eres líder o socio')
+    }
+  }
+
+  async crear(dto: CrearCompromisoDto, usuario: { id: string; rol: string }) {
+    await this.verificarAccesoProyecto(dto.proyectoId, usuario)
     const fecha = new Date(dto.fecha)
 
     const creado = await this.prisma.compromiso.create({
@@ -31,25 +40,30 @@ export class CompromisosService {
         fechaActual: fecha,
         proyectoId: dto.proyectoId,
         responsableId: dto.responsableId ?? null,
+        reunionId: dto.reunionId ?? null,
       },
     })
 
-    // recalcula estado del proyecto
-    await this.evaluador.actualizarEstado(dto.proyectoId)
+    await Promise.all([
+      this.evaluador.actualizarEstado(dto.proyectoId),
+      this.registrarHistorial(
+        dto.proyectoId,
+        'COMPROMISO_CREADO',
+        `Compromiso creado: "${dto.descripcion}"`,
+      ),
+    ])
 
     return creado
   }
-  // LISTAR TOD (DASHBOARD)
+
   async listarTodos() {
-  return this.prisma.compromiso.findMany({
-    orderBy: { fechaActual: 'asc' },
-  })
+    return this.prisma.compromiso.findMany({
+      orderBy: { fechaActual: 'asc' },
+    })
   }
 
-  //  OBTENER COMPROMISOS VENCIDOS
   async obtenerVencidos(proyectoId: string) {
     const hoy = new Date()
-
     return this.prisma.compromiso.findMany({
       where: {
         proyectoId,
@@ -60,58 +74,53 @@ export class CompromisosService {
     })
   }
 
-  // LISTAR COMPROMISOS
   async listarPorProyecto(proyectoId: string) {
-  return this.prisma.compromiso.findMany({
-    where: { proyectoId },
-    orderBy: { fechaActual: 'asc' },
-  })
-}
-  //  RESOLVER COMPROMISO (FLUJO OBLIGATORIO DEL SISTEMA)
-  async resolver(id: string, dto: ResolverCompromisoDto) {
-    const compromiso = await this.prisma.compromiso.findUnique({
-      where: { id },
+    return this.prisma.compromiso.findMany({
+      where: { proyectoId },
+      orderBy: { fechaActual: 'asc' },
     })
+  }
+
+  async resolver(id: string, dto: ResolverCompromisoDto, usuario: { id: string; rol: string }) {
+    const compromiso = await this.prisma.compromiso.findUnique({ where: { id } })
 
     if (!compromiso) {
       throw new BadRequestException('Compromiso no existe')
     }
 
-    // ==============================
-    //  CUMPLIDO
-    // ==============================
+    await this.verificarAccesoProyecto(compromiso.proyectoId, usuario)
+
+    // ── CUMPLIDO ──────────────────────────────────────────────────────────────
     if (dto.decision === DecisionCompromiso.CUMPLIDO) {
       const actualizado = await this.prisma.compromiso.update({
         where: { id },
-        data: {
-          estado: EstadoCompromiso.CUMPLIDO,
-        },
+        data: { estado: EstadoCompromiso.CUMPLIDO },
       })
 
-      await this.evaluador.actualizarEstado(compromiso.proyectoId)
+      await Promise.all([
+        this.evaluador.actualizarEstado(compromiso.proyectoId),
+        this.registrarHistorial(
+          compromiso.proyectoId,
+          'COMPROMISO_CUMPLIDO',
+          `Compromiso cumplido: "${compromiso.descripcion}"`,
+        ),
+      ])
+
       return actualizado
     }
 
-    // ==============================
-    //  NO CUMPLIDO → crea nuevo obligatorio
-    // ==============================
+    // ── NO CUMPLIDO ───────────────────────────────────────────────────────────
     if (dto.decision === DecisionCompromiso.NO_CUMPLIDO) {
       if (!dto.comentario) {
         throw new BadRequestException('Comentario obligatorio')
       }
-
       if (!dto.nuevaFecha || !dto.nuevaDescripcion) {
-        throw new BadRequestException(
-          'Debe crear nuevo compromiso obligatorio',
-        )
+        throw new BadRequestException('Debe crear nuevo compromiso obligatorio')
       }
 
       await this.prisma.compromiso.update({
         where: { id },
-        data: {
-          estado: EstadoCompromiso.NO_CUMPLIDO,
-          comentario: dto.comentario,
-        },
+        data: { estado: EstadoCompromiso.NO_CUMPLIDO, comentario: dto.comentario },
       })
 
       const nuevo = await this.prisma.compromiso.create({
@@ -123,13 +132,19 @@ export class CompromisosService {
         },
       })
 
-      await this.evaluador.actualizarEstado(compromiso.proyectoId)
+      await Promise.all([
+        this.evaluador.actualizarEstado(compromiso.proyectoId),
+        this.registrarHistorial(
+          compromiso.proyectoId,
+          'COMPROMISO_NO_CUMPLIDO',
+          `Compromiso no cumplido: "${compromiso.descripcion}". Nuevo compromiso creado: "${dto.nuevaDescripcion}"`,
+        ),
+      ])
+
       return nuevo
     }
 
-    // ==============================
-    //  REPROGRAMAR
-    // =============================
+    // ── REPROGRAMAR ───────────────────────────────────────────────────────────
     if (dto.decision === DecisionCompromiso.REPROGRAMAR) {
       if (!dto.nuevaFecha) {
         throw new BadRequestException('Debe indicar nueva fecha')
@@ -143,12 +158,38 @@ export class CompromisosService {
         },
       })
 
-      await this.evaluador.actualizarEstado(compromiso.proyectoId)
+      await Promise.all([
+        this.evaluador.actualizarEstado(compromiso.proyectoId),
+        this.registrarHistorial(
+          compromiso.proyectoId,
+          'COMPROMISO_REPROGRAMADO',
+          `Compromiso reprogramado a ${new Date(dto.nuevaFecha).toLocaleDateString('es-CO')}: "${compromiso.descripcion}"`,
+        ),
+      ])
+
       return actualizado
     }
 
-
-    
     throw new BadRequestException('Decisión inválida')
+  }
+
+  async eliminar(id: string, usuario: { id: string; rol: string }) {
+    const compromiso = await this.prisma.compromiso.findUnique({ where: { id } })
+    if (!compromiso) throw new BadRequestException('Compromiso no existe')
+
+    await this.verificarAccesoProyecto(compromiso.proyectoId, usuario)
+
+    await this.prisma.compromiso.delete({ where: { id } })
+
+    await Promise.all([
+      this.evaluador.actualizarEstado(compromiso.proyectoId),
+      this.registrarHistorial(
+        compromiso.proyectoId,
+        'COMPROMISO_ELIMINADO',
+        `Compromiso eliminado: "${compromiso.descripcion}"`,
+      ),
+    ])
+
+    return { mensaje: 'Compromiso eliminado correctamente' }
   }
 }

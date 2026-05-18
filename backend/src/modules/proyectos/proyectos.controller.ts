@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common'
 import { ProyectosService } from './proyectos.service'
 import { CrearProyectoDto } from './dto/crear-proyecto.dto'
+import { ActualizarProyectoDto } from './dto/actualizar-proyecto.dto'
 import { EvaluadorProyectoService } from 'src/common/services/evaluador-proyecto.service'
-import { UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { RolesGuard } from 'src/auth/roles.guard'
+import { Roles } from 'src/auth/decorators/roles.decorator'
+import { Rol } from '@prisma/client'
 
-
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('proyectos')
 export class ProyectosController {
   constructor(
@@ -32,5 +34,16 @@ export class ProyectosController {
   @Get(':id/advertencias')
   obtenerAdvertencias(@Param('id') id: string) {
     return this.evaluadorProyectoService.obtenerAdvertenciasProyecto(id)
+  }
+
+  @Patch(':id')
+  actualizar(@Param('id') id: string, @Body() dto: ActualizarProyectoDto, @Req() req: any) {
+    return this.service.actualizar(id, dto, req.user)
+  }
+
+  @Roles(Rol.ADMIN)
+  @Delete(':id')
+  eliminar(@Param('id') id: string) {
+    return this.service.eliminar(id)
   }
 }

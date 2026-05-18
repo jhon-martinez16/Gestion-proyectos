@@ -21,6 +21,7 @@ export class EvaluadorProyectoService {
       compromisosVencidos,
       entregablesVencidos,
       entregablesUrgentes,
+      proyectoActual,
     ] = await Promise.all([
       this.prisma.compromiso.count({
         where: {
@@ -50,6 +51,11 @@ export class EvaluadorProyectoService {
           estado: EstadoEntregable.URGENTE,
         },
       }),
+
+      this.prisma.proyecto.findUnique({
+        where: { id: proyectoId },
+        select: { estado: true },
+      }),
     ])
 
     let nuevoEstado: EstadoProyecto = EstadoProyecto.EN_CURSO
@@ -60,6 +66,8 @@ export class EvaluadorProyectoService {
       nuevoEstado = EstadoProyecto.ADVERTENCIA
     }
 
+    if (proyectoActual?.estado === nuevoEstado) return nuevoEstado
+
     await this.prisma.proyecto.update({
       where: { id: proyectoId },
       data: { estado: nuevoEstado },
@@ -68,7 +76,7 @@ export class EvaluadorProyectoService {
     await this.prisma.historialProyecto.create({
       data: {
         accion: 'EVALUACION_AUTOMATICA',
-        detalle: `Estado actualizado a ${nuevoEstado}`,
+        detalle: `Estado cambió de ${proyectoActual?.estado ?? 'desconocido'} a ${nuevoEstado}`,
         proyectoId,
       },
     })

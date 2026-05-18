@@ -1,8 +1,7 @@
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common'
+import { Controller, Post, Body, Get, Param, Patch, Delete, Req, UseGuards } from '@nestjs/common'
 import { CompromisosService } from './compromisos.service'
 import { CrearCompromisoDto } from './dto/crear-compromiso.dto'
 import { ResolverCompromisoDto } from './dto/resolver-compromiso.dto'
-import { UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 
 @UseGuards(JwtAuthGuard)
@@ -12,12 +11,12 @@ export class CompromisosController {
 
   @Get()
   listarTodos() {
-  return this.service.listarTodos()
+    return this.service.listarTodos()
   }
 
   @Post()
-  crear(@Body() dto: CrearCompromisoDto) {
-    return this.service.crear(dto)
+  crear(@Body() dto: CrearCompromisoDto, @Req() req: any) {
+    return this.service.crear(dto, req.user)
   }
 
   @Get('vencidos/:proyectoId')
@@ -25,16 +24,18 @@ export class CompromisosController {
     return this.service.obtenerVencidos(proyectoId)
   }
 
-  
   @Patch(':id/resolver')
-  resolver(@Param('id') id: string, @Body() dto: ResolverCompromisoDto) {
-    return this.service.resolver(id, dto)
+  resolver(@Param('id') id: string, @Body() dto: ResolverCompromisoDto, @Req() req: any) {
+    return this.service.resolver(id, dto, req.user)
   }
 
   @Get('proyecto/:proyectoId')
   listarPorProyecto(@Param('proyectoId') proyectoId: string) {
-  return this.service.listarPorProyecto(proyectoId)
-}
-}
+    return this.service.listarPorProyecto(proyectoId)
+  }
 
-
+  @Delete(':id')
+  eliminar(@Param('id') id: string, @Req() req: any) {
+    return this.service.eliminar(id, req.user)
+  }
+}

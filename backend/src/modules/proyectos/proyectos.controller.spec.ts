@@ -34,8 +34,9 @@ export class ProyectosController {
   actualizar(
     @Param('id') id: string,
     @Body() dto: ActualizarProyectoDto,
+    req: any,
   ) {
-    return this.service.actualizar(id, dto)
+    return this.service.actualizar(id, dto, req?.user ?? { id: '', rol: 'ADMIN' })
   }
 
   @Delete(':id')

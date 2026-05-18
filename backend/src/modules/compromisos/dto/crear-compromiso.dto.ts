@@ -13,4 +13,8 @@ export class CrearCompromisoDto {
   @IsUUID()
   @IsOptional()
   responsableId?: string
+
+  @IsUUID()
+  @IsOptional()
+  reunionId?: string
 }

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\" -Recurse -Depth 2)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\components\\\\commitments\")",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\components\\\\deliverables\")",
+      "Read(//mnt/c/Users/jhonm/sistema-gestion-proyectos/backend/src/**)",
+      "Read(//mnt/c/Users/jhonm/sistema-gestion-proyectos/frontend/**)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\" -Recurse -Directory | ForEach-Object { $_.FullName } | Select-Object -First 100)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\modules\" -Recurse | Where-Object { $_.PSIsContainer -eq $false } | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\pages\" -File | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\components\" -Recurse | Where-Object { $_.PSIsContainer -eq $false } | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\types\" -File | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\services\" -File | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\" -Recurse -Directory | ForEach-Object { $_.FullName } | Sort-Object)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\components\" -Recurse -Directory | ForEach-Object { $_.FullName } | Sort-Object)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsc *)",
+      "Bash(npm install *)",
+      "Bash(dir C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\modules *)",
+      "Bash(dir \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\modules\" /B)",
+      "Bash(dir \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\pages\" /B)",
+      "Bash(dir /S /B \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\common\")"
+    ]
+  }
+}

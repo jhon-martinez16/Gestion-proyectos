@@ -1,15 +1,36 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator'
+import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator'
+import { EstadoEntregable } from '@prisma/client'
 
 export class ActualizarEntregableDto {
-  @IsString()
   @IsOptional()
+  @IsString()
   nombre?: string
 
+  @IsOptional()
   @IsString()
-  @IsOptional()
-  descripcion?: string  
+  descripcion?: string
 
-  @IsDateString()
   @IsOptional()
+  @IsDateString()
   fechaEntrega?: string
+
+  @IsOptional()
+  @IsBoolean()
+  revisionInternaAprobada?: boolean
+
+  @IsOptional()
+  @IsBoolean()
+  clienteAprobado?: boolean
+
+  @IsOptional()
+  @IsString()
+  observacionesCliente?: string
+
+  @IsOptional()
+  @IsDateString()
+  fechaAprobacionCliente?: string
+
+  @IsOptional()
+  @IsEnum(EstadoEntregable)
+  estado?: EstadoEntregable
 }

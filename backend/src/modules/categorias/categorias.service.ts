@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common'
 import { PrismaService } from '../../prisma/prisma.service'
 import { CrearCategoriaDto } from './dto/crear-categoria.dto'
+import { ActualizarCategoriaDto } from './dto/actualizar-categoria.dto'
 
 @Injectable()
 export class CategoriasService {
@@ -38,6 +39,13 @@ export class CategoriasService {
           select: { proyectos: true },
         },
       },
+    })
+  }
+
+  async actualizar(id: string, dto: ActualizarCategoriaDto) {
+    return this.prisma.categoria.update({
+      where: { id },
+      data: dto,
     })
   }
 
