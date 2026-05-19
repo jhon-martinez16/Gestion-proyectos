@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import {
   EstadoProyecto,
   EstadoCompromiso,
@@ -99,6 +99,57 @@ export class DashboardService {
       this.prisma.proveedor.count({ where: { activo: true } }),
     ])
 
+    let misProyectosActivos: any[] = []
+    let misCompromisosVencidos: any[] = []
+    let misEntregablesProximos7Dias: any[] = []
+
+    if (usuario?.rol === 'SOCIO') {
+      const [proyActivos, compVencidos, entProximos] = await Promise.all([
+        this.prisma.proyecto.findMany({
+          where: {
+            estado: { not: EstadoProyecto.FINALIZADO },
+            ...proyectoFilter,
+          },
+          select: { id: true, nombre: true, estado: true, etapa: true, fechaFin: true },
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.compromiso.findMany({
+          where: {
+            estado: EstadoCompromiso.PENDIENTE,
+            fechaActual: { lt: hoy },
+            proyecto: proyectoFilter,
+          },
+          select: {
+            id: true,
+            descripcion: true,
+            fechaActual: true,
+            proyecto: { select: { id: true, nombre: true } },
+          },
+          orderBy: { fechaActual: 'asc' },
+          take: 10,
+        }),
+        this.prisma.entregable.findMany({
+          where: {
+            estado: { not: EstadoEntregable.COMPLETADO },
+            clienteAprobado: false,
+            fechaEntrega: { gte: hoy, lte: en7Dias },
+            proyecto: proyectoFilter,
+          },
+          select: {
+            id: true,
+            nombre: true,
+            fechaEntrega: true,
+            estado: true,
+            proyecto: { select: { id: true, nombre: true } },
+          },
+          orderBy: { fechaEntrega: 'asc' },
+        }),
+      ])
+      misProyectosActivos = proyActivos
+      misCompromisosVencidos = compVencidos
+      misEntregablesProximos7Dias = entProximos
+    }
+
     return {
       proyectos: {
         total: totalProyectos,
@@ -121,6 +172,11 @@ export class DashboardService {
         facturasPendientes,
         montoPorCobrar: Number(montoPorCobrarAgg._sum.monto ?? 0),
         proveedoresActivos,
+      },
+      socio: {
+        misProyectosActivos,
+        misCompromisosVencidos,
+        misEntregablesProximos7Dias,
       },
     }
   }

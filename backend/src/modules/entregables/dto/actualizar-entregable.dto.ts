@@ -33,4 +33,8 @@ export class ActualizarEntregableDto {
   @IsOptional()
   @IsEnum(EstadoEntregable)
   estado?: EstadoEntregable
+
+  @IsOptional()
+  @IsString()
+  motivoReprogramacion?: string
 }

@@ -1,159 +1,286 @@
-import { useState } from "react";
-import { api } from "../../services/api";
+import { useState } from "react"
+import { api } from "../../services/api"
+import Modal from "../ui/Modal"
+import { CheckCircle2, RotateCcw, AlertCircle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface Props {
-  compromiso: any;
-  onClose: () => void;
+  compromiso: any
+  onClose: (resolved?: boolean) => void
+}
+
+type Action = "CUMPLIDO" | "REPROGRAMAR" | null
+
+const inputStyle: React.CSSProperties = {
+  width: "100%", padding: "10px 12px", borderRadius: 10,
+  border: "1.5px solid var(--card-border)",
+  background: "white", color: "var(--text-primary)",
+  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+  outline: "none", transition: "border-color 0.15s",
+  boxSizing: "border-box",
 }
 
 export default function CompromisoVencidoModal({ compromiso, onClose }: Props) {
-  const [decision, setDecision] = useState<"CUMPLIDO" | "NO_CUMPLIDO" | "REPROGRAMAR" | null>(null);
-  const [comentario, setComentario] = useState("");
-  const [nuevaDescripcion, setNuevaDescripcion] = useState("");
-  const [nuevaFecha, setNuevaFecha] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const hoy = new Date().toISOString().split("T")[0]
+  const [action, setAction] = useState<Action>(null)
+  const [fechaCumplimiento, setFechaCumplimiento] = useState(hoy)
+  const [nuevaFecha, setNuevaFecha] = useState("")
+  const [motivo, setMotivo] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  const handleSubmit = async () => {
-    if (!decision) {
-      setError("Debe seleccionar una decisión.");
-      return;
-    }
+  const fechaLimite = new Date(compromiso.fechaActual)
+  const diasRetraso = Math.max(
+    0,
+    Math.floor((new Date().getTime() - fechaLimite.getTime()) / (1000 * 60 * 60 * 24))
+  )
 
-    if (decision === "NO_CUMPLIDO") {
-      if (!comentario || !nuevaDescripcion || !nuevaFecha) {
-        setError("Debe completar comentario, nueva descripción y nueva fecha.");
-        return;
-      }
-    }
-
-    if (decision === "REPROGRAMAR") {
-      if (!nuevaFecha) {
-        setError("Debe indicar la nueva fecha para reprogramar.");
-        return;
-      }
-    }
-
-    setLoading(true);
-    setError("");
-
+  const call = async (payload: object) => {
+    setLoading(true)
+    setError("")
     try {
-      const payload: any = { decision };
-
-      if (decision === "NO_CUMPLIDO") {
-        payload.comentario = comentario;
-        payload.nuevaDescripcion = nuevaDescripcion;
-        payload.nuevaFecha = nuevaFecha;
-      }
-
-      if (decision === "REPROGRAMAR") {
-        payload.nuevaFecha = nuevaFecha;
-      }
-
-      await api.patch(`/compromisos/${compromiso.id}/resolver`, payload);
-      onClose();
+      await api.patch(`/compromisos/${compromiso.id}/resolver`, payload)
+      onClose(true)
     } catch (err: any) {
-      console.error(err);
-      setError(err?.response?.data?.message || "Error al actualizar el compromiso.");
+      setError(err?.response?.data?.message || "Error al actualizar el compromiso.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  const handleCumplido = () => {
+    if (!fechaCumplimiento) { setError("Selecciona la fecha de cumplimiento."); return }
+    call({ decision: "CUMPLIDO", fechaCumplimiento })
+  }
+
+  const handleReprogramar = () => {
+    if (!nuevaFecha) { setError("Selecciona la nueva fecha."); return }
+    call({ decision: "REPROGRAMAR", nuevaFecha, ...(motivo.trim() ? { motivo } : {}) })
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[#16283C] rounded-3xl p-8 w-full max-w-lg text-white space-y-6 shadow-2xl border border-white/10">
-        <h2 className="text-2xl font-bold">Compromiso Vencido</h2>
-        <p className="text-[#9FB3C8]">{compromiso.descripcion}</p>
-        <p className="text-sm text-[#9FB3C8] mt-1">
-          Fecha: {new Date(compromiso.fechaActual).toLocaleDateString()}
-        </p>
+    <Modal onClose={() => onClose(false)} accentColor="var(--danger)">
+      <div style={{ padding: "28px 28px 24px" }}>
 
-        {/* Opciones */}
-        <div className="space-y-4 mt-4">
-          <button
-            onClick={() => setDecision("CUMPLIDO")}
-            className={`w-full py-2 rounded-xl font-semibold ${
-              decision === "CUMPLIDO" ? "bg-green-500" : "bg-green-600 hover:bg-green-400"
-            }`}
-          >
-            Marcar como Cumplido
-          </button>
-
-          <div>
-            <button
-              onClick={() => setDecision("NO_CUMPLIDO")}
-              className={`w-full py-2 rounded-xl font-semibold mb-2 ${
-                decision === "NO_CUMPLIDO" ? "bg-red-500" : "bg-red-600 hover:bg-red-400"
-              }`}
-            >
-              No Cumplido
-            </button>
-            {decision === "NO_CUMPLIDO" && (
-              <div className="space-y-2 mt-2">
-                <input
-                  type="text"
-                  placeholder="Comentario"
-                  value={comentario}
-                  onChange={(e) => setComentario(e.target.value)}
-                  className="w-full p-2 rounded-xl text-black"
-                />
-                <input
-                  type="text"
-                  placeholder="Nueva descripción del compromiso"
-                  value={nuevaDescripcion}
-                  onChange={(e) => setNuevaDescripcion(e.target.value)}
-                  className="w-full p-2 rounded-xl text-black"
-                />
-                <input
-                  type="date"
-                  value={nuevaFecha}
-                  onChange={(e) => setNuevaFecha(e.target.value)}
-                  className="w-full p-2 rounded-xl text-black"
-                />
-              </div>
-            )}
+        {/* Header */}
+        <div style={{ marginBottom: 20, paddingRight: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: 9,
+              background: "#fef2f2", border: "1px solid #fecaca",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0,
+            }}>
+              <AlertCircle size={16} color="var(--danger)" />
+            </div>
+            <h2 style={{
+              fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
+              fontFamily: "'DM Sans', sans-serif", margin: 0,
+            }}>
+              Compromiso vencido
+            </h2>
           </div>
-
-          <div>
-            <button
-              onClick={() => setDecision("REPROGRAMAR")}
-              className={`w-full py-2 rounded-xl font-semibold mb-2 ${
-                decision === "REPROGRAMAR" ? "bg-yellow-500" : "bg-yellow-600 hover:bg-yellow-400"
-              }`}
-            >
-              Reprogramar
-            </button>
-            {decision === "REPROGRAMAR" && (
-              <input
-                type="date"
-                value={nuevaFecha}
-                onChange={(e) => setNuevaFecha(e.target.value)}
-                className="w-full p-2 rounded-xl text-black mt-2"
-              />
-            )}
-          </div>
+          <p style={{
+            fontSize: 14, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif",
+            lineHeight: 1.5, paddingLeft: 42,
+          }}>
+            {compromiso.descripcion}
+          </p>
+          <p style={{
+            fontSize: 12, color: "var(--danger)", fontWeight: 600,
+            fontFamily: "'JetBrains Mono', monospace", marginTop: 6, paddingLeft: 42,
+          }}>
+            Venció el {fechaLimite.toLocaleDateString("es-CO")}
+            {diasRetraso > 0 && ` · ${diasRetraso} día${diasRetraso === 1 ? "" : "s"} de retraso`}
+          </p>
         </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {/* Acción: Marcar cumplido */}
+          <div style={{
+            borderRadius: 12, border: `1.5px solid ${action === "CUMPLIDO" ? "#16a34a" : "var(--card-border)"}`,
+            overflow: "hidden", transition: "border-color 0.15s",
+          }}>
+            <button
+              onClick={() => setAction(action === "CUMPLIDO" ? null : "CUMPLIDO")}
+              style={{
+                width: "100%", display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 16px", textAlign: "left", cursor: "pointer", border: "none",
+                background: action === "CUMPLIDO" ? "#f0fdf4" : "var(--content-bg)",
+                transition: "background 0.15s", fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              <div style={{
+                width: 28, height: 28, borderRadius: 8,
+                background: action === "CUMPLIDO" ? "#16a34a" : "#e2e8f0",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0, transition: "background 0.15s",
+              }}>
+                <CheckCircle2 size={14} color={action === "CUMPLIDO" ? "white" : "#64748b"} />
+              </div>
+              <div>
+                <p style={{ fontSize: 14, fontWeight: 600, color: action === "CUMPLIDO" ? "#15803d" : "var(--text-primary)", margin: 0 }}>
+                  Marcar como cumplido
+                </p>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
+                  El compromiso fue completado
+                </p>
+              </div>
+            </button>
+            <AnimatePresence>
+              {action === "CUMPLIDO" && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div style={{ padding: "12px 16px 14px", borderTop: "1px solid #dcfce7", background: "#f0fdf4" }}>
+                    <label style={{
+                      fontSize: 12, fontWeight: 600, color: "#15803d",
+                      fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8,
+                    }}>
+                      Fecha real de cumplimiento
+                    </label>
+                    <input
+                      type="date"
+                      value={fechaCumplimiento}
+                      max={hoy}
+                      onChange={(e) => setFechaCumplimiento(e.target.value)}
+                      style={inputStyle}
+                    />
+                    <button
+                      onClick={handleCumplido}
+                      disabled={loading}
+                      style={{
+                        width: "100%", marginTop: 10, padding: "10px", borderRadius: 10,
+                        border: "none", background: "#16a34a", color: "white",
+                        fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
+                        fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+                        transition: "opacity 0.15s",
+                      }}
+                    >
+                      {loading ? "Guardando..." : "Confirmar cumplimiento"}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-        {/* Botones de acción */}
-        <div className="flex justify-end gap-4 mt-4">
+          {/* Acción: Reprogramar */}
+          <div style={{
+            borderRadius: 12, border: `1.5px solid ${action === "REPROGRAMAR" ? "var(--info)" : "var(--card-border)"}`,
+            overflow: "hidden", transition: "border-color 0.15s",
+          }}>
+            <button
+              onClick={() => setAction(action === "REPROGRAMAR" ? null : "REPROGRAMAR")}
+              style={{
+                width: "100%", display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 16px", textAlign: "left", cursor: "pointer", border: "none",
+                background: action === "REPROGRAMAR" ? "#eff6ff" : "var(--content-bg)",
+                transition: "background 0.15s", fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              <div style={{
+                width: 28, height: 28, borderRadius: 8,
+                background: action === "REPROGRAMAR" ? "var(--info)" : "#e2e8f0",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0, transition: "background 0.15s",
+              }}>
+                <RotateCcw size={14} color={action === "REPROGRAMAR" ? "white" : "#64748b"} />
+              </div>
+              <div>
+                <p style={{ fontSize: 14, fontWeight: 600, color: action === "REPROGRAMAR" ? "#1d4ed8" : "var(--text-primary)", margin: 0 }}>
+                  Reprogramar
+                </p>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
+                  Establece una nueva fecha límite
+                </p>
+              </div>
+            </button>
+            <AnimatePresence>
+              {action === "REPROGRAMAR" && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div style={{ padding: "12px 16px 14px", borderTop: "1px solid #dbeafe", background: "#eff6ff" }}>
+                    <label style={{
+                      fontSize: 12, fontWeight: 600, color: "#1d4ed8",
+                      fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8,
+                    }}>
+                      Nueva fecha límite
+                    </label>
+                    <input
+                      type="date"
+                      value={nuevaFecha}
+                      min={hoy}
+                      onChange={(e) => setNuevaFecha(e.target.value)}
+                      style={inputStyle}
+                    />
+                    <label style={{
+                      fontSize: 12, fontWeight: 600, color: "#1d4ed8",
+                      fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8, marginTop: 10,
+                    }}>
+                      Motivo
+                      <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      placeholder="Ej: Cliente solicitó extensión de plazo"
+                      value={motivo}
+                      onChange={(e) => setMotivo(e.target.value)}
+                      style={{ ...inputStyle, resize: "none", lineHeight: 1.5 } as React.CSSProperties}
+                    />
+                    <button
+                      onClick={handleReprogramar}
+                      disabled={loading}
+                      style={{
+                        width: "100%", marginTop: 10, padding: "10px", borderRadius: 10,
+                        border: "none", background: "var(--info)", color: "white",
+                        fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
+                        fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+                        transition: "opacity 0.15s",
+                      }}
+                    >
+                      {loading ? "Guardando..." : "Confirmar reprogramación"}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {error && (
+            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+              {error}
+            </p>
+          )}
+        </div>
+
+        {/* Cerrar sin resolver */}
+        <div style={{ marginTop: 16, textAlign: "center" }}>
           <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-gray-600 hover:bg-gray-500 font-semibold"
+            onClick={() => onClose(false)}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: 12, color: "var(--text-muted)",
+              fontFamily: "'DM Sans', sans-serif",
+              textDecoration: "underline", textUnderlineOffset: 2,
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--danger)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}
           >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 font-semibold"
-          >
-            {loading ? "Guardando..." : "Confirmar"}
+            Cerrar sin resolver
           </button>
         </div>
       </div>
-    </div>
-  );
+    </Modal>
+  )
 }

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { CompromisosService } from './compromisos.service'
 import { CompromisosController } from './compromisos.controller'
-import { PrismaModule } from 'src/prisma/prisma.module'
-import { CommonModule } from 'src/common/common.module'
+import { PrismaModule } from '../../prisma/prisma.module'
+import { CommonModule } from '../../common/common.module'
 
 @Module({
   imports: [

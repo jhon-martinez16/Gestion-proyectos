@@ -5,24 +5,22 @@ import { api } from "../services/api"
 
 export default function Login() {
   const navigate = useNavigate()
- // validaciones para el login 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleLogin = async () => {
     setError("")
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    if (!email || !password) {
+    if (!email.trim() || !password.trim()) {
       setError("Todos los campos son obligatorios")
       return
     }
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email.trim())) {
       setError("Ingrese un correo electrónico válido")
       return
     }
@@ -31,7 +29,7 @@ export default function Login() {
       setLoading(true)
 
       const response = await api.post("/auth/login", {
-        email,
+        email: email.trim(),
         password,
       })
 
@@ -50,6 +48,10 @@ export default function Login() {
         } else {
           setError("Correo o contraseña incorrectos.")
         }
+      } else if (err.response?.status === 400) {
+        setError("Datos inválidos. Revise los campos.")
+      } else if (!err.response) {
+        setError("No se pudo conectar al servidor. Verifique su conexión.")
       } else {
         setError("Error del servidor. Intente nuevamente.")
       }
@@ -67,38 +69,34 @@ export default function Login() {
 
       <div className="relative z-10 w-full max-w-6xl grid lg:grid-cols-2 gap-16 items-center">
 
-        {/* Pagina derecha  */}
+        {/* Lado izquierdo */}
         <motion.div
           initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9 }}
           className="text-white flex flex-col justify-center space-y-10"
         >
-          {/* AJUSTES DEL LOGO  */}
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-blue-400/20 blur-3xl rounded-full" />
             <img
               src="/logo-logique.png"
-              alt="Logique"                       
+              alt="Logique"
               className="relative w-72 drop-shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
             />
-          </div>    
+          </div>
 
-          {/* Ajustes del texto ( Abajo logo) */}
           <div className="space-y-5">
             <h1 className="text-5xl font-semibold leading-tight">
               Gestión de proyectos
             </h1>
-
             <p className="text-white/70 text-xl">
               Plataforma interna Logique
             </p>
-
             <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full" />
           </div>
         </motion.div>
 
-        {/* Pagina izquierda */}
+        {/* Lado derecho */}
         <motion.div
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
@@ -109,55 +107,69 @@ export default function Login() {
 
             <div className="mb-8">
               <h2 className="text-white text-2xl font-semibold">
-                Bienvenido 
+                Bienvenido
               </h2>
               <p className="text-white/60 text-sm mt-2">
                 Ingrese sus credenciales para continuar
               </p>
             </div>
 
-            <form className="space-y-6" onSubmit={handleLogin} noValidate>
+            <form
+              className="space-y-5"
+              onSubmit={e => { e.preventDefault(); handleLogin(); }}
+              noValidate
+            >
 
-              {error && (
-                <div className="bg-red-500/20 border border-red-400/40 text-red-200 text-sm px-4 py-3 rounded-lg">
-                  {error}
-                </div>
-              )}
+              <div>
+                <input
+                  type="text"
+                  placeholder="Correo corporativo"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setError("") }}
+                  autoComplete="email"
+                  className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                />
+              </div>
 
-              <input
-                type="email"
-                placeholder="Correo corporativo"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-              />
+              <div>
+                <input
+                  type="password"
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError("") }}
+                  autoComplete="current-password"
+                  className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                />
+              </div>
 
-              <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-              />
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={handleLogin}
+                  disabled={loading}
+                  className={`w-full py-3 rounded-xl font-semibold text-white transition-all duration-300 ${
+                    loading
+                      ? "bg-blue-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 active:scale-[0.97] shadow-lg hover:shadow-xl"
+                  }`}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Validando...
+                    </div>
+                  ) : (
+                    "Ingresar"
+                  )}
+                </button>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full py-3 rounded-xl font-semibold text-white transition-all duration-300 ${
-                  loading
-                    ? "bg-blue-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 active:scale-[0.97] shadow-lg hover:shadow-xl"
-                }`}
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Validando...
+                {error && (
+                  <div className="flex items-center gap-2 bg-red-500/25 border border-red-400/50 text-red-100 text-sm px-4 py-3 rounded-xl">
+                    <span className="shrink-0 text-base">⚠</span>
+                    <span>{error}</span>
                   </div>
-                ) : (
-                  "Ingresar"
                 )}
-              </button>
+              </div>
 
             </form>
           </div>

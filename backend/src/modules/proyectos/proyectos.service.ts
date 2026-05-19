@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearProyectoDto } from './dto/crear-proyecto.dto'
 import { ActualizarProyectoDto } from './dto/actualizar-proyecto.dto'
-import { EvaluadorProyectoService } from 'src/common/services/evaluador-proyecto.service'
-import { NotificacionesService } from 'src/modules/notificaciones/notificaciones.service'
+import { EvaluadorProyectoService } from '../../common/services/evaluador-proyecto.service'
+import { NotificacionesService } from '../notificaciones/notificaciones.service'
 import { EstadoProyecto, EstadoCompromiso } from '@prisma/client'
 
 @Injectable()

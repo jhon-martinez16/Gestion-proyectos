@@ -14,4 +14,8 @@ export class CrearProveedorDto {
   @IsOptional()
   @IsString()
   telefono?: string
+
+  @IsOptional()
+  @IsString()
+  categoriaProveedor?: string
 }

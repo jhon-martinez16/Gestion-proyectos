@@ -23,7 +23,14 @@
       "Bash(dir C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\modules *)",
       "Bash(dir \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\modules\" /B)",
       "Bash(dir \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend\\\\src\\\\pages\" /B)",
-      "Bash(dir /S /B \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\common\")"
+      "Bash(dir /S /B \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\common\")",
+      "PowerShell(New-Item *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\" -Recurse -Directory -Depth 2)",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\backend\\\\src\\\\modules\\\\riesgos\")",
+      "Bash(Write-Host \"Done removing riesgos module\")",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(cd C:\\\\Users\\\\jhonm\\\\sistema-gestion-proyectos\\\\frontend; npx tsc --noEmit 2>&1 | Where-Object { $_ -match \"\\\\.tsx\" -and $_ -notmatch \"Facturacion|ProjectDetail\" })",
+      "Bash(xargs grep -l \"feedback\\\\|Feedback\\\\|retroalimentacion\\\\|Retroalimentacion\")"
     ]
   }
 }

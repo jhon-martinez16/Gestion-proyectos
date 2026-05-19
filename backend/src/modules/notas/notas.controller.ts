@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Put, Req, UseGuards } from '@nestjs/common'
 import { NotasService } from './notas.service'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 import { IsString } from 'class-validator'
 
 class UpsertNotaDto {

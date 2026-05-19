@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, Param, Patch, Delete, Req, UseGuards } fro
 import { EntregablesService } from './entregables.service'
 import { CrearEntregableDto } from './dto/crear-entregable.dto'
 import { ActualizarEntregableDto } from './dto/actualizar-entregable.dto'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 
 @UseGuards(JwtAuthGuard)
 @Controller('entregables')
@@ -12,6 +12,11 @@ export class EntregablesController {
   @Post()
   crear(@Body() dto: CrearEntregableDto, @Req() req: any) {
     return this.service.crear(dto, req.user)
+  }
+
+  @Get('proximos')
+  listarProximos() {
+    return this.service.listarProximos()
   }
 
   @Get('proyecto/:proyectoId')

@@ -3,7 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearUsuarioDto } from './dto/crear-usuario.dto'
 import { ActualizarUsuarioDto } from './dto/actualizar-usuario.dto'
 import * as bcrypt from 'bcrypt'

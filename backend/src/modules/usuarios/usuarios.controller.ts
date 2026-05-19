@@ -2,9 +2,9 @@ import { Body, Controller, ForbiddenException, Get, Param, Patch, Post, Req, Use
 import { UsuariosService } from './usuarios.service'
 import { CrearUsuarioDto } from './dto/crear-usuario.dto'
 import { ActualizarUsuarioDto } from './dto/actualizar-usuario.dto'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-import { RolesGuard } from 'src/auth/roles.guard'
-import { Roles } from 'src/auth/decorators/roles.decorator'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
+import { RolesGuard } from '../../auth/roles.guard'
+import { Roles } from '../../auth/decorators/roles.decorator'
 import { Rol } from '@prisma/client'
 
 @UseGuards(JwtAuthGuard, RolesGuard)

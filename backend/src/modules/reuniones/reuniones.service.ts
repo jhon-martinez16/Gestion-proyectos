@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearReunionDto } from './dto/crear-reunion.dto'
 import { ActualizarReunionDto } from './dto/actualizar-reunion.dto'
 
@@ -93,6 +93,24 @@ export class ReunionesService {
     }
 
     return actualizada
+  }
+
+  async listarProximas() {
+    const hoy = new Date()
+    const en30Dias = new Date()
+    en30Dias.setDate(hoy.getDate() + 30)
+    return this.prisma.reunionSeguimiento.findMany({
+      where: {
+        proximaReunion: { gte: hoy, lte: en30Dias },
+      },
+      select: {
+        id: true,
+        proximaReunion: true,
+        proyecto: { select: { id: true, nombre: true } },
+      },
+      orderBy: { proximaReunion: 'asc' },
+      take: 5,
+    })
   }
 
   async eliminar(id: string, usuario: { sub: string; rol: string }) {

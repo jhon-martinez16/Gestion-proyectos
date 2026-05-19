@@ -23,6 +23,8 @@ import { NotasModule } from './modules/notas/notas.module'
 import { NotificacionesModule } from './modules/notificaciones/notificaciones.module'
 import { CronogramaModule } from './modules/cronograma/cronograma.module'
 import { ReportesModule } from './modules/reportes/reportes.module'
+import { ArchivosModule } from './modules/archivos/archivos.module'
+import { FeedbackClienteModule } from './modules/feedback-cliente/feedback-cliente.module'
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { ReportesModule } from './modules/reportes/reportes.module'
     NotificacionesModule,
     CronogramaModule,
     ReportesModule,
+    ArchivosModule,
+    FeedbackClienteModule,
   ],
   providers: [EvaluadorProyectoService, VerificadorCompromisosService],
   exports: [EvaluadorProyectoService, VerificadorCompromisosService],

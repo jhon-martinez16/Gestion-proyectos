@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { FacturasService } from './facturas.service'
 import { CrearFacturaDto } from './dto/crear-factura.dto'
 import { ActualizarFacturaDto, ProgramarPagoDto, EjecutarPagoDto, ConfirmarPagoDto } from './dto/actualizar-factura.dto'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-import { RolesGuard } from 'src/auth/roles.guard'
-import { Roles } from 'src/auth/decorators/roles.decorator'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
+import { RolesGuard } from '../../auth/roles.guard'
+import { Roles } from '../../auth/decorators/roles.decorator'
 import { Rol } from '@prisma/client'
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -66,6 +66,11 @@ export class FacturasController {
   @Patch(':id/confirmar-pago')
   confirmarPago(@Param('id') id: string, @Body() dto: ConfirmarPagoDto) {
     return this.service.confirmarPago(id, dto)
+  }
+
+  @Patch(':id/adjuntar')
+  adjuntar(@Param('id') id: string, @Body() body: { archivoFacturaPath: string }) {
+    return this.service.adjuntarArchivo(id, body.archivoFacturaPath)
   }
 
   @Delete(':id')

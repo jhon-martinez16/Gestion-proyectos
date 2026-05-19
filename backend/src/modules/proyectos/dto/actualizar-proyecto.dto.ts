@@ -49,4 +49,16 @@ export class ActualizarProyectoDto {
   @IsOptional()
   @IsBoolean()
   polizaContratada?: boolean
+
+  @IsOptional()
+  @IsBoolean()
+  documentosFacturacionRecibidos?: boolean
+
+  @IsOptional()
+  @IsBoolean()
+  proveedorValidado?: boolean
+
+  @IsOptional()
+  @IsBoolean()
+  documentosPolizaConfirmados?: boolean
 }

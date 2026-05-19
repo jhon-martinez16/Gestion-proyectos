@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { api } from "../../services/api"
-import { motion } from "framer-motion"
+import Modal from "../ui/Modal"
+import { CalendarDays, FileText, ArrowRight, Clock } from "lucide-react"
 
 interface ReunionEditar {
   id: string
@@ -16,6 +17,26 @@ interface Props {
   reunion?: ReunionEditar
 }
 
+const inputStyle: React.CSSProperties = {
+  width: "100%", padding: "10px 12px", borderRadius: 10,
+  border: "1.5px solid var(--card-border)",
+  background: "var(--content-bg)", color: "var(--text-primary)",
+  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+  outline: "none", transition: "border-color 0.15s",
+  boxSizing: "border-box",
+}
+
+const textareaStyle: React.CSSProperties = {
+  ...inputStyle,
+  resize: "none" as const,
+  lineHeight: 1.5,
+}
+
+const labelStyle: React.CSSProperties = {
+  fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
+  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
+}
+
 export default function CrearReunionModal({ proyectoId, onClose, reunion }: Props) {
   const editando = !!reunion
   const [fecha, setFecha] = useState(reunion ? new Date(reunion.fecha).toISOString().split("T")[0] : "")
@@ -26,6 +47,11 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
   )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    (e.currentTarget.style.borderColor = "var(--navy, #1e3a6e)")
+  const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    (e.currentTarget.style.borderColor = "var(--card-border)")
 
   const handleSubmit = async () => {
     setError("")
@@ -59,78 +85,164 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <motion.div
-        initial={{ scale: 0.85, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-[#1F2937] p-6 rounded-3xl w-full max-w-lg shadow-xl space-y-4 max-h-[90vh] overflow-y-auto"
-      >
-        <h2 className="text-xl font-bold text-gray-100">
-          {editando ? "Editar Reunión de Seguimiento" : "Nueva Reunión de Seguimiento"}
-        </h2>
+    <Modal onClose={onClose} accentColor={editando ? "var(--accent)" : "var(--navy, #1e3a6e)"} size="md">
+      <div style={{ padding: "28px 28px 24px" }}>
 
-        <div className="space-y-3">
-          <div>
-            <label className="text-sm text-gray-400">Fecha de la reunión *</label>
+        {/* Header */}
+        <div style={{ marginBottom: 24, paddingRight: 40 }}>
+          <h2 style={{
+            fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
+            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+          }}>
+            {editando ? "Editar Reunión" : "Nueva Reunión de Seguimiento"}
+          </h2>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+            {editando ? "Actualiza los datos de la reunión" : "Registra los puntos tratados y próximos pasos"}
+          </p>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+          {/* Section: Fecha */}
+          <div style={{
+            padding: "14px 16px", borderRadius: 12,
+            background: "var(--content-bg)", border: "1px solid var(--card-border)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <CalendarDays size={14} color="var(--navy, #1e3a6e)" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                Fecha
+              </span>
+            </div>
+            <label style={labelStyle}>
+              Fecha de la reunión <span style={{ color: "var(--danger)" }}>*</span>
+            </label>
             <input
               type="date"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
-              className="w-full mt-1 p-3 rounded-xl bg-gray-800 border border-gray-600 text-gray-100"
+              style={inputStyle}
+              onFocus={focusInput}
+              onBlur={blurInput}
             />
           </div>
 
-          <div>
-            <label className="text-sm text-gray-400">Objetivos *</label>
-            <textarea
-              rows={3}
-              placeholder="¿Qué se trató en la reunión?"
-              value={objetivos}
-              onChange={(e) => setObjetivos(e.target.value)}
-              className="w-full mt-1 p-3 rounded-xl bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-500 resize-none"
-            />
+          {/* Section: Contenido */}
+          <div style={{
+            padding: "14px 16px", borderRadius: 12,
+            background: "var(--content-bg)", border: "1px solid var(--card-border)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <FileText size={14} color="var(--navy, #1e3a6e)" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                Contenido
+              </span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div>
+                <label style={labelStyle}>
+                  Objetivos / Temas tratados <span style={{ color: "var(--danger)" }}>*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="¿Qué se trató en la reunión?"
+                  value={objetivos}
+                  onChange={(e) => setObjetivos(e.target.value)}
+                  style={textareaStyle}
+                  onFocus={focusInput}
+                  onBlur={blurInput}
+                />
+              </div>
+
+              <div>
+                <label style={labelStyle}>
+                  Próximos pasos
+                  <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Acciones acordadas..."
+                  value={proximospasos}
+                  onChange={(e) => setProximospasos(e.target.value)}
+                  style={textareaStyle}
+                  onFocus={focusInput}
+                  onBlur={blurInput}
+                />
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="text-sm text-gray-400">Próximos pasos <span className="text-gray-500">(opcional)</span></label>
-            <textarea
-              rows={2}
-              placeholder="Acciones acordadas..."
-              value={proximospasos}
-              onChange={(e) => setProximospasos(e.target.value)}
-              className="w-full mt-1 p-3 rounded-xl bg-gray-800 border border-gray-600 text-gray-100 placeholder-gray-500 resize-none"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm text-gray-400">Próxima reunión <span className="text-gray-500">(opcional)</span></label>
+          {/* Section: Próxima reunión */}
+          <div style={{
+            padding: "14px 16px", borderRadius: 12,
+            background: "var(--content-bg)", border: "1px solid var(--card-border)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <Clock size={14} color="var(--text-muted)" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                Seguimiento
+              </span>
+            </div>
+            <label style={labelStyle}>
+              Próxima reunión
+              <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+            </label>
             <input
               type="date"
               value={proximaReunion}
               onChange={(e) => setProximaReunion(e.target.value)}
-              className="w-full mt-1 p-3 rounded-xl bg-gray-800 border border-gray-600 text-gray-100"
+              style={inputStyle}
+              onFocus={focusInput}
+              onBlur={blurInput}
             />
           </div>
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-gray-600 hover:bg-gray-500 text-white font-medium transition"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="px-5 py-2 rounded-xl bg-orange-400 hover:bg-orange-500 text-white font-semibold transition disabled:opacity-50"
-            >
-              {loading ? "Guardando..." : editando ? "Guardar cambios" : "Crear Reunión"}
-            </button>
-          </div>
+          {error && (
+            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+              {error}
+            </p>
+          )}
         </div>
-      </motion.div>
-    </div>
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: 10, marginTop: 24, justifyContent: "flex-end" }}>
+          <button
+            onClick={onClose}
+            style={{
+              padding: "9px 20px", borderRadius: 10,
+              border: "1.5px solid var(--card-border)",
+              background: "white", color: "var(--text-secondary)",
+              fontSize: 14, fontWeight: 500, cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "white")}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            style={{
+              padding: "9px 20px", borderRadius: 10, border: "none",
+              background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
+              color: "white", fontSize: 14, fontWeight: 600,
+              cursor: loading ? "not-allowed" : "pointer",
+              fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+              transition: "opacity 0.15s",
+              display: "flex", alignItems: "center", gap: 6,
+            }}
+          >
+            {loading ? "Guardando..." : (
+              <>
+                {editando ? "Guardar cambios" : "Registrar Reunión"}
+                {!loading && <ArrowRight size={14} />}
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </Modal>
   )
 }

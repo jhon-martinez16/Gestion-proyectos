@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { FeedbackService } from './feedback.service'
 import { CrearFeedbackDto } from './dto/crear-feedback.dto'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 
 @UseGuards(JwtAuthGuard)
 @Controller('feedback')

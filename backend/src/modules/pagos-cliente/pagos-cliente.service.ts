@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearPagoClienteDto } from './dto/crear-pago-cliente.dto'
 import { MarcarRecibidoDto } from './dto/marcar-recibido.dto'
 import { PagoEstado } from '@prisma/client'
@@ -46,7 +46,9 @@ export class PagosClienteService {
     const montoRecibido = Number(dto.montoRecibido)
     const montoEsperado = Number(pago.montoEsperado)
     const estado: PagoEstado =
-      montoRecibido >= montoEsperado ? PagoEstado.RECIBIDO : PagoEstado.PARCIAL
+      montoRecibido >= montoEsperado || dto.forzarRecibido === true
+        ? PagoEstado.RECIBIDO
+        : PagoEstado.PARCIAL
 
     return this.prisma.pagoCliente.update({
       where: { id },
@@ -58,6 +60,13 @@ export class PagosClienteService {
         comprobantePath: dto.comprobantePath ?? pago.comprobantePath,
       },
     })
+  }
+
+  async adjuntarComprobante(id: string, archivoComprobantePath: string, usuario: { sub: string; rol: string }) {
+    this.checkFinanciero(usuario.rol)
+    const pago = await this.prisma.pagoCliente.findUnique({ where: { id } })
+    if (!pago) throw new NotFoundException('Pago no encontrado')
+    return this.prisma.pagoCliente.update({ where: { id }, data: { archivoComprobantePath } })
   }
 
   async eliminar(id: string, usuario: { sub: string; rol: string }) {

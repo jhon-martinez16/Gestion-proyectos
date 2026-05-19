@@ -1,9 +1,9 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { EstadoCompromiso } from '@prisma/client'
 import { CrearCompromisoDto } from './dto/crear-compromiso.dto'
 import { ResolverCompromisoDto, DecisionCompromiso } from './dto/resolver-compromiso.dto'
-import { EvaluadorProyectoService } from 'src/common/services/evaluador-proyecto.service'
+import { EvaluadorProyectoService } from '../../common/services/evaluador-proyecto.service'
 
 @Injectable()
 export class CompromisosService {
@@ -77,6 +77,7 @@ export class CompromisosService {
   async listarPorProyecto(proyectoId: string) {
     return this.prisma.compromiso.findMany({
       where: { proyectoId },
+      include: { reunion: { select: { id: true, fecha: true } } },
       orderBy: { fechaActual: 'asc' },
     })
   }
@@ -92,18 +93,25 @@ export class CompromisosService {
 
     // ── CUMPLIDO ──────────────────────────────────────────────────────────────
     if (dto.decision === DecisionCompromiso.CUMPLIDO) {
+      const fechaCumplimiento = dto.fechaCumplimiento ? new Date(dto.fechaCumplimiento) : new Date()
+      const diasRetraso = Math.max(
+        0,
+        Math.floor((fechaCumplimiento.getTime() - compromiso.fechaActual.getTime()) / (1000 * 60 * 60 * 24)),
+      )
+
       const actualizado = await this.prisma.compromiso.update({
         where: { id },
         data: { estado: EstadoCompromiso.CUMPLIDO },
       })
 
+      const detalle =
+        diasRetraso > 0
+          ? `Compromiso "${compromiso.descripcion}" cumplido con ${diasRetraso} día${diasRetraso === 1 ? '' : 's'} de retraso`
+          : `Compromiso "${compromiso.descripcion}" cumplido a tiempo`
+
       await Promise.all([
         this.evaluador.actualizarEstado(compromiso.proyectoId),
-        this.registrarHistorial(
-          compromiso.proyectoId,
-          'COMPROMISO_CUMPLIDO',
-          `Compromiso cumplido: "${compromiso.descripcion}"`,
-        ),
+        this.registrarHistorial(compromiso.proyectoId, 'COMPROMISO_CUMPLIDO', detalle),
       ])
 
       return actualizado
@@ -150,6 +158,9 @@ export class CompromisosService {
         throw new BadRequestException('Debe indicar nueva fecha')
       }
 
+      const fechaOriginal = compromiso.fechaActual.toLocaleDateString('es-CO')
+      const fechaNueva = new Date(dto.nuevaFecha).toLocaleDateString('es-CO')
+
       const actualizado = await this.prisma.compromiso.update({
         where: { id },
         data: {
@@ -158,13 +169,12 @@ export class CompromisosService {
         },
       })
 
+      const sufijo = dto.motivo ? `. Motivo: ${dto.motivo}` : ''
+      const detalle = `Compromiso "${compromiso.descripcion}" reprogramado de ${fechaOriginal} a ${fechaNueva}${sufijo}`
+
       await Promise.all([
         this.evaluador.actualizarEstado(compromiso.proyectoId),
-        this.registrarHistorial(
-          compromiso.proyectoId,
-          'COMPROMISO_REPROGRAMADO',
-          `Compromiso reprogramado a ${new Date(dto.nuevaFecha).toLocaleDateString('es-CO')}: "${compromiso.descripcion}"`,
-        ),
+        this.registrarHistorial(compromiso.proyectoId, 'COMPROMISO_REPROGRAMADO', detalle),
       ])
 
       return actualizado

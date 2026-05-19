@@ -21,4 +21,12 @@ export class ResolverCompromisoDto {
   @IsOptional()
   @IsString()
   nuevaDescripcion?: string
+
+  @IsOptional()
+  @IsDateString()
+  fechaCumplimiento?: string
+
+  @IsOptional()
+  @IsString()
+  motivo?: string
 }

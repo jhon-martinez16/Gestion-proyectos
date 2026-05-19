@@ -1,26 +1,41 @@
-import clsx from "clsx"
 import type { ReactNode } from "react"
 
 interface Props {
-  variant: "success" | "warning" | "danger" | "info"
+  variant: "success" | "warning" | "danger" | "info" | "neutral"
   children: ReactNode
+  dot?: boolean
 }
 
-const badgeStyles = {
-  success: "bg-emerald-100 text-emerald-700",
-  warning: "bg-yellow-100 text-yellow-800",
-  danger: "bg-red-100 text-red-700",
-  info: "bg-[#F58220]/20 text-[#F58220]",
+const variantStyles: Record<string, { bg: string; text: string; dot: string }> = {
+  success: { bg: "var(--primary-light)",   text: "var(--primary-dark)", dot: "var(--primary)" },
+  warning: { bg: "var(--warning-light)",   text: "#92400e",              dot: "var(--warning)" },
+  danger:  { bg: "var(--danger-light)",    text: "var(--danger)",        dot: "var(--danger)" },
+  info:    { bg: "var(--info-light)",      text: "var(--info)",          dot: "var(--info)" },
+  neutral: { bg: "#f1f5f9",               text: "var(--text-secondary)", dot: "#94a3b8" },
 }
 
-export default function Badge({ variant, children }: Props) {
+export default function Badge({ variant, children, dot = false }: Props) {
+  const cfg = variantStyles[variant] ?? variantStyles.neutral
   return (
-    <span
-      className={clsx(
-        "px-3 py-1 rounded-full text-xs font-semibold shadow-sm transition",
-        badgeStyles[variant]
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: dot ? 5 : 0,
+      padding: "3px 10px",
+      borderRadius: 50,
+      fontSize: 12,
+      fontWeight: 600,
+      background: cfg.bg,
+      color: cfg.text,
+      fontFamily: "'DM Sans', sans-serif",
+      whiteSpace: "nowrap",
+    }}>
+      {dot && (
+        <span style={{
+          width: 5, height: 5, borderRadius: "50%",
+          background: cfg.dot, flexShrink: 0,
+        }} />
       )}
-    >
       {children}
     </span>
   )

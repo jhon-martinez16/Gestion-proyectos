@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } fro
 import { ReunionesService } from './reuniones.service'
 import { CrearReunionDto } from './dto/crear-reunion.dto'
 import { ActualizarReunionDto } from './dto/actualizar-reunion.dto'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 
 @UseGuards(JwtAuthGuard)
 @Controller('reuniones')
@@ -12,6 +12,11 @@ export class ReunionesController {
   @Post()
   crear(@Body() dto: CrearReunionDto, @Req() req: any) {
     return this.service.crear(dto, req.user)
+  }
+
+  @Get('proximas')
+  listarProximas() {
+    return this.service.listarProximas()
   }
 
   @Get('proyecto/:proyectoId')

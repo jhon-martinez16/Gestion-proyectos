@@ -2,10 +2,10 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } fro
 import { ProyectosService } from './proyectos.service'
 import { CrearProyectoDto } from './dto/crear-proyecto.dto'
 import { ActualizarProyectoDto } from './dto/actualizar-proyecto.dto'
-import { EvaluadorProyectoService } from 'src/common/services/evaluador-proyecto.service'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-import { RolesGuard } from 'src/auth/roles.guard'
-import { Roles } from 'src/auth/decorators/roles.decorator'
+import { EvaluadorProyectoService } from '../../common/services/evaluador-proyecto.service'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
+import { RolesGuard } from '../../auth/roles.guard'
+import { Roles } from '../../auth/decorators/roles.decorator'
 import { Rol } from '@prisma/client'
 
 @UseGuards(JwtAuthGuard, RolesGuard)

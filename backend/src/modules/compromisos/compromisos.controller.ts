@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, Param, Patch, Delete, Req, UseGuards } fro
 import { CompromisosService } from './compromisos.service'
 import { CrearCompromisoDto } from './dto/crear-compromiso.dto'
 import { ResolverCompromisoDto } from './dto/resolver-compromiso.dto'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 
 @UseGuards(JwtAuthGuard)
 @Controller('compromisos')

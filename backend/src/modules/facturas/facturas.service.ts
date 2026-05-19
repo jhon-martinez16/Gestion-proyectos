@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearFacturaDto } from './dto/crear-factura.dto'
 import { ActualizarFacturaDto, ProgramarPagoDto, EjecutarPagoDto, ConfirmarPagoDto } from './dto/actualizar-factura.dto'
 import { EstadoFactura } from '@prisma/client'
@@ -158,6 +158,19 @@ export class FacturasService {
         proveedor: { select: { id: true, nombre: true } },
       },
     })
+  }
+
+  async adjuntarArchivo(id: string, archivoFacturaPath: string) {
+    const factura = await this.obtenerPorId(id)
+    const updated = await this.prisma.factura.update({ where: { id }, data: { archivoFacturaPath } })
+    await this.prisma.historialProyecto.create({
+      data: {
+        proyectoId: factura.proyectoId,
+        accion: 'ARCHIVO_ADJUNTADO',
+        detalle: `Archivo adjuntado a factura ${factura.numero}`,
+      },
+    })
+    return updated
   }
 
   async eliminar(id: string) {

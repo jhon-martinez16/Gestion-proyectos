@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsOptional, IsString, Min } from 'class-validator'
+import { IsDateString, IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator'
 import { Type } from 'class-transformer'
 
 export class CrearPagoClienteDto {
@@ -14,6 +14,8 @@ export class CrearPagoClienteDto {
   descripcion: string
 
   @Type(() => Number)
+  @IsNumber()
+  @Min(0)
   montoEsperado: number
 
   @IsDateString()

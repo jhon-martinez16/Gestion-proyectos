@@ -1,4 +1,4 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator'
 import { Type } from 'class-transformer'
 
 export class MarcarRecibidoDto {
@@ -15,4 +15,8 @@ export class MarcarRecibidoDto {
   @IsOptional()
   @IsString()
   comprobantePath?: string
+
+  @IsOptional()
+  @IsBoolean()
+  forzarRecibido?: boolean
 }

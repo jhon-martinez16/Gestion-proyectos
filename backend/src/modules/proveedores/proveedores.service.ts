@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearProveedorDto } from './dto/crear-proveedor.dto'
 import { ActualizarProveedorDto } from './dto/actualizar-proveedor.dto'
 
@@ -32,6 +32,7 @@ export class ProveedoresService {
     if (dto.nit !== undefined) data.nit = dto.nit
     if (dto.email !== undefined) data.email = dto.email
     if (dto.telefono !== undefined) data.telefono = dto.telefono
+    if (dto.categoriaProveedor !== undefined) data.categoriaProveedor = dto.categoriaProveedor
 
     return this.prisma.proveedor.update({ where: { id }, data })
   }

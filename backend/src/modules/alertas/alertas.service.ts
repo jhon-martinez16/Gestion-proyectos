@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
-import { EstadoCompromiso, EstadoEntregable, EtapaProyecto, PagoEstado } from '@prisma/client'
+import { PrismaService } from '../../prisma/prisma.service'
+import { EstadoCompromiso, EstadoEntregable, EstadoFactura, EtapaProyecto, PagoEstado } from '@prisma/client'
 
 export interface Alerta {
   tipo: string
@@ -141,7 +141,7 @@ export class AlertasService {
       // Facturas APROBADAS sin fecha programada de pago
       this.prisma.factura.findMany({
         where: {
-          estado: 'APROBADA',
+          estado: EstadoFactura.APROBADA,
           fechaProgramadaPago: null,
           proyecto: proyectoFilter,
         },

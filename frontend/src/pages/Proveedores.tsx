@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { api } from "../services/api"
 import Modal from "../components/ui/Modal"
 
@@ -9,7 +9,21 @@ interface Proveedor {
   email?: string
   telefono?: string
   activo: boolean
+  categoriaProveedor?: string
   _count?: { facturas: number }
+}
+
+const pvInputStyle: React.CSSProperties = {
+  width: "100%", padding: "10px 12px", borderRadius: 10,
+  border: "1.5px solid var(--card-border)",
+  background: "var(--content-bg)", color: "var(--text-primary)",
+  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+  outline: "none", transition: "border-color 0.15s",
+  boxSizing: "border-box",
+}
+const pvLabelStyle: React.CSSProperties = {
+  fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
+  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
 }
 
 function ProveedorModal({
@@ -24,14 +38,19 @@ function ProveedorModal({
   const [nit, setNit] = useState(proveedor?.nit ?? "")
   const [email, setEmail] = useState(proveedor?.email ?? "")
   const [telefono, setTelefono] = useState(proveedor?.telefono ?? "")
+  const [categoria, setCategoria] = useState(proveedor?.categoriaProveedor ?? "")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const focusInput = (e: React.FocusEvent<HTMLInputElement>) =>
+    (e.currentTarget.style.borderColor = "var(--navy, #1e3a6e)")
+  const blurInput = (e: React.FocusEvent<HTMLInputElement>) =>
+    (e.currentTarget.style.borderColor = "var(--card-border)")
 
   const handleSubmit = async () => {
     setError(null)
     if (!nombre.trim()) { setError("El nombre es obligatorio."); return }
     if (!nit.trim()) { setError("El NIT es obligatorio."); return }
-
     setLoading(true)
     try {
       const payload = {
@@ -39,6 +58,7 @@ function ProveedorModal({
         nit,
         email: email.trim() || undefined,
         telefono: telefono.trim() || undefined,
+        categoriaProveedor: categoria.trim() || undefined,
       }
       if (editando) {
         await api.patch(`/proveedores/${proveedor!.id}`, payload)
@@ -54,60 +74,141 @@ function ProveedorModal({
   }
 
   return (
-    <Modal onClose={onClose}>
-      <div className="space-y-5">
-        <h2 className="text-2xl font-bold text-[#0B355A]">
-          {editando ? "Editar Proveedor" : "Nuevo Proveedor"}
-        </h2>
+    <Modal onClose={onClose} size="sm" accentColor={editando ? "var(--accent)" : "var(--navy, #1e3a6e)"}>
+      <div style={{ padding: "28px 28px 24px" }}>
 
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm text-gray-600">Nombre *</label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#0B355A]"
-            />
-          </div>
-          <div>
-            <label className="text-sm text-gray-600">NIT *</label>
-            <input
-              type="text"
-              value={nit}
-              onChange={(e) => setNit(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#0B355A]"
-            />
-          </div>
-          <div>
-            <label className="text-sm text-gray-600">Email <span className="text-gray-400">(opcional)</span></label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#0B355A]"
-            />
-          </div>
-          <div>
-            <label className="text-sm text-gray-600">Teléfono <span className="text-gray-400">(opcional)</span></label>
-            <input
-              type="text"
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#0B355A]"
-            />
-          </div>
+        {/* Header */}
+        <div style={{ marginBottom: 24, paddingRight: 40 }}>
+          <h2 style={{
+            fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
+            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+          }}>
+            {editando ? "Editar Proveedor" : "Nuevo Proveedor"}
+          </h2>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+            {editando ? "Actualiza los datos del proveedor" : "Registra un nuevo proveedor en el sistema"}
+          </p>
         </div>
 
-        {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* Nombre */}
+          <div>
+            <label style={pvLabelStyle}>
+              Nombre <span style={{ color: "var(--danger)" }}>*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Razón social o nombre comercial"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              style={pvInputStyle}
+              onFocus={focusInput}
+              onBlur={blurInput}
+            />
+          </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full bg-[#0B355A] hover:bg-[#0a2e4e] text-white py-3 rounded-xl font-semibold transition disabled:opacity-50"
-        >
-          {loading ? "Guardando..." : editando ? "Guardar cambios" : "Crear Proveedor"}
-        </button>
+          {/* NIT */}
+          <div>
+            <label style={pvLabelStyle}>
+              NIT <span style={{ color: "var(--danger)" }}>*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="000.000.000-0"
+              value={nit}
+              onChange={(e) => setNit(e.target.value)}
+              style={pvInputStyle}
+              onFocus={focusInput}
+              onBlur={blurInput}
+            />
+          </div>
+
+          {/* Email + Teléfono en grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div>
+              <label style={pvLabelStyle}>
+                Email
+                <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+              </label>
+              <input
+                type="email"
+                placeholder="correo@empresa.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={pvInputStyle}
+                onFocus={focusInput}
+                onBlur={blurInput}
+              />
+            </div>
+            <div>
+              <label style={pvLabelStyle}>
+                Teléfono
+                <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+              </label>
+              <input
+                type="text"
+                placeholder="+57 300 000 0000"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                style={pvInputStyle}
+                onFocus={focusInput}
+                onBlur={blurInput}
+              />
+            </div>
+          </div>
+
+          {/* Categoría */}
+          <div>
+            <label style={pvLabelStyle}>
+              Categoría
+              <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Ej: Consultoría, Software, Logística..."
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+              style={pvInputStyle}
+              onFocus={focusInput}
+              onBlur={blurInput}
+            />
+          </div>
+
+          {error && (
+            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: 10, marginTop: 24, justifyContent: "flex-end" }}>
+          <button
+            onClick={onClose}
+            style={{
+              padding: "9px 20px", borderRadius: 10,
+              border: "1.5px solid var(--card-border)", background: "white",
+              color: "var(--text-secondary)", fontSize: 14, fontWeight: 500,
+              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "white")}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            style={{
+              padding: "9px 20px", borderRadius: 10, border: "none",
+              background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
+              color: "white", fontSize: 14, fontWeight: 600,
+              cursor: loading ? "not-allowed" : "pointer",
+              fontFamily: "'DM Sans', sans-serif",
+              opacity: loading ? 0.6 : 1, transition: "opacity 0.15s",
+            }}
+          >
+            {loading ? "Guardando..." : editando ? "Guardar cambios" : "Crear Proveedor"}
+          </button>
+        </div>
       </div>
     </Modal>
   )
@@ -197,6 +298,7 @@ export default function Proveedores() {
               <p className="text-sm text-gray-500">NIT: {p.nit}</p>
               {p.email && <p className="text-xs text-gray-400">{p.email}</p>}
               {p.telefono && <p className="text-xs text-gray-400">{p.telefono}</p>}
+              {p.categoriaProveedor && <p className="text-xs text-gray-500 font-medium">{p.categoriaProveedor}</p>}
               {p._count !== undefined && (
                 <p className="text-xs mt-1">
                   <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">

@@ -1,8 +1,8 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma/prisma.service'
 import { CrearEntregableDto } from './dto/crear-entregable.dto'
 import { ActualizarEntregableDto } from './dto/actualizar-entregable.dto'
-import { EvaluadorProyectoService } from 'src/common/services/evaluador-proyecto.service'
+import { EvaluadorProyectoService } from '../../common/services/evaluador-proyecto.service'
 
 @Injectable()
 export class EntregablesService {
@@ -51,6 +51,27 @@ export class EntregablesService {
     return creado
   }
 
+  async listarProximos() {
+    const hoy = new Date()
+    const en30Dias = new Date()
+    en30Dias.setDate(hoy.getDate() + 30)
+    return this.prisma.entregable.findMany({
+      where: {
+        estado: { not: 'COMPLETADO' as any },
+        fechaEntrega: { gte: hoy, lte: en30Dias },
+      },
+      select: {
+        id: true,
+        nombre: true,
+        fechaEntrega: true,
+        estado: true,
+        proyecto: { select: { id: true, nombre: true } },
+      },
+      orderBy: { fechaEntrega: 'asc' },
+      take: 10,
+    })
+  }
+
   async listarPorProyecto(proyectoId: string) {
     return this.prisma.entregable.findMany({
       where: { proyectoId },
@@ -86,7 +107,24 @@ export class EntregablesService {
 
     let accion = 'ENTREGABLE_ACTUALIZADO'
     let detalle = `Entregable actualizado: "${actual.nombre}"`
-    if (dto.revisionInternaAprobada === true) {
+    if (dto.estado === 'COMPLETADO') {
+      const hoy = new Date()
+      const diasRetraso = Math.max(
+        0,
+        Math.floor((hoy.getTime() - actual.fechaEntrega.getTime()) / (1000 * 60 * 60 * 24)),
+      )
+      accion = 'ENTREGABLE_COMPLETADO'
+      detalle =
+        diasRetraso > 0
+          ? `Entregable "${actual.nombre}" completado con ${diasRetraso} día${diasRetraso === 1 ? '' : 's'} de retraso`
+          : `Entregable "${actual.nombre}" completado a tiempo`
+    } else if (dto.fechaEntrega !== undefined && dto.motivoReprogramacion !== undefined) {
+      const fechaOriginal = actual.fechaEntrega.toLocaleDateString('es-CO')
+      const fechaNueva = new Date(dto.fechaEntrega).toLocaleDateString('es-CO')
+      const sufijo = dto.motivoReprogramacion ? `. Motivo: ${dto.motivoReprogramacion}` : ''
+      accion = 'ENTREGABLE_REPROGRAMADO'
+      detalle = `Entregable "${actual.nombre}" reprogramado de ${fechaOriginal} a ${fechaNueva}${sufijo}`
+    } else if (dto.revisionInternaAprobada === true) {
       accion = 'REVISION_INTERNA_APROBADA'
       detalle = `Revisión interna aprobada: "${actual.nombre}"`
     } else if (dto.clienteAprobado === true) {

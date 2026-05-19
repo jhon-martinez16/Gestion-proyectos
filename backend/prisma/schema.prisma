@@ -126,6 +126,11 @@ model Proyecto {
   nota                 NotaProyecto?
   notificaciones       NotificacionInterna[]
   cronogramaVersiones  CronogramaVersion[]
+  feedbacksCliente     FeedbackCliente[]
+
+  documentosFacturacionRecibidos Boolean @default(false)
+  proveedorValidado               Boolean @default(false)
+  documentosPolizaConfirmados     Boolean @default(false)
 }
 
 model Factura {
@@ -138,6 +143,7 @@ model Factura {
   fechaPago             DateTime?
   observaciones         String?
   comprobantePagoPath   String?
+  archivoFacturaPath    String?
   fechaProgramadaPago   DateTime?
   pagoEjecutado         Boolean       @default(false)
   fechaPagoEjecutado    DateTime?
@@ -152,13 +158,14 @@ model Factura {
 }
 
 model Proveedor {
-  id        String   @id @default(uuid())
-  nombre    String
-  nit       String   @unique
-  email     String?
-  telefono  String?
-  activo    Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id                 String   @id @default(uuid())
+  nombre             String
+  nit                String   @unique
+  email              String?
+  telefono           String?
+  activo             Boolean  @default(true)
+  categoriaProveedor String?
+  createdAt          DateTime @default(now())
 
   facturas Factura[]
 }
@@ -214,6 +221,8 @@ model Entregable {
 
   responsableId String?
   responsable   Usuario? @relation(fields: [responsableId], references: [id])
+
+  feedbacksCliente FeedbackCliente[]
 }
 
 model HistorialProyecto {
@@ -239,17 +248,18 @@ model FeedbackInterno {
 }
 
 model PagoCliente {
-  id               String     @id @default(uuid())
-  numeroCuota      Int
-  descripcion      String
-  montoEsperado    Decimal
-  montoRecibido    Decimal?
-  fechaEsperada    DateTime
-  fechaRecibido    DateTime?
-  estado           PagoEstado @default(PENDIENTE)
-  comprobantePath  String?
-  observaciones    String?
-  createdAt        DateTime   @default(now())
+  id                       String     @id @default(uuid())
+  numeroCuota              Int
+  descripcion              String
+  montoEsperado            Decimal
+  montoRecibido            Decimal?
+  fechaEsperada            DateTime
+  fechaRecibido            DateTime?
+  estado                   PagoEstado @default(PENDIENTE)
+  comprobantePath          String?
+  archivoComprobantePath   String?
+  observaciones            String?
+  createdAt                DateTime   @default(now())
 
   proyectoId String
   proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
@@ -291,3 +301,20 @@ model CronogramaVersion {
   proyectoId String
   proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
 }
+
+model FeedbackCliente {
+  id              String   @id @default(uuid())
+  calificacion    Int
+  comentario      String
+  fechaFeedback   DateTime
+  registradoPorId String
+  createdAt       DateTime @default(now())
+
+  proyectoId    String
+  proyecto      Proyecto   @relation(fields: [proyectoId], references: [id])
+
+  entregableId  String?
+  entregable    Entregable? @relation(fields: [entregableId], references: [id])
+}
+
+
