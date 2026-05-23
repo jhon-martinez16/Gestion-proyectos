@@ -102,6 +102,7 @@ export default function Projects() {
 
   const activos     = filteredProjects.filter(p => p.estado !== "FINALIZADO")
   const finalizados = filteredProjects.filter(p => p.estado === "FINALIZADO")
+  const enRiesgo    = projects.filter(p => p.estado === "EN_RIESGO").length
 
   const groupByCategory = (list: Proyecto[]) =>
     list.reduce((acc: Record<string, Proyecto[]>, p) => {
@@ -119,8 +120,12 @@ export default function Projects() {
     <motion.div variants={pageVariants} initial="initial" animate="animate">
       <div className="flex items-end justify-between mb-8 pb-6 border-b border-ui-border">
         <div>
-          <h1 className="font-serif text-[30px] font-normal text-ink leading-tight">Proyectos</h1>
-          <p className="text-sm text-ink-3 mt-1.5">Cargando proyectos…</p>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-ink-3">Gestión</span>
+          </div>
+          <h1 className="font-serif text-[36px] font-normal text-ink leading-[1.05] mb-2">Proyectos</h1>
+          <p className="text-[15px] text-ink-2 max-w-xl">Cargando proyectos…</p>
         </div>
       </div>
       <div className="grid gap-5" style={{ gridTemplateColumns: GRID_COLS }}>
@@ -145,10 +150,23 @@ export default function Projects() {
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
       <div className="flex items-end justify-between mb-8 pb-6 border-b border-ui-border">
         <div>
-          <h1 className="font-serif text-[30px] font-normal text-ink leading-tight">Proyectos</h1>
-          <p className="text-sm text-ink-3 mt-1.5">
-            {projects.length} proyecto{projects.length !== 1 ? "s" : ""} en total
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-ink-3">Gestión</span>
+          </div>
+          <h1 className="font-serif text-[36px] font-normal text-ink leading-[1.05] mb-2">
+            Proyectos
+          </h1>
+          <p className="text-[15px] text-ink-2 max-w-xl mb-4">
+            Cartera completa de iniciativas activas y proyectos cerrados.
           </p>
+          <div className="flex items-center gap-4 text-[13px] text-ink-3">
+            <span><strong className="text-ink font-semibold">{activos.length}</strong> activos</span>
+            <span className="text-ink-4">·</span>
+            <span><strong className="text-state-red font-semibold">{enRiesgo}</strong> en riesgo</span>
+            <span className="text-ink-4">·</span>
+            <span><strong className="text-ink-2 font-semibold">{finalizados.length}</strong> cerrados</span>
+          </div>
         </div>
         <Button variant="primary" leftIcon={Plus} onClick={() => setShowModal(true)}>
           Nuevo Proyecto
