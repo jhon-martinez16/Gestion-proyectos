@@ -81,14 +81,14 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
       tabIndex={0}
       whileHover={{ y: -2 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className="group relative rounded-xl border border-ui-border bg-canvas overflow-hidden cursor-pointer shadow-card hover:shadow-card-hover transition-shadow duration-200"
+      className="group relative rounded-xl border border-ui-border bg-white overflow-hidden cursor-pointer shadow-card hover:shadow-card-hover transition-shadow duration-200"
       onClick={() => navigate(`/projects/${proyecto.id}`)}
       onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${proyecto.id}`)}
     >
       {/* Vertical state bar */}
       <div
         className={clsx(
-          "absolute left-0 top-0 h-full w-[3px] transition-all duration-200 group-hover:w-1",
+          "absolute left-0 top-0 bottom-0 w-[3px] transition-all duration-200 group-hover:w-1",
           STATE_BAR[proyecto.estado] ?? "bg-state-zinc",
         )}
       />
