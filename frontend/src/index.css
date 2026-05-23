@@ -312,6 +312,24 @@ body {
 .btn-icon:hover { background: var(--canvas-2); color: var(--text-primary); }
 .btn-icon.danger:hover { background: var(--danger-light); color: var(--danger); }
 
+/* ── CARDS ───────────────────────────────────────────────────── */
+/* Siempre blancas: nunca usar canvas (#FAFAF9) que confunde con el fondo de página */
+.card-surface {
+  background: #FFFFFF;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-lg);
+}
+
+.card-surface-hover {
+  /* No usar `all` para no interferir con las transiciones de framer-motion (transform) */
+  transition: box-shadow 200ms var(--ease), border-color 200ms var(--ease);
+}
+.card-surface-hover:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--text-faint);
+}
+
 /* ── INPUTS ──────────────────────────────────────────────────── */
 .form-input {
   width: 100%;

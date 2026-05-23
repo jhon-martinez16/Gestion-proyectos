@@ -81,7 +81,7 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
       tabIndex={0}
       whileHover={{ y: -2 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className="group relative rounded-xl border border-ui-border bg-white overflow-hidden cursor-pointer shadow-card hover:shadow-card-hover transition-shadow duration-200"
+      className="group relative card-surface card-surface-hover overflow-hidden cursor-pointer"
       onClick={() => navigate(`/projects/${proyecto.id}`)}
       onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${proyecto.id}`)}
     >
