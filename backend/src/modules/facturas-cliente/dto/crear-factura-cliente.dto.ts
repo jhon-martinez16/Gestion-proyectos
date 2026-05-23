@@ -1,7 +1,7 @@
 import { IsDateString, IsNumber, IsOptional, IsString, Min } from 'class-validator'
 import { Type } from 'class-transformer'
 
-export class CrearFacturaDto {
+export class CrearFacturaClienteDto {
   @IsString()
   proyectoId: string
 
@@ -22,12 +22,4 @@ export class CrearFacturaDto {
   @IsOptional()
   @IsString()
   observaciones?: string
-
-  @IsOptional()
-  @IsString()
-  proveedorId?: string
-
-  @IsOptional()
-  @IsString()
-  archivoFacturaPath?: string
 }

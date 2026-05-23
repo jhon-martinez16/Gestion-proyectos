@@ -1,9 +1,11 @@
-import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator'
 import { Type } from 'class-transformer'
 
 export class MarcarRecibidoDto {
+  @IsOptional()
+  @IsNumber()
   @Type(() => Number)
-  montoRecibido: number
+  montoRecibido?: number
 
   @IsDateString()
   fechaRecibido: string
@@ -19,4 +21,8 @@ export class MarcarRecibidoDto {
   @IsOptional()
   @IsBoolean()
   forzarRecibido?: boolean
+
+  @IsOptional()
+  @IsString()
+  facturaClienteId?: string
 }

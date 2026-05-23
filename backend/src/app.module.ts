@@ -25,6 +25,8 @@ import { CronogramaModule } from './modules/cronograma/cronograma.module'
 import { ReportesModule } from './modules/reportes/reportes.module'
 import { ArchivosModule } from './modules/archivos/archivos.module'
 import { FeedbackClienteModule } from './modules/feedback-cliente/feedback-cliente.module'
+import { FacturasClienteModule } from './modules/facturas-cliente/facturas-cliente.module'
+import { AiModule } from './modules/ai/ai.module'
 
 @Module({
   imports: [
@@ -54,6 +56,8 @@ import { FeedbackClienteModule } from './modules/feedback-cliente/feedback-clien
     ReportesModule,
     ArchivosModule,
     FeedbackClienteModule,
+    FacturasClienteModule,
+    AiModule,
   ],
   providers: [EvaluadorProyectoService, VerificadorCompromisosService],
   exports: [EvaluadorProyectoService, VerificadorCompromisosService],

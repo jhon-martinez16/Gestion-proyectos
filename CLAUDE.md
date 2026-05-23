@@ -211,3 +211,29 @@ API calls use centralized axios instance from `services/api.ts` configured with 
 - **History**: HistorialProyecto model tracks project action audit trail
 - **Error Handling**: NestJS exceptions (NotFoundException, UnauthorizedException) used for consistency
 - **Password Security**: bcrypt with default salt rounds for user password hashing
+
+
+
+## IA Integration (Anthropic API)
+
+### Configuración
+- API Key guardada en `backend/.env` como `ANTHROPIC_API_KEY`
+- Modelo a usar: `claude-sonnet-4-20250514`
+- Las llamadas a la API se hacen SIEMPRE desde el backend, 
+  nunca desde el frontend (proteger la API key)
+- El frontend llama al backend, el backend llama a Anthropic
+
+### Endpoints IA creados
+- POST `/ai/chat` → Chat del asistente de proyecto
+- POST `/ai/generar-acta` → Generador de contenido para reuniones
+
+### Módulo
+- Ubicación: `backend/src/modules/ai/`
+- Sigue la misma arquitectura NestJS: controller, service, dto
+- NO usa Prisma (no guarda en base de datos)
+- Instalar SDK: `npm install @anthropic-ai/sdk` en /backend
+
+### Optimización de costos
+- max_tokens: 500 para chat, 400 para actas
+- Solo últimos 6 mensajes del historial en cada llamada
+- Contexto del proyecto limitado a campos esenciales

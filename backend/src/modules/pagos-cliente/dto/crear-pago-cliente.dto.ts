@@ -24,4 +24,8 @@ export class CrearPagoClienteDto {
   @IsOptional()
   @IsString()
   observaciones?: string
+
+  @IsOptional()
+  @IsString()
+  facturaClienteId?: string
 }

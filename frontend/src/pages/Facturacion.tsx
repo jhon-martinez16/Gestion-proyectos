@@ -268,9 +268,18 @@ export default function Facturacion() {
                       ${Number(f.monto).toLocaleString("es-CO", { minimumFractionDigits: 2 })}
                     </td>
                     <td className="px-5 py-4 text-center">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${ESTADO_STYLES[f.estado]}`}>
-                        {ESTADO_LABELS[f.estado]}
-                      </span>
+                      <div className="flex flex-col items-center gap-1">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${ESTADO_STYLES[f.estado]}`}>
+                          {ESTADO_LABELS[f.estado]}
+                        </span>
+                        {f.fechaProgramadaPago && (
+                          <span className="text-xs text-indigo-600 whitespace-nowrap">
+                            Prog. {new Date(f.fechaProgramadaPago).toLocaleDateString("es-CO")}
+                            {f.pagoEjecutado && " · Ejec."}
+                            {f.confirmacionFinanciera && " · Conf."}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-5 py-4 text-gray-500">
                       {new Date(f.fechaEmision).toLocaleDateString("es-CO")}
@@ -331,18 +340,6 @@ export default function Facturacion() {
                       </div>
                     </td>
                   </tr>
-
-                  {/* Fila fecha programada */}
-                  {f.fechaProgramadaPago && (
-                    <tr className="bg-indigo-50/40">
-                      <td colSpan={8} className="px-5 py-2 text-xs text-indigo-700">
-                        Pago programado para:{" "}
-                        <span className="font-semibold">{new Date(f.fechaProgramadaPago).toLocaleDateString("es-CO")}</span>
-                        {f.pagoEjecutado && <span className="ml-3 text-purple-700 font-semibold">· Ejecutado</span>}
-                        {f.confirmacionFinanciera && <span className="ml-3 text-green-700 font-semibold">· Confirmado</span>}
-                      </td>
-                    </tr>
-                  )}
 
                   {/* Inline: programar fecha */}
                   {programandoPagoId === f.id && (

@@ -10,7 +10,8 @@ import CrearReunionModal from "../components/reuniones/CrearReunionModal";
 import DetalleReunionModal from "../components/reuniones/DetalleReunionModal";
 import FileUploadButton from "../components/ui/FileUploadButton";
 import Modal from "../components/ui/Modal";
-import { getRolFromToken, getUserIdFromToken } from "../utils/auth";
+import { getRolFromToken, getUserIdFromToken } from "../utils/auth"
+import AsistenteIA from "../components/AsistenteIA/AsistenteIA";
 
 type EstadoFactura = "PENDIENTE" | "APROBADA" | "PAGADA" | "RECHAZADA"
 type TipoFeedback = "POSITIVO" | "NEGATIVO" | "MEJORA"
@@ -47,6 +48,19 @@ interface PagoCliente {
   estado: PagoEstado
   observaciones?: string
   archivoComprobantePath?: string | null
+  facturaCliente?: { id: string; numero: string; concepto: string } | null
+}
+
+interface FacturaCliente {
+  id: string
+  numero: string
+  concepto: string
+  monto: number
+  fechaEmision: string
+  observaciones?: string
+  montoPagado: number
+  saldoPendiente: number
+  numeroPagos: number
 }
 
 interface FeedbackCliente {
@@ -249,6 +263,10 @@ const [feedbacksCliente, setFeedbacksCliente] = useState<FeedbackCliente[]>([]);
   const [cuotaARecibir, setCuotaARecibir] = useState<PagoCliente | null>(null);
   const [forzarCuotaRecibida, setForzarCuotaRecibida] = useState(false);
   const [cuotaRecibirPath, setCuotaRecibirPath] = useState("");
+  const [montoARecibir, setMontoARecibir] = useState("");
+  const [facturaClienteIdParaRecibir, setFacturaClienteIdParaRecibir] = useState("");
+  const [facturasCliente, setFacturasCliente] = useState<FacturaCliente[]>([]);
+  const [showFacturaClienteModal, setShowFacturaClienteModal] = useState(false);
 
   // Is current user the lider or socio2 of this project?
   const esParteDelProyecto = project
@@ -289,6 +307,12 @@ const [feedbacksCliente, setFeedbacksCliente] = useState<FeedbackCliente[]>([]);
       try {
         const pcRes = await api.get(`/pagos-cliente/proyecto/${id}`);
         setPagosCliente(pcRes.data);
+      } catch { /* ignore */ }
+
+      // Facturas emitidas al cliente
+      try {
+        const fcRes = await api.get(`/facturas-cliente/proyecto/${id}`);
+        setFacturasCliente(fcRes.data);
       } catch { /* ignore */ }
 
       // Nota del proyecto
@@ -333,7 +357,7 @@ const [feedbacksCliente, setFeedbacksCliente] = useState<FeedbackCliente[]>([]);
         fechaLocal.getMonth() < hoyLocal.getMonth()) ||
       (fechaLocal.getFullYear() === hoyLocal.getFullYear() &&
         fechaLocal.getMonth() === hoyLocal.getMonth() &&
-        fechaLocal.getDate() <= hoyLocal.getDate())
+        fechaLocal.getDate() < hoyLocal.getDate())
     );
   };
 
@@ -458,17 +482,41 @@ const handleEliminarFeedbackCliente = async (fbId: string) => {
     ? (feedbacksCliente.reduce((s, f) => s + f.calificacion, 0) / feedbacksCliente.length).toFixed(1)
     : null;
 
-const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar: boolean) => {
+const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar: boolean, facturaId?: string) => {
+    const montoEsperadoOriginal = cuotaARecibir?.montoEsperado;
+    const numeroCuotaOriginal = cuotaARecibir?.numeroCuota;
     try {
       await api.patch(`/pagos-cliente/${cuotaId}/marcar-recibido`, {
         montoRecibido: monto,
         fechaRecibido: new Date().toISOString(),
         ...(forzar ? { forzarRecibido: true } : {}),
+        ...(facturaId ? { facturaClienteId: facturaId } : {}),
       });
       const pcRes = await api.get(`/pagos-cliente/proyecto/${id}`);
       setPagosCliente(pcRes.data);
+      const fcRes2 = await api.get(`/facturas-cliente/proyecto/${id}`);
+      setFacturasCliente(fcRes2.data);
       setCuotaARecibir(null);
       setForzarCuotaRecibida(false);
+      setFacturaClienteIdParaRecibir("");
+
+      // Offer to create balance payment if partial
+      const saldo = Number(montoEsperadoOriginal) - monto;
+      if (saldo > 0 && !forzar) {
+        const nextCuota = Math.max(...pcRes.data.map((p: PagoCliente) => p.numeroCuota), 0) + 1;
+        if (window.confirm(`Pago parcial registrado. Saldo pendiente: $${saldo.toLocaleString("es-CO")}.\n¿Registrar nuevo cobro por el saldo restante?`)) {
+          await api.post("/pagos-cliente", {
+            proyectoId: project.id,
+            numeroCuota: nextCuota,
+            descripcion: `Saldo cuota #${numeroCuotaOriginal}`,
+            montoEsperado: saldo,
+            fechaEsperada: new Date().toISOString(),
+            ...(facturaId ? { facturaClienteId: facturaId } : {}),
+          });
+          const pcRes3 = await api.get(`/pagos-cliente/proyecto/${id}`);
+          setPagosCliente(pcRes3.data);
+        }
+      }
     } catch (err: any) {
       alert(err.response?.data?.message || "Error al marcar cuota");
     }
@@ -847,15 +895,9 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 <p className="font-semibold text-gray-700 text-sm">¿Requiere contrato?</p>
                 <p className="text-xs text-gray-400 mt-0.5">Formalización contractual</p>
               </div>
-              {esAdmin ? (
-                <button disabled={updatingEstado} onClick={() => patchProyecto({ requiereContrato: !project.requiereContrato })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${project.requiereContrato ? "bg-[#16A34A]" : "bg-gray-300"}`}>
-                  <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${project.requiereContrato ? "translate-x-6" : "translate-x-1"}`} />
-                </button>
-              ) : (
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${project.requiereContrato ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"}`}>
-                  {project.requiereContrato ? "Sí" : "No"}
-                </span>
-              )}
+              <span className={`px-2 py-1 rounded-full text-xs font-semibold ${project.requiereContrato ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"}`}>
+                {project.requiereContrato ? "Sí" : "No"}
+              </span>
             </div>
           </div>
           {esAdmin && project.propuestaAprobada && (
@@ -953,6 +995,11 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     </div>
                     {!e.revisionInternaAprobada ? (
                       <button onClick={() => patchEntregable(e.id, { revisionInternaAprobada: true })} className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#16A34A] text-white hover:bg-[#15803D] transition">Aprobar revisión interna</button>
+                    ) : e.observacionesCliente ? (
+                      <div className="space-y-3">
+                        <p className="text-xs text-gray-500">El cliente devolvió este entregable. Corrígelo y re-envía para aprobación.</p>
+                        <button onClick={() => patchEntregable(e.id, { observacionesCliente: null, estado: "PENDIENTE" })} className="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition">Re-enviar para aprobación</button>
+                      </div>
                     ) : (
                       <div className="space-y-3">
                         <textarea rows={2} placeholder="Observaciones del cliente (opcional para devolución)..." value={obsMap[e.id] ?? ""} onChange={(ev) => setObsMap((prev) => ({ ...prev, [e.id]: ev.target.value }))} className="w-full p-3 rounded-xl border border-gray-200 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-[#16A34A]" />
@@ -1005,8 +1052,8 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {c.estado === "PENDIENTE" && !vencido && <button onClick={() => handleCumplido(c.id)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition">Cumplido</button>}
-                    {c.estado === "PENDIENTE" && <button onClick={() => setVencidoModal(c)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-orange-50 text-orange-600 hover:bg-orange-100 transition">Resolver</button>}
+                    {(c.estado === "PENDIENTE" || c.estado === "REPROGRAMADO") && !vencido && <button onClick={() => handleCumplido(c.id)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition">Cumplido</button>}
+                    {(c.estado === "PENDIENTE" || c.estado === "REPROGRAMADO") && esVencidoOCumpleHoy(c.fechaActual) && <button onClick={() => setVencidoModal(c)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-orange-50 text-orange-600 hover:bg-orange-100 transition">Resolver</button>}
                     <button onClick={() => handleEliminarCompromiso(c.id)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition">Eliminar</button>
                   </div>
                 </li>
@@ -1168,6 +1215,65 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
         </CollapsibleSection>
       )}
 
+      {/* FACTURAS EMITIDAS AL CLIENTE */}
+      {esFinanciero && (
+        <CollapsibleSection title="Facturas Emitidas al Cliente" sectionId="facturas-cliente" projectId={project.id} buttonText="+ Nueva factura" onClick={() => setShowFacturaClienteModal(true)}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", marginTop: -4, marginBottom: 12 }}>
+            Facturas enviadas al cliente con seguimiento de pagos recibidos y saldo pendiente.
+          </p>
+          {facturasCliente.length === 0 ? (
+            <p style={{ fontSize: 14, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", padding: "8px 0" }}>No hay facturas registradas.</p>
+          ) : (
+            <div style={{ overflowX: "auto", borderRadius: 10, border: "1px solid var(--card-border)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: "var(--content-bg)" }}>
+                    {["N°", "Concepto", "Emisión", "Total", "Pagado", "Saldo", ""].map((h) => (
+                      <th key={h} style={{ padding: "8px 12px", textAlign: h === "" ? "right" : "left", fontSize: 11, fontWeight: 700, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", borderBottom: "1px solid var(--card-border)", whiteSpace: "nowrap" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {facturasCliente.map((fc, idx) => {
+                    const pctPagado = fc.monto > 0 ? Math.round((fc.montoPagado / fc.monto) * 100) : 0;
+                    return (
+                      <tr key={fc.id} style={{ background: idx % 2 === 0 ? "white" : "var(--content-bg)" }}>
+                        <td style={{ padding: "10px 12px", fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>#{fc.numero}</td>
+                        <td style={{ padding: "10px 12px", color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", maxWidth: 200 }}>
+                          <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{fc.concepto}</div>
+                          {fc.observaciones && <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{fc.observaciones}</div>}
+                        </td>
+                        <td style={{ padding: "10px 12px", color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{new Date(fc.fechaEmision).toLocaleDateString("es-CO")}</td>
+                        <td style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>${fc.monto.toLocaleString("es-CO")}</td>
+                        <td style={{ padding: "10px 12px", fontFamily: "'DM Sans', sans-serif" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div style={{ width: 50, height: 5, borderRadius: 99, background: "#e2e8f0", overflow: "hidden" }}>
+                              <div style={{ width: `${pctPagado}%`, height: "100%", background: "#16a34a", borderRadius: 99 }} />
+                            </div>
+                            <span style={{ color: "#16a34a", fontWeight: 600, fontSize: 12, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>${fc.montoPagado.toLocaleString("es-CO")}</span>
+                          </div>
+                        </td>
+                        <td style={{ padding: "10px 12px", fontWeight: 600, color: fc.saldoPendiente > 0 ? "#dc2626" : "#16a34a", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>
+                          {fc.saldoPendiente > 0 ? `$${fc.saldoPendiente.toLocaleString("es-CO")}` : "—"}
+                        </td>
+                        <td style={{ padding: "10px 12px", textAlign: "right" }}>
+                          <button
+                            onClick={async () => { if (!window.confirm(`¿Eliminar factura #${fc.numero}?`)) return; await api.delete(`/facturas-cliente/${fc.id}`); const r = await api.get(`/facturas-cliente/proyecto/${id}`); setFacturasCliente(r.data); }}
+                            style={{ padding: "3px 8px", borderRadius: 6, border: "1px solid #fecaca", background: "#fff5f5", color: "#dc2626", fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CollapsibleSection>
+      )}
+
       {/* PAGOS RECIBIDOS DEL CLIENTE */}
       {esFinanciero && (
         <CollapsibleSection title="Pagos Recibidos del Cliente" sectionId="cuotas" projectId={project.id} buttonText="+ Registrar pago" onClick={() => setShowCuotaModal(true)}>
@@ -1229,7 +1335,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                         </span>
                         {!esRecibido && (
                           <button
-                            onClick={() => { setCuotaARecibir(pc); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); }}
+                            onClick={() => { setCuotaARecibir(pc); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); setMontoARecibir(String(pc.montoEsperado)); }}
                             style={{
                               padding: "5px 12px", borderRadius: 8, cursor: "pointer",
                               background: "var(--navy, #1e3a6e)", color: "white", border: "none",
@@ -1332,11 +1438,37 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
         <>
           <button
             onClick={() => setNotasOpen(true)}
-            className="fixed bottom-6 right-6 z-40 bg-[#16A34A] hover:bg-[#15803D] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 font-semibold text-sm transition"
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            style={{
+              position: "fixed",
+              bottom: 28,
+              left: 232,
+              zIndex: 1000,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "11px 20px",
+              borderRadius: 50,
+              border: "none",
+              background: "#16A34A",
+              color: "white",
+              fontSize: 14,
+              fontWeight: 700,
+              fontFamily: "'DM Sans', sans-serif",
+              cursor: "pointer",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.22)",
+              transition: "opacity 0.15s",
+            }}
           >
-            <span>📝</span>
-            <span>Notas</span>
-            {nota && <span className="w-2 h-2 rounded-full bg-white/60" />}
+            <span style={{ fontSize: 18, lineHeight: 1 }}>📝</span>
+            Notas
+            {nota && (
+              <span style={{
+                width: 7, height: 7, borderRadius: "50%",
+                background: "rgba(255,255,255,0.65)", flexShrink: 0,
+              }} />
+            )}
           </button>
 
           {notasOpen && (
@@ -1370,16 +1502,17 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {showCompromisoModal && <CrearCompromisoModal proyectoId={project.id} onClose={() => { setShowCompromisoModal(false); loadData(); }} />}
       {vencidoModal && <CompromisoVencidoModal compromiso={vencidoModal} onClose={(resolved?: boolean) => { if (!resolved) setVencidoDismissed(prev => new Set(prev).add(vencidoModal.id)); setVencidoModal(null); loadData(); }} />}
       {entregableVencidoModal && <EntregableVencidoModal entregable={entregableVencidoModal} onClose={(resolved?: boolean) => { if (!resolved) setVencidoDismissedEntregables(prev => new Set(prev).add(entregableVencidoModal.id)); setEntregableVencidoModal(null); loadData(); }} />}
-      {showReunionModal && <CrearReunionModal proyectoId={project.id} onClose={() => { setShowReunionModal(false); loadData(); }} />}
-      {reunionDetalle && <DetalleReunionModal reunion={reunionDetalle} onClose={() => setReunionDetalle(null)} onUpdate={() => { setReunionDetalle(null); loadData(); }} />}
+      {showReunionModal && <CrearReunionModal proyectoId={project.id} proyecto={{ nombre: project.nombre, estado: project.estado }} onClose={() => { setShowReunionModal(false); loadData(); }} />}
+      {reunionDetalle && <DetalleReunionModal reunion={reunionDetalle} proyecto={{ nombre: project.nombre, estado: project.estado }} onClose={() => setReunionDetalle(null)} onUpdate={() => { setReunionDetalle(null); loadData(); }} />}
       {entregableEditando && <CrearEntregableModal proyectoId={project.id} entregable={entregableEditando} onClose={() => { setEntregableEditando(null); loadData(); }} />}
-      {reunionEditando && <CrearReunionModal proyectoId={project.id} reunion={reunionEditando} onClose={() => { setReunionEditando(null); loadData(); }} />}
+      {reunionEditando && <CrearReunionModal proyectoId={project.id} proyecto={{ nombre: project.nombre, estado: project.estado }} reunion={reunionEditando} onClose={() => { setReunionEditando(null); loadData(); }} />}
       {showFeedbackModal && <FeedbackModal proyectoId={project.id} onClose={() => { setShowFeedbackModal(false); loadData(); }} />}
       {showCuotaModal && <CuotaModal proyectoId={project.id} nextCuota={pagosCliente.length + 1} onClose={() => { setShowCuotaModal(false); loadData(); }} />}
+      {showFacturaClienteModal && <FacturaClienteModal proyectoId={project.id} onClose={() => { setShowFacturaClienteModal(false); api.get(`/facturas-cliente/proyecto/${id}`).then(r => setFacturasCliente(r.data)).catch(() => {}); }} />}
 
       {cuotaARecibir && (
         <Modal
-          onClose={() => { setCuotaARecibir(null); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); }}
+          onClose={() => { setCuotaARecibir(null); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); setMontoARecibir(""); }}
           size="sm"
           accentColor="#16a34a"
         >
@@ -1394,12 +1527,57 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {/* Monto info */}
+              {/* Monto esperado (referencia) */}
               <div style={{ padding: "12px 14px", borderRadius: 10, background: "#f0fdf4", border: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <p style={{ fontSize: 12, fontWeight: 600, color: "#16a34a", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>Monto esperado</p>
                 <p style={{ fontSize: 18, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
                   ${Number(cuotaARecibir.montoEsperado).toLocaleString("es-CO")}
                 </p>
+              </div>
+
+              {/* Factura cliente */}
+              {facturasCliente.length > 0 && (
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+                    Factura correspondiente <span style={{ color: "var(--danger)" }}>*</span>
+                  </label>
+                  <select
+                    value={facturaClienteIdParaRecibir}
+                    onChange={e => setFacturaClienteIdParaRecibir(e.target.value)}
+                    style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "var(--content-bg)", color: "var(--text-primary)", fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none", boxSizing: "border-box" as const }}
+                  >
+                    <option value="">— Seleccionar factura —</option>
+                    {facturasCliente.map(fc => (
+                      <option key={fc.id} value={fc.id}>#{fc.numero} — {fc.concepto} (saldo: ${fc.saldoPendiente.toLocaleString("es-CO")})</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Monto recibido */}
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+                  Monto recibido (COP) <span style={{ color: "var(--danger)" }}>*</span>
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={montoARecibir}
+                  onChange={e => setMontoARecibir(e.target.value)}
+                  style={{
+                    width: "100%", padding: "10px 12px", borderRadius: 10,
+                    border: "1.5px solid var(--card-border)",
+                    background: "var(--content-bg)", color: "var(--text-primary)",
+                    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                    outline: "none", boxSizing: "border-box" as const,
+                  }}
+                />
+                {Number(montoARecibir) < Number(cuotaARecibir.montoEsperado) && montoARecibir !== "" && (
+                  <p style={{ fontSize: 11, color: "#b45309", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+                    Pago parcial — activa "Forzar recibido" para marcarlo como completado.
+                  </p>
+                )}
               </div>
 
               {/* FileUpload comprobante */}
@@ -1431,7 +1609,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
 
             <div style={{ display: "flex", gap: 10, marginTop: 24, justifyContent: "flex-end" }}>
               <button
-                onClick={() => { setCuotaARecibir(null); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); }}
+                onClick={() => { setCuotaARecibir(null); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); setMontoARecibir(""); setFacturaClienteIdParaRecibir(""); }}
                 style={{
                   padding: "9px 20px", borderRadius: 10,
                   border: "1.5px solid var(--card-border)", background: "white",
@@ -1447,9 +1625,10 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 onClick={async () => {
                   const cuotaId = cuotaARecibir.id
                   const pathAdjuntar = cuotaRecibirPath
-                  await handleMarcarCuotaRecibida(cuotaId, cuotaARecibir.montoEsperado, forzarCuotaRecibida)
+                  await handleMarcarCuotaRecibida(cuotaId, Number(montoARecibir) || Number(cuotaARecibir.montoEsperado), forzarCuotaRecibida, facturaClienteIdParaRecibir || undefined)
                   if (pathAdjuntar) await handleAdjuntarCuota(cuotaId, pathAdjuntar)
                   setCuotaRecibirPath("")
+                  setMontoARecibir("")
                 }}
                 style={{
                   padding: "9px 20px", borderRadius: 10, border: "none",
@@ -1466,6 +1645,8 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
           </div>
         </Modal>
       )}
+
+      <AsistenteIA project={project} entregables={entregables} compromisos={compromisos} />
     </div>
   );
 }
@@ -1623,6 +1804,97 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
             }}
           >
             {loading ? "Guardando..." : "Registrar pago"}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
+/* ─── MODAL NUEVA FACTURA CLIENTE ─────────────────────────── */
+function FacturaClienteModal({ proyectoId, onClose }: { proyectoId: string; onClose: () => void }) {
+  const [numero, setNumero] = useState("")
+  const [concepto, setConcepto] = useState("")
+  const [monto, setMonto] = useState("")
+  const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0])
+  const [observaciones, setObservaciones] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const inputSt: React.CSSProperties = {
+    width: "100%", padding: "10px 12px", borderRadius: 10,
+    border: "1.5px solid var(--card-border)",
+    background: "var(--content-bg)", color: "var(--text-primary)",
+    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+    outline: "none", boxSizing: "border-box" as const,
+  }
+
+  const handleSubmit = async () => {
+    setError(null)
+    if (!numero.trim()) { setError("El número de factura es obligatorio."); return }
+    if (!concepto.trim()) { setError("El concepto es obligatorio."); return }
+    if (!monto || isNaN(Number(monto)) || Number(monto) <= 0) { setError("El monto debe ser positivo."); return }
+    if (!fecha) { setError("La fecha de emisión es obligatoria."); return }
+    setLoading(true)
+    try {
+      await api.post("/facturas-cliente", {
+        proyectoId,
+        numero,
+        concepto,
+        monto: Number(monto),
+        fechaEmision: new Date(fecha).toISOString(),
+        observaciones: observaciones.trim() || undefined,
+      })
+      onClose()
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Error al crear la factura.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Modal onClose={onClose} size="sm" accentColor="var(--navy, #1e3a6e)">
+      <div style={{ padding: "28px 28px 24px" }}>
+        <div style={{ marginBottom: 20, paddingRight: 40 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+            Nueva Factura al Cliente
+          </h2>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+            Registra una factura emitida y realiza seguimiento de pagos
+          </p>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 12 }}>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>N° Factura *</label>
+              <input type="text" placeholder="001" value={numero} onChange={e => setNumero(e.target.value)} style={inputSt} />
+            </div>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Concepto *</label>
+              <input type="text" placeholder="Descripción del servicio" value={concepto} onChange={e => setConcepto(e.target.value)} style={inputSt} />
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Monto (COP) *</label>
+              <input type="number" min="0" placeholder="0" value={monto} onChange={e => setMonto(e.target.value)} style={inputSt} />
+            </div>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Fecha emisión *</label>
+              <input type="date" value={fecha} onChange={e => setFecha(e.target.value)} style={inputSt} />
+            </div>
+          </div>
+          <div>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Observaciones <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>(opcional)</span></label>
+            <input type="text" placeholder="Notas adicionales" value={observaciones} onChange={e => setObservaciones(e.target.value)} style={inputSt} />
+          </div>
+          {error && <p style={{ fontSize: 12, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>}
+        </div>
+        <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
+          <button onClick={onClose} style={{ padding: "9px 20px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "white", color: "var(--text-secondary)", fontSize: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Cancelar</button>
+          <button onClick={handleSubmit} disabled={loading} style={{ padding: "9px 20px", borderRadius: 10, border: "none", background: "var(--navy, #1e3a6e)", color: "white", fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+            {loading ? "Guardando..." : "Crear Factura"}
           </button>
         </div>
       </div>
@@ -2033,9 +2305,13 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 5 }}>
-              Fecha *
+              Fecha
             </label>
-            <input type="date" value={fecha} onChange={e => setFecha(e.target.value)} style={inputSt} />
+            <div style={{ ...inputSt, background: "var(--content-bg)", cursor: "default", display: "flex", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+                {new Date(fecha).toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })}
+              </span>
+            </div>
           </div>
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 5 }}>

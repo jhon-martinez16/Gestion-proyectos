@@ -11,6 +11,7 @@ import Facturacion from "./pages/Facturacion"
 import Proveedores from "./pages/Proveedores"
 import Reportes from "./pages/Reportes"
 import Cronograma from "./pages/Cronograma"
+import Propuestas from "./pages/Propuestas"
 import Login from "./pages/Login"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/auth/ProtectedRoute"
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/facturacion" element={<Facturacion />} />
             <Route path="/proveedores" element={<Proveedores />} />
             <Route path="/reportes"   element={<Reportes />} />
+            <Route path="/propuestas"  element={<Propuestas />} />
             <Route path="/cronograma" element={<Cronograma />} />
             <Route path="/settings"   element={<Settings />} />
             <Route path="*"           element={<NotFound />} />

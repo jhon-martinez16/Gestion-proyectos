@@ -49,6 +49,13 @@ export class CategoriasService {
     })
   }
 
+  async activar(id: string) {
+    return this.prisma.categoria.update({
+      where: { id },
+      data: { activa: true },
+    })
+  }
+
   async desactivar(id: string) {
     return this.prisma.categoria.update({
       where: { id },

@@ -2,7 +2,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import {
   LayoutDashboard, FolderOpen, CalendarDays, Users, Tag,
-  Receipt, Truck, BarChart3, Settings2, Bell, Mail, LogOut,
+  Receipt, Truck, BarChart3, Settings2, Bell, Mail, LogOut, FileText,
 } from "lucide-react"
 import { getRolFromToken, getNameFromToken } from "../../utils/auth"
 
@@ -14,9 +14,10 @@ interface Props {
 }
 
 const NAV_MAIN = [
-  { to: "/",           label: "Dashboard",   icon: LayoutDashboard },
-  { to: "/projects",   label: "Proyectos",   icon: FolderOpen,  matchPrefix: true },
-  { to: "/cronograma", label: "Cronograma",  icon: CalendarDays },
+  { to: "/",            label: "Dashboard",   icon: LayoutDashboard },
+  { to: "/projects",    label: "Proyectos",   icon: FolderOpen,  matchPrefix: true },
+  { to: "/propuestas",  label: "Propuestas",  icon: FileText },
+  { to: "/cronograma",  label: "Cronograma",  icon: CalendarDays },
 ]
 const NAV_ADMIN = [
   { to: "/users",      label: "Usuarios",    icon: Users },

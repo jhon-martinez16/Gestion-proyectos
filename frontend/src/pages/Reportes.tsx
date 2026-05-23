@@ -109,7 +109,7 @@ export default function Reportes() {
         <StatCard label="Total Proyectos" value={resumen.totalProyectos} color="text-[#0B355A]" />
         <StatCard label="% Compromisos cumplidos" value={`${resumen.pctCompromisosCumplidos}%`} color="text-green-600" />
         <StatCard label="% Entregables aprobados" value={`${resumen.pctEntregablesAprobados}%`} color="text-blue-600" />
-        <StatCard label="Total facturado (pagado)" value={formatCOP(financiero.totalFacturado)} color="text-[#F58220]" />
+        <StatCard label="Total facturado" value={formatCOP(financiero.totalFacturado)} color="text-[#F58220]" />
       </div>
 
       {/* PROYECTOS POR ESTADO */}
@@ -130,7 +130,7 @@ export default function Reportes() {
         <h2 className="text-xl font-bold text-gray-800">Resumen Financiero</h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <FinCard label="Total facturado" value={formatCOP(financiero.totalFacturado)} sub="Facturas pagadas" />
+          <FinCard label="Total facturado" value={formatCOP(financiero.totalFacturado)} sub="Todas las facturas" />
           <FinCard label="Pendiente por pagar" value={formatCOP(financiero.totalPendienteFactura)} sub="Facturas pendientes" />
           <FinCard label="Pendiente clientes" value={formatCOP(financiero.pendienteCliente)} sub={`${formatCOP(financiero.totalRecibidoCliente)} recibido de ${formatCOP(financiero.totalEsperadoCliente)}`} />
         </div>

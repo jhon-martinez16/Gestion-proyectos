@@ -13,7 +13,6 @@ export class ReportesService {
       entregables,
       facturas,
       pagosCliente,
-      lideres,
     ] = await Promise.all([
       this.prisma.proyecto.findMany({
         include: {
@@ -27,15 +26,6 @@ export class ReportesService {
       this.prisma.entregable.findMany(),
       this.prisma.factura.findMany({ include: { proyecto: { select: { id: true, nombre: true } } } }),
       this.prisma.pagoCliente.findMany({ include: { proyecto: { select: { id: true, nombre: true } } } }),
-      this.prisma.usuario.findMany({
-        where: { rol: 'SOCIO', activo: true },
-        select: {
-          id: true,
-          nombre: true,
-          compromisos: true,
-          entregables: true,
-        },
-      }),
     ])
 
     // Proyectos por estado
@@ -55,7 +45,7 @@ export class ReportesService {
     const pctEntregablesAprobados = totalEntregables > 0 ? Math.round((aprobados / totalEntregables) * 100) : 0
 
     // Financiero facturas
-    const totalFacturado = facturas.filter((f) => f.estado === EstadoFactura.PAGADA).reduce((s, f) => s + Number(f.monto), 0)
+    const totalFacturado = facturas.reduce((s, f) => s + Number(f.monto), 0)
     const totalPendienteFactura = facturas.filter((f) => f.estado === EstadoFactura.PENDIENTE).reduce((s, f) => s + Number(f.monto), 0)
     const facturasPorEstado: Record<string, { count: number; monto: number }> = {}
     for (const e of Object.values(EstadoFactura)) {
@@ -77,10 +67,18 @@ export class ReportesService {
       montoRecibido: p.pagosCliente.reduce((s, pc) => s + Number(pc.montoRecibido ?? 0), 0),
     }))
 
-    // Performance por líder
-    const performanceLideres = lideres.map((l) => ({
-      liderId: l.id,
-      liderNombre: l.nombre,
+    // Performance por líder (basado en proyectos liderados)
+    const lideresMap: Record<string, { liderId: string; liderNombre: string; compromisos: any[]; entregables: any[] }> = {}
+    for (const p of proyectos) {
+      if (!lideresMap[p.liderId]) {
+        lideresMap[p.liderId] = { liderId: p.liderId, liderNombre: p.lider.nombre, compromisos: [], entregables: [] }
+      }
+      lideresMap[p.liderId].compromisos.push(...p.compromisos)
+      lideresMap[p.liderId].entregables.push(...p.entregables)
+    }
+    const performanceLideres = Object.values(lideresMap).map((l) => ({
+      liderId: l.liderId,
+      liderNombre: l.liderNombre,
       compromisosCumplidos: l.compromisos.filter((c) => c.estado === EstadoCompromiso.CUMPLIDO).length,
       compromisosTotal: l.compromisos.length,
       entregablesAprobados: l.entregables.filter((e) => e.clienteAprobado).length,

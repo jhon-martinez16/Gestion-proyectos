@@ -33,6 +33,11 @@ export class ProveedoresController {
     return this.service.actualizar(id, dto)
   }
 
+  @Patch(':id/activar')
+  activar(@Param('id') id: string) {
+    return this.service.activar(id)
+  }
+
   @Patch(':id/desactivar')
   desactivar(@Param('id') id: string) {
     return this.service.desactivar(id)

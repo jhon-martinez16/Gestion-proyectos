@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { api } from "../../services/api"
 import Modal from "../ui/Modal"
-import { CalendarDays, FileText, ArrowRight, Clock } from "lucide-react"
+import { CalendarDays, FileText, ArrowRight, Clock, Sparkles } from "lucide-react"
+import GenerarActaModal from "./GenerarActaModal"
 
 interface ReunionEditar {
   id: string
@@ -15,6 +16,7 @@ interface Props {
   proyectoId: string
   onClose: () => void
   reunion?: ReunionEditar
+  proyecto?: { nombre: string; estado: string }
 }
 
 const inputStyle: React.CSSProperties = {
@@ -37,7 +39,7 @@ const labelStyle: React.CSSProperties = {
   fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
 }
 
-export default function CrearReunionModal({ proyectoId, onClose, reunion }: Props) {
+export default function CrearReunionModal({ proyectoId, onClose, reunion, proyecto }: Props) {
   const editando = !!reunion
   const [fecha, setFecha] = useState(reunion ? new Date(reunion.fecha).toISOString().split("T")[0] : "")
   const [objetivos, setObjetivos] = useState(reunion?.objetivos ?? "")
@@ -47,6 +49,9 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
   )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [showActaModal, setShowActaModal] = useState(false)
+
+  const contextoProyecto = { nombre: proyecto?.nombre ?? "", estado: proyecto?.estado ?? "" }
 
   const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     (e.currentTarget.style.borderColor = "var(--navy, #1e3a6e)")
@@ -85,6 +90,18 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
   }
 
   return (
+    <>
+    {showActaModal && (
+      <GenerarActaModal
+        contextoProyecto={contextoProyecto}
+        onUsar={(obj, pasos) => {
+          setObjetivos(obj)
+          setProximospasos(pasos)
+          setShowActaModal(false)
+        }}
+        onCancelar={() => setShowActaModal(false)}
+      />
+    )}
     <Modal onClose={onClose} accentColor={editando ? "var(--accent)" : "var(--navy, #1e3a6e)"} size="md">
       <div style={{ padding: "28px 28px 24px" }}>
 
@@ -141,9 +158,14 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div>
-                <label style={labelStyle}>
-                  Objetivos / Temas tratados <span style={{ color: "var(--danger)" }}>*</span>
-                </label>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>
+                    Objetivos / Temas tratados <span style={{ color: "var(--danger)" }}>*</span>
+                  </label>
+                  {proyecto && (
+                    <IaButton onClick={() => setShowActaModal(true)} />
+                  )}
+                </div>
                 <textarea
                   rows={3}
                   placeholder="¿Qué se trató en la reunión?"
@@ -156,10 +178,15 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
               </div>
 
               <div>
-                <label style={labelStyle}>
-                  Próximos pasos
-                  <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
-                </label>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>
+                    Próximos pasos
+                    <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+                  </label>
+                  {proyecto && (
+                    <IaButton onClick={() => setShowActaModal(true)} />
+                  )}
+                </div>
                 <textarea
                   rows={2}
                   placeholder="Acciones acordadas..."
@@ -244,5 +271,28 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion }: Prop
         </div>
       </div>
     </Modal>
+    </>
+  )
+}
+
+function IaButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        display: "flex", alignItems: "center", gap: 4,
+        padding: "3px 9px", borderRadius: 7, border: "none",
+        background: "rgba(249,115,22,0.10)", color: "var(--accent, #f97316)",
+        fontSize: 11, fontWeight: 700, cursor: "pointer",
+        fontFamily: "'DM Sans', sans-serif", transition: "background 0.15s",
+        flexShrink: 0,
+      }}
+      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(249,115,22,0.20)")}
+      onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(249,115,22,0.10)")}
+    >
+      <Sparkles size={11} />
+      IA
+    </button>
   )
 }

@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import * as path from 'path'
 import * as fs from 'fs'
 
-const CARPETAS_PERMITIDAS = ['facturas', 'recibos', 'general']
+const CARPETAS_PERMITIDAS = ['facturas', 'recibos', 'general', 'entregables']
 const TIPOS_PERMITIDOS = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
 const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 

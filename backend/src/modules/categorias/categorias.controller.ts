@@ -31,6 +31,12 @@ export class CategoriasController {
   }
 
   @Roles(Rol.ADMIN)
+  @Patch(':id/activar')
+  activar(@Param('id') id: string) {
+    return this.service.activar(id)
+  }
+
+  @Roles(Rol.ADMIN)
   @Patch(':id/desactivar')
   desactivar(@Param('id') id: string) {
     return this.service.desactivar(id)

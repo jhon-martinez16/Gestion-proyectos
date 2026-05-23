@@ -43,6 +43,16 @@ export default function Categories() {
     }
   }
 
+  const handleActivar = async (c: Category) => {
+    if (!window.confirm(`¿Activar la categoría "${c.nombre}"?`)) return
+    try {
+      await api.patch(`/categorias/${c.id}/activar`)
+      loadData()
+    } catch {
+      setError("Error activando categoría.")
+    }
+  }
+
   const handleCloseModal = () => {
     setShowModal(false)
     setCategoriaEditando(null)
@@ -124,12 +134,19 @@ export default function Categories() {
                 Editar
               </button>
 
-              {c.activa && (
+              {c.activa ? (
                 <button
                   onClick={() => handleDesactivar(c)}
                   className="px-3 py-1.5 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition"
                 >
                   Desactivar
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleActivar(c)}
+                  className="px-3 py-1.5 rounded-xl text-sm font-medium bg-green-50 text-green-600 hover:bg-green-100 transition"
+                >
+                  Activar
                 </button>
               )}
             </div>

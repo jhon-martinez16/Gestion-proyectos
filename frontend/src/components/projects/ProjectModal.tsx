@@ -201,6 +201,7 @@ function CalculatedDateField({
           <input
             type="date"
             value={value}
+            min={new Date().toISOString().split("T")[0]}
             onChange={e => onManualChange(e.target.value)}
             className="form-input"
           />
@@ -273,10 +274,11 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
   }, [fechaInicio, manualDate, editando])
 
   // ── Validation per step ──
+  const today = new Date().toISOString().split("T")[0]
   const step1Valid = nombre.trim() && (editando || categoriaId)
   const step2Valid = editando
-    ? !!fechaFin
-    : (!!fechaInicio && !!fechaFin && !!liderId && !!socio2Id)
+    ? !!fechaFin && fechaFin >= today
+    : (!!fechaInicio && fechaInicio >= today && !!fechaFin && fechaFin >= fechaInicio && !!liderId && !!socio2Id)
 
   // ── Submit ──
   const handleSubmit = async () => {
@@ -364,7 +366,7 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
               <textarea value={descripcion} onChange={e => setDescripcion(e.target.value)} className="form-input" rows={3} />
             </FormField>
             <FormField label="Fecha estimada de finalización" required>
-              <input type="date" value={fechaFin} onChange={e => setFechaFin(e.target.value)} className="form-input" />
+              <input type="date" value={fechaFin} min={new Date().toISOString().split("T")[0]} onChange={e => setFechaFin(e.target.value)} className="form-input" />
             </FormField>
           </div>
 
@@ -642,6 +644,7 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                   <input
                     type="date"
                     value={fechaInicio}
+                    min={today}
                     onChange={e => { setFechaInicio(e.target.value); setManualDate(false) }}
                     className="form-input"
                   />

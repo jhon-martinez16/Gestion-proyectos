@@ -248,6 +248,16 @@ export default function Proveedores() {
     }
   }
 
+  const handleActivar = async (p: Proveedor) => {
+    if (!window.confirm(`¿Activar a ${p.nombre}?`)) return
+    try {
+      await api.patch(`/proveedores/${p.id}/activar`)
+      loadData()
+    } catch {
+      setError("Error activando proveedor.")
+    }
+  }
+
   const handleCloseModal = () => {
     setShowModal(false)
     setEditando(null)
@@ -318,12 +328,19 @@ export default function Proveedores() {
               >
                 Editar
               </button>
-              {p.activo && (
+              {p.activo ? (
                 <button
                   onClick={() => handleDesactivar(p)}
                   className="px-3 py-1.5 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition"
                 >
                   Desactivar
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleActivar(p)}
+                  className="px-3 py-1.5 rounded-xl text-sm font-medium bg-green-50 text-green-600 hover:bg-green-100 transition"
+                >
+                  Activar
                 </button>
               )}
             </div>

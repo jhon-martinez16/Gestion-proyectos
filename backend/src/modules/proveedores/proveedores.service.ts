@@ -37,6 +37,11 @@ export class ProveedoresService {
     return this.prisma.proveedor.update({ where: { id }, data })
   }
 
+  async activar(id: string) {
+    await this.obtenerPorId(id)
+    return this.prisma.proveedor.update({ where: { id }, data: { activo: true } })
+  }
+
   async desactivar(id: string) {
     await this.obtenerPorId(id)
     return this.prisma.proveedor.update({ where: { id }, data: { activo: false } })

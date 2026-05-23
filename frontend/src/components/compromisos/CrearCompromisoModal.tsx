@@ -180,6 +180,7 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
             <input
               type="date"
               value={fecha}
+              min={new Date().toISOString().split("T")[0]}
               onChange={(e) => setFecha(e.target.value)}
               style={inputStyle}
               onFocus={focusInput}

@@ -123,6 +123,7 @@ model Proyecto {
   facturas             Factura[]
   feedbacks            FeedbackInterno[]
   pagosCliente         PagoCliente[]
+  facturasCliente      FacturaCliente[]
   nota                 NotaProyecto?
   notificaciones       NotificacionInterna[]
   cronogramaVersiones  CronogramaVersion[]
@@ -247,6 +248,21 @@ model FeedbackInterno {
   proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
 }
 
+model FacturaCliente {
+  id            String      @id @default(uuid())
+  numero        String
+  concepto      String
+  monto         Decimal
+  fechaEmision  DateTime
+  observaciones String?
+  createdAt     DateTime    @default(now())
+
+  proyectoId String
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+
+  pagos PagoCliente[]
+}
+
 model PagoCliente {
   id                       String     @id @default(uuid())
   numeroCuota              Int
@@ -263,6 +279,9 @@ model PagoCliente {
 
   proyectoId String
   proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+
+  facturaClienteId String?
+  facturaCliente   FacturaCliente? @relation(fields: [facturaClienteId], references: [id])
 }
 
 model NotaProyecto {

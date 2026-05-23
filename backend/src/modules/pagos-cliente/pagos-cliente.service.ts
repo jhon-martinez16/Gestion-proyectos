@@ -27,6 +27,7 @@ export class PagosClienteService {
         montoEsperado: dto.montoEsperado,
         fechaEsperada: new Date(dto.fechaEsperada),
         observaciones: dto.observaciones,
+        facturaClienteId: dto.facturaClienteId ?? null,
       },
     })
   }
@@ -34,6 +35,7 @@ export class PagosClienteService {
   async listarPorProyecto(proyectoId: string) {
     return this.prisma.pagoCliente.findMany({
       where: { proyectoId },
+      include: { facturaCliente: { select: { id: true, numero: true, concepto: true } } },
       orderBy: { numeroCuota: 'asc' },
     })
   }
@@ -43,7 +45,7 @@ export class PagosClienteService {
     const pago = await this.prisma.pagoCliente.findUnique({ where: { id } })
     if (!pago) throw new NotFoundException('Pago no encontrado')
 
-    const montoRecibido = Number(dto.montoRecibido)
+    const montoRecibido = dto.montoRecibido !== undefined ? Number(dto.montoRecibido) : Number(pago.montoEsperado)
     const montoEsperado = Number(pago.montoEsperado)
     const estado: PagoEstado =
       montoRecibido >= montoEsperado || dto.forzarRecibido === true
@@ -58,6 +60,7 @@ export class PagosClienteService {
         estado,
         observaciones: dto.observaciones ?? pago.observaciones,
         comprobantePath: dto.comprobantePath ?? pago.comprobantePath,
+        ...(dto.facturaClienteId !== undefined && { facturaClienteId: dto.facturaClienteId }),
       },
     })
   }

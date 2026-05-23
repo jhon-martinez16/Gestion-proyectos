@@ -21,6 +21,7 @@ export class FacturasService {
         fechaEmision: new Date(dto.fechaEmision),
         observaciones: dto.observaciones,
         proveedorId: dto.proveedorId ?? null,
+        archivoFacturaPath: dto.archivoFacturaPath ?? null,
       },
       include: {
         proyecto: { select: { id: true, nombre: true } },

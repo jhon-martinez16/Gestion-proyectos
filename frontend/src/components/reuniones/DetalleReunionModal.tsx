@@ -2,7 +2,8 @@ import { useState } from "react"
 import { api } from "../../services/api"
 import Modal from "../ui/Modal"
 import CrearCompromisoModal from "../compromisos/CrearCompromisoModal"
-import { CheckCircle2, Calendar, FileText, ArrowRight, Clock, Plus } from "lucide-react"
+import GenerarActaModal from "./GenerarActaModal"
+import { CheckCircle2, Calendar, FileText, ArrowRight, Clock, Plus, Sparkles } from "lucide-react"
 
 interface Compromiso {
   id: string
@@ -26,6 +27,7 @@ interface Props {
   reunion: Reunion
   onClose: () => void
   onUpdate: () => void
+  proyecto?: { nombre: string; estado: string }
 }
 
 const ESTADO_CFG: Record<string, { bg: string; color: string; label: string }> = {
@@ -35,9 +37,29 @@ const ESTADO_CFG: Record<string, { bg: string; color: string; label: string }> =
   REPROGRAMADO: { bg: "#dbeafe", color: "#1d4ed8", label: "Reprogramado" },
 }
 
-export default function DetalleReunionModal({ reunion, onClose, onUpdate }: Props) {
+export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyecto }: Props) {
   const [aprobando, setAprobando] = useState(false)
   const [showCrearCompromiso, setShowCrearCompromiso] = useState(false)
+  const [showActaModal, setShowActaModal] = useState(false)
+  const [aplicandoActa, setAplicandoActa] = useState(false)
+
+  const handleUsarActa = async (objetivos: string, proximosPasos: string) => {
+    setShowActaModal(false)
+    setAplicandoActa(true)
+    try {
+      await api.patch(`/reuniones/${reunion.id}`, {
+        objetivos,
+        proximospasos: proximosPasos,
+      })
+      onUpdate()
+    } catch (err) {
+      console.error("Error al aplicar acta IA", err)
+    } finally {
+      setAplicandoActa(false)
+    }
+  }
+
+  const contextoProyecto = { nombre: proyecto?.nombre ?? "", estado: proyecto?.estado ?? "" }
 
   const handleAprobarCalidad = async () => {
     try {
@@ -53,6 +75,13 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate }: Prop
 
   return (
     <>
+      {showActaModal && (
+        <GenerarActaModal
+          contextoProyecto={contextoProyecto}
+          onUsar={handleUsarActa}
+          onCancelar={() => setShowActaModal(false)}
+        />
+      )}
       <Modal onClose={onClose} size="md" accentColor="var(--navy, #1e3a6e)">
         <div style={{ padding: "28px 28px 24px" }}>
 
@@ -110,11 +139,16 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate }: Prop
               padding: "14px 16px", borderRadius: 12,
               background: "var(--content-bg)", border: "1px solid var(--card-border)",
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 8 }}>
-                <FileText size={12} color="var(--navy, #1e3a6e)" />
-                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                  Objetivos
-                </span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                  <FileText size={12} color="var(--navy, #1e3a6e)" />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    Objetivos
+                  </span>
+                </div>
+                {proyecto && (
+                  <IaButton onClick={() => setShowActaModal(true)} loading={aplicandoActa} />
+                )}
               </div>
               <p style={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
                 {reunion.objetivos}
@@ -122,22 +156,25 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate }: Prop
             </div>
 
             {/* Próximos pasos */}
-            {reunion.proximospasos && (
-              <div style={{
-                padding: "14px 16px", borderRadius: 12,
-                background: "var(--content-bg)", border: "1px solid var(--card-border)",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 8 }}>
+            <div style={{
+              padding: "14px 16px", borderRadius: 12,
+              background: "var(--content-bg)", border: "1px solid var(--card-border)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                   <ArrowRight size={12} color="var(--accent)" />
                   <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     Próximos pasos
                   </span>
                 </div>
-                <p style={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
-                  {reunion.proximospasos}
-                </p>
+                {proyecto && (
+                  <IaButton onClick={() => setShowActaModal(true)} loading={aplicandoActa} />
+                )}
               </div>
-            )}
+              <p style={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
+                {reunion.proximospasos || <span style={{ color: "var(--text-muted)", fontStyle: "italic" }}>Sin próximos pasos registrados</span>}
+              </p>
+            </div>
 
             {/* Próxima reunión */}
             {reunion.proximaReunion && (
@@ -252,5 +289,28 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate }: Prop
         />
       )}
     </>
+  )
+}
+
+function IaButton({ onClick, loading }: { onClick: () => void; loading?: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={loading}
+      style={{
+        display: "flex", alignItems: "center", gap: 4,
+        padding: "3px 9px", borderRadius: 7, border: "none",
+        background: "rgba(249,115,22,0.10)", color: "var(--accent, #f97316)",
+        fontSize: 11, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer",
+        fontFamily: "'DM Sans', sans-serif", transition: "background 0.15s",
+        flexShrink: 0, opacity: loading ? 0.5 : 1,
+      }}
+      onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = "rgba(249,115,22,0.20)" }}
+      onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(249,115,22,0.10)")}
+    >
+      <Sparkles size={11} />
+      {loading ? "Aplicando..." : "✨ IA"}
+    </button>
   )
 }
