@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
@@ -7,6 +7,9 @@ import {
 } from "lucide-react"
 import { api } from "../services/api"
 import { getRolFromToken, getNameFromToken } from "../utils/auth"
+import PageHeader from "../components/ui/PageHeader"
+import BrandDot from "../components/ui/BrandDot"
+import type { ReactNode } from "react"
 
 // ── Types ──────────────────────────────────────────────────────────
 interface DashboardData {
@@ -68,8 +71,7 @@ function initials(name: string) {
 
 function avatarBg(name: string) {
   const colors = ["#6366F1","#0EA5E9","#10B981","#F59E0B","#EC4899","#8B5CF6"]
-  const index = name.charCodeAt(0) % colors.length
-  return colors[index]
+  return colors[name.charCodeAt(0) % colors.length]
 }
 
 function hace(dateStr: string) {
@@ -92,6 +94,13 @@ function diasRetraso(dateStr: string) {
 
 function formatCOP(n: number) {
   return "$" + Math.round(n).toLocaleString("es-CO")
+}
+
+function formatCompact(n: number) {
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B`
+  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`
+  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`
+  return `$${Math.round(n).toLocaleString("es-CO")}`
 }
 
 // ── Design tokens ──────────────────────────────────────────────────
@@ -118,16 +127,20 @@ const pageVariants = {
 }
 
 const containerVariants = {
-  animate: { transition: { staggerChildren: 0.07 } },
+  animate: { transition: { staggerChildren: 0.06 } },
 }
 
 const itemVariants = {
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.24 } },
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.22 } },
 }
 
 // ── AnimatedNumber ─────────────────────────────────────────────────
-function AnimatedNumber({ value, currency = false }: { value: number; currency?: boolean }) {
+function AnimatedNumber({ value, currency = false, format }: {
+  value: number
+  currency?: boolean
+  format?: (n: number) => string
+}) {
   const [display, setDisplay] = useState(0)
   const prevRef = useRef(0)
 
@@ -150,100 +163,100 @@ function AnimatedNumber({ value, currency = false }: { value: number; currency?:
     requestAnimationFrame(step)
   }, [value])
 
+  if (format)   return <>{format(display)}</>
   if (currency) return <>{formatCOP(display)}</>
   return <>{display}</>
 }
 
-// ── KPI Card ───────────────────────────────────────────────────────
-function KpiCard({ title, value, icon: Icon, accentColor, numColor = "var(--text-primary)", sub, currency, progress, bgTint, onClick }: {
-  title: string; value: number; icon: React.ElementType
-  accentColor: string; numColor?: string; sub?: string
-  currency?: boolean; progress?: number; bgTint?: boolean; onClick?: () => void
+// ── KPI Card (nuevo estilo minimalista) ────────────────────────────
+function KpiCard({ title, value, icon: Icon, sub, currency, compact, progress, redBorder, amberValue, onClick }: {
+  title: string
+  value: number
+  icon: React.ElementType
+  sub?: string
+  currency?: boolean
+  compact?: boolean
+  progress?: number
+  redBorder?: boolean
+  amberValue?: boolean
+  onClick?: () => void
 }) {
-  const [hovered, setHovered] = useState(false)
-  const displayFontSize = currency && value >= 10_000_000 ? 22 : currency && value >= 1_000_000 ? 26 : currency ? 30 : 40
+  const showRed   = !!redBorder && value > 0
+  const showAmber = !!amberValue && value > 0
+  const numColor  = showRed ? "var(--state-red)" : showAmber ? "var(--state-amber)" : "var(--text-primary)"
 
   return (
     <motion.div
       variants={itemVariants}
-      whileHover={{ y: -3 }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
+      whileHover={{ y: -2 }}
       onClick={onClick}
+      className="card-surface card-surface-hover flex flex-col"
       style={{
-        background: bgTint ? "var(--danger-light)" : "white",
-        border: bgTint ? "1px solid rgba(239,68,68,0.2)" : "1px solid var(--card-border)",
-        borderRadius: "var(--radius-lg)",
+        borderRadius: 14,
         padding: 20,
-        position: "relative",
+        minHeight: 140,
         cursor: onClick ? "pointer" : "default",
-        overflow: "hidden",
-        boxShadow: hovered
-          ? "var(--card-shadow-hover)"
-          : "var(--card-shadow)",
-        transition: "box-shadow 0.18s ease",
-        borderTop: `3px solid ${accentColor}`,
+        borderLeft: showRed ? "2px solid var(--state-red)" : showAmber ? "2px solid var(--state-amber)" : undefined,
+        transition: "box-shadow 250ms var(--ease)",
       }}
     >
-      {/* Icon circle */}
-      <div style={{
-        position: "absolute", top: 18, right: 18,
-        width: 38, height: 38, borderRadius: "50%",
-        background: `${accentColor}18`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-      }}>
-        <Icon size={17} color={accentColor} />
+      {/* Icon + label */}
+      <div className="flex items-center gap-1.5 mb-3">
+        <Icon size={14} className="text-ink-3 flex-shrink-0" />
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-2 leading-none">
+          {title}
+        </p>
       </div>
 
-      <p style={{
-        fontSize: 11, fontWeight: 600, textTransform: "uppercase",
-        letterSpacing: "0.08em", color: "var(--text-muted)",
-        marginBottom: 10, paddingRight: 48,
-      }}>
-        {title}
-      </p>
-
-      <p style={{
-        fontFamily: "'Instrument Serif', Georgia, serif",
-        fontSize: displayFontSize,
-        color: numColor,
-        lineHeight: 1.05,
-        fontVariantNumeric: "tabular-nums",
-      }}>
-        <AnimatedNumber value={value} currency={currency} />
+      {/* Number */}
+      <p className="leading-none" style={{ fontSize: 32, fontWeight: 600, letterSpacing: "-0.03em", color: numColor }}>
+        {compact
+          ? <AnimatedNumber value={value} format={formatCompact} />
+          : currency
+          ? <AnimatedNumber value={value} currency />
+          : <AnimatedNumber value={value} />
+        }
       </p>
 
       {sub && (
-        <p style={{
-          fontSize: 11, color: "var(--text-muted)", marginTop: 4,
-        }}>
-          {sub}
-        </p>
+        <p className="text-[12px] text-ink-3 mt-1.5">{sub}</p>
       )}
 
       {progress !== undefined && (
-        <div style={{ marginTop: 14, height: 3, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.min(100, progress)}%` }}
-            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-            style={{ height: "100%", background: accentColor, borderRadius: 99 }}
-          />
+        <div className="mt-auto pt-3">
+          <div className="h-[3px] bg-canvas-2 rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, progress)}%` }}
+              transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+              className="h-full bg-primary rounded-full"
+            />
+          </div>
         </div>
       )}
     </motion.div>
   )
 }
 
-// ── Section Title ──────────────────────────────────────────────────
-function SectionTitle({ children }: { children: React.ReactNode }) {
+// ── Panel header helper ────────────────────────────────────────────
+function PanelHeader({ label, count, color = "default" }: {
+  label: string; count?: number; color?: "default" | "danger"
+}) {
   return (
-    <p style={{
-      fontSize: 11, fontWeight: 600, textTransform: "uppercase",
-      letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: 12,
-    }}>
-      {children}
-    </p>
+    <div className="flex items-center gap-2 px-5 py-4 border-b border-ui-border">
+      <BrandDot color={color === "danger" ? "danger" : "accent"} />
+      <span className="text-[11px] font-semibold uppercase tracking-[0.10em] text-ink-2">
+        {label}
+      </span>
+      {count !== undefined && count > 0 && (
+        <span
+          className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+          style={{ background: color === "danger" ? "var(--state-red)" : "var(--primary)" }}
+        >
+          {count}
+        </span>
+      )}
+    </div>
   )
 }
 
@@ -263,77 +276,50 @@ function StatusBadge({ estado }: { estado: string }) {
   )
 }
 
-// ── Dashboard Header ───────────────────────────────────────────────
-function DashboardHeader({ nombre, alertasCriticas, lideres, filterLider, setFilterLider }: {
-  nombre: string | null; alertasCriticas: number
-  lideres: { id: string; nombre: string }[]; filterLider: string; setFilterLider: (v: string) => void
+// ── Dashboard Header (usando PageHeader) ───────────────────────────
+function DashboardHeader({ nombre, alertasCriticas, lideres, filterLider, setFilterLider, stats }: {
+  nombre: string | null
+  alertasCriticas: number
+  lideres: { id: string; nombre: string }[]
+  filterLider: string
+  setFilterLider: (v: string) => void
+  stats?: ReactNode
 }) {
   return (
-    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28 }}>
-      <div>
-        <h1 style={{
-          fontFamily: "'Instrument Serif', Georgia, serif",
-          fontSize: 32, fontWeight: 400,
-          color: "var(--text-primary)", margin: 0, lineHeight: 1.1,
-        }}>
-          {getGreeting()}{nombre ? `, ${nombre.split(" ")[0]}` : ""}
-        </h1>
-        <p style={{
-          fontSize: 14, color: "var(--text-muted)", marginTop: 6,
-        }}>
-          {formatFecha(new Date())}
-        </p>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {lideres.length > 0 && (
-          <div style={{
-            display: "flex", alignItems: "center", gap: 8,
-            background: "white", border: "1px solid var(--card-border)",
-            borderRadius: 10, padding: "7px 14px",
-            boxShadow: "var(--card-shadow)",
-          }}>
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Vista:</span>
+    <PageHeader
+      eyebrow="Resumen"
+      title={`${getGreeting()}${nombre ? `, ${nombre.split(" ")[0]}` : ""}`}
+      subtitle={formatFecha(new Date())}
+      stats={stats}
+      actions={
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+          {lideres.length > 0 && (
             <select
               value={filterLider}
               onChange={e => setFilterLider(e.target.value)}
-              style={{
-                fontSize: 13, fontWeight: 600, color: "var(--text-primary)",
-                border: "none", background: "transparent", outline: "none",
-                cursor: "pointer",              }}
+              className="form-input"
+              style={{ width: "auto", minWidth: 145, fontSize: 13 }}
             >
               <option value="">Todos los líderes</option>
               {lideres.map(u => <option key={u.id} value={u.id}>{u.nombre}</option>)}
             </select>
-          </div>
-        )}
-        <AnimatePresence>
-          {alertasCriticas > 0 && (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "7px 14px",
-                background: "var(--danger-light)",
-                border: "1px solid rgba(239,68,68,0.25)",
-                borderRadius: 10,
-              }}
-            >
-              <span style={{
-                width: 8, height: 8, borderRadius: "50%",
-                background: "var(--danger)", display: "inline-block",
-                animation: "pulse-dot 1.5s ease-in-out infinite",
-              }} />
-              <span style={{
-                fontSize: 13, fontWeight: 700, color: "var(--danger)",
-              }}>
-                {alertasCriticas} alerta{alertasCriticas !== 1 ? "s" : ""} crítica{alertasCriticas !== 1 ? "s" : ""}
-              </span>
-            </motion.div>
           )}
-        </AnimatePresence>
-      </div>
-    </div>
+          <AnimatePresence>
+            {alertasCriticas > 0 && (
+              <motion.div
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] font-semibold text-state-red bg-state-red-bg border border-state-red/20 whitespace-nowrap"
+              >
+                <BrandDot color="danger" pulse />
+                {alertasCriticas} alerta{alertasCriticas !== 1 ? "s" : ""} crítica{alertasCriticas !== 1 ? "s" : ""}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      }
+    />
   )
 }
 
@@ -349,9 +335,7 @@ function FacturasPendientesCard({ facturas, total, onNavigate }: {
         textAlign: "center", boxShadow: "var(--card-shadow)",
       }}>
         <CheckCircle2 size={24} color="var(--primary)" style={{ margin: "0 auto 8px" }} />
-        <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
-          Sin facturas pendientes
-        </p>
+        <p style={{ fontSize: 13, color: "var(--text-muted)" }}>Sin facturas pendientes</p>
       </div>
     )
   }
@@ -368,20 +352,14 @@ function FacturasPendientesCard({ facturas, total, onNavigate }: {
           display: "flex", alignItems: "center", gap: 12,
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{
-              fontSize: 12, fontWeight: 600, color: "var(--text-primary)",
-              fontFamily: "'JetBrains Mono', monospace",
-            }}>
+            <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
               #{f.numero}
             </p>
             <p style={{ fontSize: 11, color: "var(--text-muted)" }}>
               {f.proyecto?.nombre ?? "—"} · {hace(f.fechaEmision)}
             </p>
           </div>
-          <p style={{
-            fontSize: 13, fontWeight: 700, color: "var(--warning)",
-            fontFamily: "'JetBrains Mono', monospace",
-          }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "var(--warning)", fontFamily: "'JetBrains Mono', monospace" }}>
             {formatCOP(Number(f.monto))}
           </p>
         </div>
@@ -392,17 +370,10 @@ function FacturasPendientesCard({ facturas, total, onNavigate }: {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         background: "var(--content-bg)",
       }}>
-        <span style={{
-          fontSize: 13, fontWeight: 700, color: "var(--text-primary)",
-          fontFamily: "'Instrument Serif', Georgia, serif",
-        }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'Instrument Serif', Georgia, serif" }}>
           {formatCOP(total)}
         </span>
-        <button
-          onClick={onNavigate}
-          className="btn-primary"
-          style={{ padding: "6px 14px", fontSize: 12, gap: 4 }}
-        >
+        <button onClick={onNavigate} className="btn-primary" style={{ padding: "6px 14px", fontSize: 12, gap: 4 }}>
           Aprobar <ArrowRight size={12} />
         </button>
       </div>
@@ -433,26 +404,12 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
   )
 
   return (
-    <div style={{
-      background: "white", border: "1px solid var(--card-border)",
-      borderRadius: "var(--radius-lg)", overflow: "hidden",
-      boxShadow: "var(--card-shadow)",
-    }}>
-      {/* Header */}
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "14px 20px", borderBottom: "1px solid var(--card-border)",
-      }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
-          Proyectos — vista mensual
-        </p>
+    <div className="card-surface overflow-hidden">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: "1px solid var(--card-border)" }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>Proyectos — vista mensual</p>
         <button
           onClick={() => onNavigate("/cronograma")}
-          style={{
-            fontSize: 12, color: "var(--primary)", background: "none",
-            border: "none", cursor: "pointer", fontWeight: 600,
-            display: "flex", alignItems: "center", gap: 4,
-          }}
+          style={{ fontSize: 12, color: "var(--primary)", background: "none", border: "none", cursor: "pointer", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}
         >
           Ver cronograma completo <ChevronRight size={13} />
         </button>
@@ -465,39 +422,22 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
       ) : (
         <div className="gantt-scroll" style={{ overflowX: "auto" }}>
           <div style={{ minWidth: 600 }}>
-            {/* Month row */}
             <div style={{ display: "flex", background: "var(--content-bg)", borderBottom: "1px solid var(--card-border)" }}>
               <div style={{ width: 200, flexShrink: 0, padding: "8px 16px", borderRight: "1px solid var(--card-border)" }} />
               <div style={{ flex: 1, position: "relative", height: 36 }}>
                 {months.map((m, i) => (
-                  <span key={i} style={{
-                    position: "absolute", left: `${m.pct}%`,
-                    top: "50%", transform: "translate(-50%, -50%)",
-                    fontSize: 11, fontWeight: 600, color: "var(--text-muted)",
-                    textTransform: "capitalize", whiteSpace: "nowrap",
-                  }}>
+                  <span key={i} style={{ position: "absolute", left: `${m.pct}%`, top: "50%", transform: "translate(-50%, -50%)", fontSize: 11, fontWeight: 600, color: "var(--text-muted)", textTransform: "capitalize", whiteSpace: "nowrap" }}>
                     {m.label}
                   </span>
                 ))}
                 {todayPct > 0 && todayPct < 100 && (
-                  <div style={{
-                    position: "absolute", left: `${todayPct}%`,
-                    top: 4, transform: "translateX(-50%)",
-                  }}>
-                    <span style={{
-                      fontSize: 9, background: "var(--accent)", color: "white",
-                      padding: "2px 6px", borderRadius: 4, fontWeight: 700,
-                      fontFamily: "'JetBrains Mono', monospace",
-                      boxShadow: "0 2px 6px rgba(249,115,22,0.4)",
-                    }}>
-                      HOY
-                    </span>
+                  <div style={{ position: "absolute", top: 4, left: `${todayPct}%`, transform: "translateX(-50%)" }}>
+                    <span style={{ fontSize: 9, background: "var(--accent)", color: "white", padding: "2px 6px", borderRadius: 4, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", boxShadow: "0 2px 6px rgba(249,115,22,0.4)" }}>HOY</span>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Project rows */}
             {visible.map((p, idx) => {
               const barLeft  = toPct(new Date(p.fechaInicio))
               const barRight = toPct(new Date(p.fechaFin))
@@ -508,49 +448,18 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
               return (
                 <div
                   key={p.id}
-                  style={{
-                    display: "flex", height: 52,
-                    borderBottom: idx < visible.length - 1 ? "1px solid var(--card-border)" : "none",
-                    background: isHovered ? "rgba(22,163,74,0.03)" : idx % 2 === 0 ? "white" : "#fafbff",
-                    transition: "background 0.12s",
-                  }}
+                  style={{ display: "flex", height: 52, borderBottom: idx < visible.length - 1 ? "1px solid var(--card-border)" : "none", background: isHovered ? "rgba(22,163,74,0.03)" : idx % 2 === 0 ? "white" : "#fafbff", transition: "background 0.12s" }}
                   onMouseEnter={() => setHoveredRow(p.id)}
                   onMouseLeave={() => setHoveredRow(null)}
                 >
-                  <div
-                    style={{
-                      width: 200, flexShrink: 0, padding: "0 16px",
-                      borderRight: "1px solid var(--card-border)",
-                      display: "flex", alignItems: "center", cursor: "pointer",
-                    }}
-                    onClick={() => onNavigate(`/projects/${p.id}`)}
-                  >
-                    <p style={{
-                      fontSize: 12, fontWeight: 600, color: "var(--text-primary)",
-                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    }}>
-                      {p.nombre}
-                    </p>
+                  <div style={{ width: 200, flexShrink: 0, padding: "0 16px", borderRight: "1px solid var(--card-border)", display: "flex", alignItems: "center", cursor: "pointer" }} onClick={() => onNavigate(`/projects/${p.id}`)}>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.nombre}</p>
                   </div>
                   <div style={{ flex: 1, position: "relative" }}>
-                    {/* Today line */}
                     {todayPct > 0 && todayPct < 100 && (
-                      <div style={{
-                        position: "absolute", left: `${todayPct}%`,
-                        top: 0, bottom: 0,
-                        borderLeft: "2px dashed var(--accent)",
-                        opacity: 0.6, zIndex: 2,
-                      }} />
+                      <div style={{ position: "absolute", left: `${todayPct}%`, top: 0, bottom: 0, borderLeft: "2px dashed var(--accent)", opacity: 0.6, zIndex: 2 }} />
                     )}
-                    {/* Bar */}
-                    <div style={{
-                      position: "absolute",
-                      left: `${barLeft}%`, width: `${barWidth}%`,
-                      height: 32, top: "50%", transform: "translateY(-50%)",
-                      background: gradient, borderRadius: 20, zIndex: 1,
-                      boxShadow: isHovered ? "0 4px 12px rgba(0,0,0,0.15)" : "0 1px 4px rgba(0,0,0,0.08)",
-                      transition: "box-shadow 0.15s",
-                    }} />
+                    <div style={{ position: "absolute", left: `${barLeft}%`, width: `${barWidth}%`, height: 32, top: "50%", transform: "translateY(-50%)", background: gradient, borderRadius: 20, zIndex: 1, boxShadow: isHovered ? "0 4px 12px rgba(0,0,0,0.15)" : "0 1px 4px rgba(0,0,0,0.08)", transition: "box-shadow 0.15s" }} />
                   </div>
                 </div>
               )
@@ -571,100 +480,42 @@ function ProximosVencimientos({ entregables, reuniones, onNavigate }: {
   const reuns = reuniones.slice(0, 4)
 
   return (
-    <div style={{
-      background: "white", border: "1px solid var(--card-border)",
-      borderRadius: "var(--radius-lg)", overflow: "hidden",
-      boxShadow: "var(--card-shadow)",
-    }}>
+    <div style={{ background: "white", border: "1px solid var(--card-border)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--card-shadow)" }}>
       <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--card-border)" }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
-          Próximos vencimientos
-        </p>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>Próximos vencimientos</p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        {/* Entregables */}
         <div style={{ borderRight: "1px solid var(--card-border)", padding: "16px 20px" }}>
-          <SectionTitle>Entregables</SectionTitle>
+          <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 10 }}>Entregables</p>
           {ents.length === 0 ? (
             <p style={{ fontSize: 13, color: "var(--text-muted)" }}>Sin entregables próximos</p>
           ) : ents.map((e, i) => {
             const label = enDias(e.fechaEntrega)
             const isUrgent = label === "hoy" || label === "mañana"
             return (
-              <div
-                key={e.id}
-                onClick={() => onNavigate(`/projects/${e.proyecto.id}`)}
-                style={{
-                  display: "flex", alignItems: "flex-start", gap: 10,
-                  paddingBottom: i < ents.length - 1 ? 10 : 0,
-                  marginBottom: i < ents.length - 1 ? 10 : 0,
-                  borderBottom: i < ents.length - 1 ? "1px solid var(--card-border)" : "none",
-                  cursor: "pointer",
-                }}
-              >
+              <div key={e.id} onClick={() => onNavigate(`/projects/${e.proyecto.id}`)} style={{ display: "flex", alignItems: "flex-start", gap: 10, paddingBottom: i < ents.length - 1 ? 10 : 0, marginBottom: i < ents.length - 1 ? 10 : 0, borderBottom: i < ents.length - 1 ? "1px solid var(--card-border)" : "none", cursor: "pointer" }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{
-                    fontSize: 13, fontWeight: 600, color: "var(--text-primary)",
-                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  }}>
-                    {e.nombre}
-                  </p>
-                  <span style={{
-                    fontSize: 10, padding: "1px 7px", borderRadius: 99,
-                    background: "var(--primary-light)", color: "var(--primary-dark)",
-                    fontWeight: 600,                  }}>
-                    {e.proyecto.nombre}
-                  </span>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.nombre}</p>
+                  <span style={{ fontSize: 10, padding: "1px 7px", borderRadius: 99, background: "var(--primary-light)", color: "var(--primary-dark)", fontWeight: 600 }}>{e.proyecto.nombre}</span>
                 </div>
-                <span style={{
-                  fontSize: 11, fontWeight: 700, flexShrink: 0,
-                  color: isUrgent ? "var(--danger)" : "var(--info)",
-                  fontFamily: "'JetBrains Mono', monospace",
-                }}>
-                  {label}
-                </span>
+                <span style={{ fontSize: 11, fontWeight: 700, flexShrink: 0, color: isUrgent ? "var(--danger)" : "var(--info)", fontFamily: "'JetBrains Mono', monospace" }}>{label}</span>
               </div>
             )
           })}
         </div>
-
-        {/* Reuniones */}
         <div style={{ padding: "16px 20px" }}>
-          <SectionTitle>Reuniones</SectionTitle>
+          <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 10 }}>Reuniones</p>
           {reuns.length === 0 ? (
             <p style={{ fontSize: 13, color: "var(--text-muted)" }}>Sin reuniones programadas</p>
           ) : reuns.map((r, i) => (
-            <div
-              key={r.id}
-              onClick={() => onNavigate(`/projects/${r.proyecto.id}`)}
-              style={{
-                display: "flex", alignItems: "flex-start", gap: 10,
-                paddingBottom: i < reuns.length - 1 ? 10 : 0,
-                marginBottom: i < reuns.length - 1 ? 10 : 0,
-                borderBottom: i < reuns.length - 1 ? "1px solid var(--card-border)" : "none",
-                cursor: "pointer",
-              }}
-            >
+            <div key={r.id} onClick={() => onNavigate(`/projects/${r.proyecto.id}`)} style={{ display: "flex", alignItems: "flex-start", gap: 10, paddingBottom: i < reuns.length - 1 ? 10 : 0, marginBottom: i < reuns.length - 1 ? 10 : 0, borderBottom: i < reuns.length - 1 ? "1px solid var(--card-border)" : "none", cursor: "pointer" }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{
-                  fontSize: 13, fontWeight: 600, color: "var(--text-primary)",
-                  fontFamily: "'JetBrains Mono', monospace",
-                }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
                   {new Date(r.proximaReunion).toLocaleDateString("es-CO", { weekday: "short", day: "numeric", month: "short" })}
                 </p>
-                <p style={{
-                  fontSize: 11, color: "var(--text-muted)",
-                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                }}>
-                  {r.proyecto.nombre}
-                </p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.proyecto.nombre}</p>
               </div>
-              <span style={{
-                fontSize: 11, fontWeight: 700, color: "#6366f1", flexShrink: 0,
-                fontFamily: "'JetBrains Mono', monospace",
-              }}>
-                {enDias(r.proximaReunion)}
-              </span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", flexShrink: 0, fontFamily: "'JetBrains Mono', monospace" }}>{enDias(r.proximaReunion)}</span>
             </div>
           ))}
         </div>
@@ -726,38 +577,32 @@ export default function Dashboard() {
 
   // ── Loading ──
   if (loading) return (
-    <div style={{
-      height: "60vh", display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: 16,
-    }}>
-      <div style={{
-        width: 40, height: 40, border: "3px solid var(--card-border)",
-        borderTopColor: "var(--primary)", borderRadius: "50%",
-        animation: "spin 0.8s linear infinite",
-      }} />
-      <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
-        Cargando dashboard…
-      </p>
-    </div>
+    <motion.div variants={pageVariants} initial="initial" animate="animate">
+      <DashboardHeader
+        nombre={nombre}
+        alertasCriticas={0}
+        lideres={[]}
+        filterLider=""
+        setFilterLider={() => {}}
+        stats={<span className="text-ink-3">Cargando datos…</span>}
+      />
+      <div className="flex items-center justify-center h-40 gap-3">
+        <div className="w-5 h-5 rounded-full border-2 border-ui-border border-t-primary animate-spin" />
+        <p className="text-[13px] text-ink-3">Cargando dashboard…</p>
+      </div>
+    </motion.div>
   )
 
   // ── Error ──
   if (error || !data) return (
-    <div style={{
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center",
-      height: "60vh", gap: 16,
-    }}>
-      <p style={{ color: "var(--danger)", fontWeight: 500 }}>
-        {error ?? "Error inesperado."}
-      </p>
+    <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
+      <p className="text-sm text-state-red font-medium">{error ?? "Error inesperado."}</p>
       <button onClick={loadData} className="btn-primary">Reintentar</button>
     </div>
   )
 
   const today = new Date(); today.setHours(0, 0, 0, 0)
 
-  // Derived data
   const lideres            = Array.from(new Map(proyectos.map(p => [p.lider.id, p.lider])).values()).sort((a, b) => a.nombre.localeCompare(b.nombre))
   const proyectosFiltrados = filterLider ? proyectos.filter(p => p.lider.id === filterLider) : proyectos
   const recentProyectos    = [...proyectosFiltrados].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5)
@@ -783,41 +628,45 @@ export default function Dashboard() {
   if (rol === "SOCIO") {
     const socio = data.socio
     return (
-      <motion.div variants={pageVariants} initial="initial" animate="animate" style={{ minHeight: "100%" }}>
-        <DashboardHeader nombre={nombre} alertasCriticas={alertasCriticas} lideres={lideres} filterLider={filterLider} setFilterLider={setFilterLider} />
+      <motion.div variants={pageVariants} initial="initial" animate="animate">
+        <DashboardHeader
+          nombre={nombre}
+          alertasCriticas={alertasCriticas}
+          lideres={[]}
+          filterLider=""
+          setFilterLider={() => {}}
+          stats={
+            <>
+              <span><strong className="text-ink font-semibold">{data.proyectos.total}</strong> proyectos</span>
+              <span className="text-ink-4">·</span>
+              <span><strong className="text-state-amber font-semibold">{data.proyectos.advertencia}</strong> en advertencia</span>
+              <span className="text-ink-4">·</span>
+              <span><strong className="text-state-red font-semibold">{data.proyectos.enRiesgo}</strong> en riesgo</span>
+            </>
+          }
+        />
 
-        <motion.div variants={containerVariants} initial="initial" animate="animate"
-          style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
-          <KpiCard title="Mis Proyectos" value={data.proyectos.total}
-            icon={Briefcase} accentColor="#6366f1"
-            sub="asignados" onClick={() => navigate("/projects")} />
-          <KpiCard title="En Advertencia" value={data.proyectos.advertencia}
-            icon={AlertTriangle} accentColor="var(--warning)" numColor="var(--warning)"
-            onClick={() => navigate("/projects")} />
-          <KpiCard title="En Riesgo" value={data.proyectos.enRiesgo}
-            icon={AlertTriangle} accentColor="var(--danger)" numColor="var(--danger)"
-            bgTint onClick={() => navigate("/projects")} />
+        <motion.div
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+          className="grid gap-4 mb-6"
+          style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
+        >
+          <KpiCard title="Mis Proyectos" value={data.proyectos.total} icon={Briefcase} sub="asignados" onClick={() => navigate("/projects")} />
+          <KpiCard title="En Advertencia" value={data.proyectos.advertencia} icon={AlertTriangle} amberValue onClick={() => navigate("/projects")} />
+          <KpiCard title="En Riesgo" value={data.proyectos.enRiesgo} icon={AlertTriangle} redBorder onClick={() => navigate("/projects")} />
         </motion.div>
 
         {socio?.misProyectosActivos && socio.misProyectosActivos.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <SectionTitle>Mis proyectos activos</SectionTitle>
-            <motion.div variants={containerVariants} initial="initial" animate="animate"
-              style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          <div className="mb-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.10em] text-ink-3 mb-3">Mis proyectos activos</p>
+            <motion.div variants={containerVariants} initial="initial" animate="animate" className="grid gap-3" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
               {socio.misProyectosActivos.map(p => (
-                <motion.div key={p.id} variants={itemVariants}
-                  whileHover={{ y: -3, boxShadow: "var(--card-shadow-hover)" }}
-                  style={{
-                    background: "white", border: "1px solid var(--card-border)",
-                    borderRadius: "var(--radius-lg)", padding: 16,
-                    cursor: "pointer", boxShadow: "var(--card-shadow)",
-                  }}
-                  onClick={() => navigate(`/projects/${p.id}`)}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>
-                    {p.nombre}
-                  </p>
+                <motion.div key={p.id} variants={itemVariants} whileHover={{ y: -2 }} className="card-surface card-surface-hover p-4 cursor-pointer" onClick={() => navigate(`/projects/${p.id}`)}>
+                  <p className="text-[14px] font-semibold text-ink mb-2">{p.nombre}</p>
                   <StatusBadge estado={p.estado} />
-                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 8, fontFamily: "'JetBrains Mono', monospace" }}>
+                  <p className="text-[11px] text-ink-3 mt-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                     Fin: {new Date(p.fechaFin).toLocaleDateString("es-CO")}
                   </p>
                 </motion.div>
@@ -827,39 +676,21 @@ export default function Dashboard() {
         )}
 
         {socio?.misCompromisosVencidos && socio.misCompromisosVencidos.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <SectionTitle>Compromisos vencidos</SectionTitle>
-            <div style={{
-              background: "white", border: "1px solid rgba(239,68,68,0.2)",
-              borderRadius: "var(--radius-lg)", overflow: "hidden",
-              boxShadow: "var(--card-shadow)",
-            }}>
+          <div className="mb-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.10em] text-ink-3 mb-3">Compromisos vencidos</p>
+            <div className="card-surface overflow-hidden" style={{ borderLeft: "2px solid var(--state-red)" }}>
               {socio.misCompromisosVencidos.map((c, i) => (
-                <div key={c.id}
+                <div
+                  key={c.id}
                   onClick={() => navigate(`/projects/${c.proyecto.id}`)}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 12,
-                    padding: "12px 16px", cursor: "pointer",
-                    background: "var(--danger-light)",
-                    borderBottom: i < socio.misCompromisosVencidos.length - 1 ? "1px solid rgba(239,68,68,0.1)" : "none",
-                    borderLeft: "3px solid var(--danger)",
-                    transition: "opacity 0.12s",
-                  }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.opacity = "0.85")}
-                  onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.opacity = "1")}
+                  className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-state-red-bg transition-colors duration-100"
+                  style={{ borderBottom: i < socio.misCompromisosVencidos.length - 1 ? "1px solid rgba(220,38,38,0.08)" : "none" }}
                 >
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 13, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {c.descripcion}
-                    </p>
-                    <p style={{ fontSize: 11, color: "var(--text-muted)" }}>
-                      {c.proyecto.nombre}
-                    </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] text-ink truncate">{c.descripcion}</p>
+                    <p className="text-[11px] text-ink-3">{c.proyecto.nombre}</p>
                   </div>
-                  <span style={{
-                    fontSize: 12, color: "var(--danger)", fontWeight: 700, flexShrink: 0,
-                    fontFamily: "'JetBrains Mono', monospace",
-                  }}>
+                  <span className="text-[12px] font-bold text-state-red flex-shrink-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                     +{diasRetraso(c.fechaActual)}d
                   </span>
                 </div>
@@ -874,24 +705,30 @@ export default function Dashboard() {
   // ── ADMINISTRATIVO ─────────────────────────────────────────────
   if (rol === "ADMINISTRATIVO") {
     return (
-      <motion.div variants={pageVariants} initial="initial" animate="animate" style={{ minHeight: "100%" }}>
-        <DashboardHeader nombre={nombre} alertasCriticas={alertasCriticas} lideres={[]} filterLider="" setFilterLider={() => {}} />
-        <motion.div variants={containerVariants} initial="initial" animate="animate"
-          style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
-          <KpiCard title="Total Facturado" value={data.financiero.totalFacturado}
-            icon={TrendingUp} accentColor="var(--primary)" numColor="var(--primary-dark)"
-            currency sub="cobrado" onClick={() => navigate("/facturacion")} />
-          <KpiCard title="Facturas Pendientes" value={data.financiero.facturasPendientes}
-            icon={AlertTriangle} accentColor="var(--warning)" numColor="var(--warning)"
-            onClick={() => navigate("/facturacion")} />
-          <KpiCard title="Por Cobrar" value={data.financiero.montoPorCobrar}
-            icon={DollarSign} accentColor="var(--info)" numColor="var(--info)"
-            currency sub="aprobado" onClick={() => navigate("/facturacion")} />
-          <KpiCard title="Proveedores Activos" value={data.financiero.proveedoresActivos}
-            icon={Briefcase} accentColor="#6366f1"
-            onClick={() => navigate("/proveedores")} />
+      <motion.div variants={pageVariants} initial="initial" animate="animate">
+        <DashboardHeader
+          nombre={nombre}
+          alertasCriticas={alertasCriticas}
+          lideres={[]}
+          filterLider=""
+          setFilterLider={() => {}}
+          stats={
+            <>
+              <span><strong className="text-ink font-semibold">{formatCompact(data.financiero.totalFacturado)}</strong> facturado</span>
+              <span className="text-ink-4">·</span>
+              <span><strong className="text-state-amber font-semibold">{data.financiero.facturasPendientes}</strong> facturas pendientes</span>
+              <span className="text-ink-4">·</span>
+              <span><strong className="text-ink font-semibold">{data.financiero.proveedoresActivos}</strong> proveedores</span>
+            </>
+          }
+        />
+        <motion.div variants={containerVariants} initial="initial" animate="animate" className="grid gap-4 mb-6" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+          <KpiCard title="Total Facturado" value={data.financiero.totalFacturado} icon={TrendingUp} compact sub="cobrado" onClick={() => navigate("/facturacion")} />
+          <KpiCard title="Facturas Pendientes" value={data.financiero.facturasPendientes} icon={AlertTriangle} amberValue onClick={() => navigate("/facturacion")} />
+          <KpiCard title="Por Cobrar" value={data.financiero.montoPorCobrar} icon={DollarSign} compact sub="aprobado" onClick={() => navigate("/facturacion")} />
+          <KpiCard title="Proveedores Activos" value={data.financiero.proveedoresActivos} icon={Briefcase} onClick={() => navigate("/proveedores")} />
         </motion.div>
-        <SectionTitle>Facturas pendientes de aprobación</SectionTitle>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.10em] text-ink-3 mb-3">Facturas pendientes de aprobación</p>
         <FacturasPendientesCard facturas={factsPendientes} total={totalFactsPend} onNavigate={() => navigate("/facturacion")} />
       </motion.div>
     )
@@ -899,177 +736,134 @@ export default function Dashboard() {
 
   // ── ADMIN ──────────────────────────────────────────────────────
   return (
-    <motion.div variants={pageVariants} initial="initial" animate="animate" style={{ minHeight: "100%" }}>
+    <motion.div variants={pageVariants} initial="initial" animate="animate">
 
-      {/* Header */}
-      <DashboardHeader nombre={nombre} alertasCriticas={alertasCriticas} lideres={lideres} filterLider={filterLider} setFilterLider={setFilterLider} />
+      <DashboardHeader
+        nombre={nombre}
+        alertasCriticas={alertasCriticas}
+        lideres={lideres}
+        filterLider={filterLider}
+        setFilterLider={setFilterLider}
+        stats={
+          <>
+            <span><strong className="text-ink font-semibold">{totalActivos}</strong> activos</span>
+            <span className="text-ink-4">·</span>
+            <span><strong className="text-state-red font-semibold">{data.proyectos.enRiesgo}</strong> en riesgo</span>
+            <span className="text-ink-4">·</span>
+            <span><strong className="text-state-red font-semibold">{data.compromisos.vencidos}</strong> compromisos vencidos</span>
+            {mostrarFinanciero && (
+              <>
+                <span className="text-ink-4">·</span>
+                <span><strong className="text-state-amber font-semibold">{formatCompact(montoPendienteTotal)}</strong> pendiente</span>
+              </>
+            )}
+          </>
+        }
+      />
 
-      {/* Row 1: KPIs */}
-      <motion.div variants={containerVariants} initial="initial" animate="animate"
-        style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14, marginBottom: 28 }}>
+      {/* Row 1: 5 KPIs */}
+      <motion.div variants={containerVariants} initial="initial" animate="animate" className="grid gap-4 mb-7" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
         <KpiCard
           title="Proyectos Activos" value={totalActivos}
-          icon={Briefcase} accentColor="#6366f1"
+          icon={Briefcase}
           sub={`${totalFinalizados} finalizados de ${proyectos.length}`}
           progress={progresoPct}
           onClick={() => navigate("/projects")}
         />
         <KpiCard
           title="En Riesgo" value={data.proyectos.enRiesgo}
-          icon={AlertTriangle} accentColor="var(--danger)" numColor="var(--danger)"
-          sub="requieren atención" bgTint
+          icon={AlertTriangle} redBorder
+          sub="Requieren atención inmediata"
           onClick={() => navigate("/projects")}
         />
         <KpiCard
           title="Compromisos Vencidos" value={data.compromisos.vencidos}
-          icon={Clock} accentColor="var(--danger)"
-          numColor={data.compromisos.vencidos > 0 ? "var(--danger)" : "var(--text-primary)"}
-          bgTint={data.compromisos.vencidos > 0}
+          icon={Clock} redBorder
           onClick={() => navigate("/projects")}
         />
         <KpiCard
           title="Entregables 7 días" value={data.entregables.proximos7Dias}
-          icon={Calendar} accentColor="var(--info)" numColor="var(--info)"
+          icon={Calendar} amberValue
+          sub="Próximos a vencer"
           onClick={() => navigate("/projects")}
         />
         <KpiCard
           title="Facturación pendiente" value={montoPendienteTotal}
-          icon={DollarSign} accentColor="var(--warning)" numColor="var(--warning)"
-          currency sub="pendiente + aprobado"
+          icon={DollarSign} compact amberValue
+          sub="Pendiente + aprobado"
           onClick={() => navigate("/facturacion")}
         />
       </motion.div>
 
-      {/* Row 2: 60/40 */}
-      <div style={{ display: "grid", gridTemplateColumns: "3fr 2fr", gap: 20, marginBottom: 24 }}>
+      {/* Row 2: Activity 60% + Right panel 40% */}
+      <div className="grid gap-5 mb-6" style={{ gridTemplateColumns: "3fr 2fr" }}>
 
         {/* Activity feed */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.15 }}
-          style={{
-            background: "white", border: "1px solid var(--card-border)",
-            borderRadius: "var(--radius-lg)", overflow: "hidden",
-            boxShadow: "var(--card-shadow)",
-          }}
+          className="card-surface overflow-hidden"
         >
-          <div style={{
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            padding: "16px 20px", borderBottom: "1px solid var(--card-border)",
-          }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
-              Actividad reciente
-            </p>
-            <span style={{
-              fontSize: 12, padding: "2px 10px", borderRadius: 99,
-              background: "var(--content-bg)", color: "var(--text-secondary)",
-              fontWeight: 600,            }}>
-              {recentProyectos.length}
-            </span>
-          </div>
+          <PanelHeader label="Actividad reciente" count={recentProyectos.length} />
           {recentProyectos.length === 0 ? (
-            <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
-              Sin proyectos
-            </div>
+            <div className="flex items-center justify-center py-10 text-[13px] text-ink-3">Sin proyectos</div>
           ) : (
             recentProyectos.map((p, i) => {
               const cfg = ESTADO_COLOR[p.estado] ?? ESTADO_COLOR.PROPUESTA
               return (
                 <div
                   key={p.id}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 0,
-                    borderBottom: i < recentProyectos.length - 1 ? "1px solid var(--card-border)" : "none",
-                    cursor: "pointer", transition: "background 0.12s",
-                  }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.background = "rgba(22,163,74,0.03)")}
-                  onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.background = "white")}
+                  className="flex items-center gap-0 cursor-pointer hover:bg-canvas-2 transition-colors duration-100"
+                  style={{ borderBottom: i < recentProyectos.length - 1 ? "1px solid var(--card-border)" : "none" }}
                   onClick={() => navigate(`/projects/${p.id}`)}
                 >
-                  <div style={{
-                    width: 3, alignSelf: "stretch",
-                    background: cfg.bar, flexShrink: 0,
-                  }} />
-                  <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 12, padding: "13px 16px", minWidth: 0 }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{
-                        fontSize: 14, fontWeight: 600, color: "var(--text-primary)",
-                        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                      }}>
-                        {p.nombre}
-                      </p>
-                      <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}>
-                        {p.categoria?.nombre ?? "—"}
-                      </p>
+                  <div style={{ width: 3, alignSelf: "stretch", background: cfg.bar, flexShrink: 0 }} />
+                  <div className="flex-1 flex items-center gap-3 px-4 py-3 min-w-0">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[14px] font-semibold text-ink truncate">{p.nombre}</p>
+                      <p className="text-[11px] text-ink-3 mt-0.5">{p.categoria?.nombre ?? "—"}</p>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                      <div style={{
-                        width: 26, height: 26, borderRadius: "50%",
-                        background: avatarBg(p.lider.nombre),
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        color: "white", fontSize: 10, fontWeight: 700,
-                      }}>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <div style={{ width: 26, height: 26, borderRadius: "50%", background: avatarBg(p.lider.nombre), display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 10, fontWeight: 700 }}>
                         {initials(p.lider.nombre)}
                       </div>
                     </div>
                     <StatusBadge estado={p.estado} />
-                    <span style={{
-                      fontSize: 11, color: "var(--text-muted)", flexShrink: 0, minWidth: 48, textAlign: "right",
-                      fontFamily: "'JetBrains Mono', monospace",
-                    }}>
+                    <span className="text-[11px] text-ink-3 flex-shrink-0 min-w-[40px] text-right" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                       {hace(p.createdAt)}
                     </span>
-                    <ArrowRight size={13} color="var(--card-border)" style={{ flexShrink: 0 }} />
+                    <ArrowRight size={13} className="text-ink-4 flex-shrink-0" />
                   </div>
                 </div>
               )
             })
           )}
+          {recentProyectos.length > 0 && (
+            <div className="px-5 py-3 border-t border-ui-border">
+              <button onClick={() => navigate("/projects")} className="text-[12px] text-accent font-semibold flex items-center gap-1">
+                Ver todos <ArrowRight size={11} />
+              </button>
+            </div>
+          )}
         </motion.div>
 
         {/* Right column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="flex flex-col gap-4">
 
           {/* Compromisos vencidos */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.22 }}
-            style={{
-              background: "white", border: "1px solid var(--card-border)",
-              borderRadius: "var(--radius-lg)", overflow: "hidden",
-              flex: 1, boxShadow: "var(--card-shadow)",
-            }}
+            className="card-surface overflow-hidden flex-1"
+            style={{ borderLeft: compVencidos.length > 0 ? "2px solid var(--state-red)" : undefined }}
           >
-            <div style={{
-              padding: "12px 16px",
-              background: compVencidos.length > 0 ? "var(--danger-light)" : "var(--content-bg)",
-              borderBottom: "1px solid var(--card-border)",
-              display: "flex", alignItems: "center", gap: 8,
-            }}>
-              <Clock size={14} color={compVencidos.length > 0 ? "var(--danger)" : "var(--text-muted)"} />
-              <p style={{
-                fontSize: 13, fontWeight: 700,
-                color: compVencidos.length > 0 ? "var(--danger)" : "var(--text-primary)",
-              }}>
-                Compromisos vencidos
-              </p>
-              {compVencidos.length > 0 && (
-                <span style={{
-                  marginLeft: "auto", fontSize: 11, padding: "1px 8px",
-                  borderRadius: 99, background: "var(--danger)",
-                  color: "white", fontWeight: 700,                }}>
-                  {compVencidos.length}
-                </span>
-              )}
-            </div>
+            <PanelHeader label="Compromisos vencidos" count={compVencidos.length} color="danger" />
             {compVencidos.length === 0 ? (
-              <div style={{ padding: "20px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-                <CheckCircle2 size={16} color="var(--primary)" />
-                <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-                  Sin compromisos vencidos
-                </span>
+              <div className="flex items-center gap-2 px-5 py-5">
+                <CheckCircle2 size={16} className="text-primary" />
+                <span className="text-[13px] text-ink-2">Todo al día</span>
               </div>
             ) : (
               <div className="comp-scroll" style={{ maxHeight: 200, overflowY: "auto" }}>
@@ -1078,39 +872,15 @@ export default function Dashboard() {
                   return (
                     <div
                       key={c.id}
-                      style={{
-                        padding: "10px 16px",
-                        borderBottom: i < compVencidos.length - 1 ? "1px solid rgba(239,68,68,0.08)" : "none",
-                        borderLeft: "3px solid var(--danger)",
-                        background: "var(--danger-light)",
-                        cursor: proy ? "pointer" : "default",
-                        display: "flex", alignItems: "flex-start", gap: 10,
-                        transition: "opacity 0.12s",
-                      }}
-                      onMouseEnter={e => { if (proy) (e.currentTarget as HTMLDivElement).style.opacity = "0.8" }}
-                      onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.opacity = "1")}
+                      className="flex items-start gap-2.5 px-4 py-2.5 cursor-pointer hover:bg-state-red-bg transition-colors duration-100"
+                      style={{ borderBottom: i < compVencidos.length - 1 ? "1px solid rgba(220,38,38,0.08)" : "none" }}
                       onClick={() => { if (proy) navigate(`/projects/${proy.id}`) }}
                     >
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{
-                          fontSize: 12, color: "var(--text-primary)",
-                          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                        }}>
-                          {c.descripcion}
-                        </p>
-                        {proy && (
-                          <span style={{
-                            fontSize: 10, padding: "1px 6px", borderRadius: 99,
-                            background: "rgba(239,68,68,0.12)", color: "var(--danger)",
-                            fontWeight: 600,                          }}>
-                            {proy.nombre}
-                          </span>
-                        )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[12px] text-ink truncate">{c.descripcion}</p>
+                        {proy && <p className="text-[10px] text-state-red font-semibold mt-0.5">{proy.nombre}</p>}
                       </div>
-                      <span style={{
-                        fontSize: 11, fontWeight: 700, color: "var(--danger)", flexShrink: 0,
-                        fontFamily: "'JetBrains Mono', monospace",
-                      }}>
+                      <span className="text-[11px] font-bold text-state-red flex-shrink-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                         +{diasRetraso(c.fechaActual)}d
                       </span>
                     </div>
@@ -1125,67 +895,28 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.3 }}
-            style={{
-              background: "white", border: "1px solid var(--card-border)",
-              borderRadius: "var(--radius-lg)", overflow: "hidden",
-              flex: 1, boxShadow: "var(--card-shadow)",
-            }}
+            className="card-surface overflow-hidden flex-1"
           >
-            <div style={{
-              display: "flex", alignItems: "center", gap: 8,
-              padding: "12px 16px", borderBottom: "1px solid var(--card-border)",
-            }}>
-              <DollarSign size={14} color="var(--warning)" />
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)" }}>
-                Facturas pendientes
-              </p>
-            </div>
+            <PanelHeader label="Facturas pendientes" />
             {factsPendientes.length === 0 ? (
-              <div style={{ padding: "24px 16px", fontSize: 13, color: "var(--text-muted)", textAlign: "center" }}>
-                Sin facturas pendientes
-              </div>
+              <div className="px-5 py-5 text-[13px] text-ink-3 text-center">Sin facturas pendientes</div>
             ) : (
               <>
                 {factsPendientes.map((f, i) => (
-                  <div key={f.id} style={{
-                    padding: "9px 16px",
-                    borderBottom: i < factsPendientes.length - 1 ? "1px solid var(--card-border)" : "none",
-                    display: "flex", alignItems: "center", gap: 8,
-                  }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        #{f.numero}
-                      </p>
-                      <p style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {f.proyecto?.nombre ?? "—"}
-                      </p>
+                  <div key={f.id} className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: i < factsPendientes.length - 1 ? "1px solid var(--card-border)" : "none" }}>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[12px] font-semibold text-ink" style={{ fontFamily: "'JetBrains Mono', monospace" }}>#{f.numero}</p>
+                      <p className="text-[11px] text-ink-3 truncate">{f.proyecto?.nombre ?? "—"}</p>
                     </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <p style={{ fontSize: 12, fontWeight: 700, color: "var(--warning)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        {formatCOP(Number(f.monto))}
-                      </p>
-                      <p style={{ fontSize: 10, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        {hace(f.fechaEmision)}
-                      </p>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-[12px] font-bold text-state-amber" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formatCOP(Number(f.monto))}</p>
+                      <p className="text-[10px] text-ink-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{hace(f.fechaEmision)}</p>
                     </div>
                   </div>
                 ))}
-                <div style={{
-                  padding: "10px 16px", borderTop: "1px solid var(--card-border)",
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  background: "var(--content-bg)",
-                }}>
-                  <span style={{
-                    fontSize: 13, fontWeight: 700, color: "var(--text-primary)",
-                    fontFamily: "'Instrument Serif', Georgia, serif",
-                  }}>
-                    {formatCOP(totalFactsPend)}
-                  </span>
-                  <button
-                    onClick={() => navigate("/facturacion")}
-                    className="btn-primary"
-                    style={{ fontSize: 12, padding: "5px 12px", gap: 4 }}
-                  >
+                <div className="flex items-center justify-between px-4 py-3 border-t border-ui-border bg-canvas">
+                  <span className="text-[13px] font-bold text-ink" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>{formatCOP(totalFactsPend)}</span>
+                  <button onClick={() => navigate("/facturacion")} className="btn-primary" style={{ fontSize: 12, padding: "5px 12px", gap: 4 }}>
                     Aprobar <ArrowRight size={11} />
                   </button>
                 </div>
@@ -1196,26 +927,13 @@ export default function Dashboard() {
       </div>
 
       {/* Row 3: Mini Gantt */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.35 }}
-        style={{ marginBottom: 20 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.35 }} className="mb-5">
         <MiniGantt proyectos={proyectos} onNavigate={(path) => navigate(path)} />
       </motion.div>
 
       {/* Row 4: Próximos vencimientos */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.4 }}
-      >
-        <ProximosVencimientos
-          entregables={entregablesProx}
-          reuniones={reunionesProx}
-          onNavigate={(path) => navigate(path)}
-        />
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.4 }}>
+        <ProximosVencimientos entregables={entregablesProx} reuniones={reunionesProx} onNavigate={(path) => navigate(path)} />
       </motion.div>
 
     </motion.div>
