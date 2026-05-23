@@ -52,7 +52,7 @@ const cardVariants = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },
 }
 
-const GRID_COLS = "repeat(auto-fill, minmax(340px, 1fr))"
+const GRID_COLS = "repeat(auto-fill, minmax(300px, 1fr))"
 
 export default function Projects() {
   const esAdmin = getRolFromToken() === "ADMIN"
