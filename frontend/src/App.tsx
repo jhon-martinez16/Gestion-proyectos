@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react"
 import { Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import DashboardLayout from "./layouts/DashboardLayout"
@@ -17,6 +18,11 @@ import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/auth/ProtectedRoute"
 import ScrollToTop from "./components/ScrollToTop"
 
+// Only bundled in dev builds — Vite's dead-code elimination drops this in production
+const DesignSystem = import.meta.env.DEV
+  ? lazy(() => import("./pages/DesignSystem"))
+  : null
+
 export default function App() {
   const location = useLocation()
 
@@ -25,6 +31,16 @@ export default function App() {
       <ScrollToTop />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
+          {import.meta.env.DEV && DesignSystem && (
+            <Route
+              path="/__design"
+              element={
+                <Suspense fallback={null}>
+                  <DesignSystem />
+                </Suspense>
+              }
+            />
+          )}
           <Route path="/login" element={<Login />} />
 
           <Route
