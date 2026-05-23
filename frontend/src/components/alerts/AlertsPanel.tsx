@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, AlertTriangle, AlertCircle } from "lucide-react"
@@ -92,10 +92,10 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                 <AlertTriangle size={18} color="var(--danger)" />
               </div>
               <div>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", margin: 0, fontFamily: "'DM Sans', sans-serif" }}>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                   Alertas del sistema
                 </h2>
-                <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0, fontFamily: "'DM Sans', sans-serif" }}>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
                   {visibles.length} alerta{visibles.length !== 1 ? "s" : ""} activa{visibles.length !== 1 ? "s" : ""}
                 </p>
               </div>
@@ -125,7 +125,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                 }}>
                   <AlertCircle size={20} color="var(--primary)" />
                 </div>
-                <p style={{ fontSize: 14, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+                <p style={{ fontSize: 14, color: "var(--text-muted)" }}>
                   No hay alertas activas
                 </p>
               </div>
@@ -136,8 +136,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                 <p style={{
                   fontSize: 11, fontWeight: 700, textTransform: "uppercase",
                   letterSpacing: "0.08em", color: "var(--danger)",
-                  marginBottom: 10, fontFamily: "'DM Sans', sans-serif",
-                }}>
+                  marginBottom: 10,                }}>
                   Críticas ({criticas.length})
                 </p>
                 {Object.entries(groupByProject(criticas)).map(([proyectoId, alertasP]) => (
@@ -157,7 +156,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                       onMouseEnter={e => (e.currentTarget.style.background = "rgba(239,68,68,0.12)")}
                       onMouseLeave={e => (e.currentTarget.style.background = "var(--danger-light)")}
                     >
-                      <p style={{ fontSize: 13, fontWeight: 700, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: "var(--danger)" }}>
                         {alertasP[0].proyectoNombre}
                       </p>
                     </button>
@@ -170,7 +169,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                           borderTop: i > 0 ? "1px solid rgba(239,68,68,0.08)" : "none",
                           background: "white",
                         }}>
-                          <p style={{ fontSize: 12, color: "var(--danger)", flex: 1, fontFamily: "'DM Sans', sans-serif" }}>
+                          <p style={{ fontSize: 12, color: "var(--danger)", flex: 1 }}>
                             {a.mensaje}
                           </p>
                           <button
@@ -194,8 +193,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                 <p style={{
                   fontSize: 11, fontWeight: 700, textTransform: "uppercase",
                   letterSpacing: "0.08em", color: "var(--warning)",
-                  marginBottom: 10, fontFamily: "'DM Sans', sans-serif",
-                }}>
+                  marginBottom: 10,                }}>
                   Advertencias ({medias.length})
                 </p>
                 {Object.entries(groupByProject(medias)).map(([proyectoId, alertasP]) => (
@@ -215,7 +213,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                       onMouseEnter={e => (e.currentTarget.style.background = "rgba(245,158,11,0.12)")}
                       onMouseLeave={e => (e.currentTarget.style.background = "var(--warning-light)")}
                     >
-                      <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e", fontFamily: "'DM Sans', sans-serif" }}>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>
                         {alertasP[0].proyectoNombre}
                       </p>
                     </button>
@@ -228,7 +226,7 @@ export default function AlertsPanel({ alertas, onClose }: Props) {
                           borderTop: i > 0 ? "1px solid rgba(245,158,11,0.08)" : "none",
                           background: "white",
                         }}>
-                          <p style={{ fontSize: 12, color: "#92400e", flex: 1, fontFamily: "'DM Sans', sans-serif" }}>
+                          <p style={{ fontSize: 12, color: "#92400e", flex: 1 }}>
                             {a.mensaje}
                           </p>
                           <button

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+﻿import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { api } from "../services/api"
@@ -308,10 +308,10 @@ export default function Cronograma() {
       <div style={{ padding: "28px 36px 0" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: "#1e293b", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 700, color: "#1e293b", margin: 0 }}>
               Cronograma
             </h1>
-            <p style={{ fontSize: 13, color: "#64748b", marginTop: 3, fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: "#64748b", marginTop: 3 }}>
               Vista de proyectos y entregables en el tiempo
             </p>
           </div>
@@ -327,7 +327,7 @@ export default function Cronograma() {
                   background: pageView === value ? "white" : "transparent",
                   color: pageView === value ? "#1e293b" : "#64748b",
                   fontSize: 13, fontWeight: pageView === value ? 600 : 500,
-                  fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
+                  cursor: "pointer",
                   boxShadow: pageView === value ? "0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04)" : "none",
                   transition: "all 0.18s", whiteSpace: "nowrap",
                 }}>{label}</button>
@@ -337,7 +337,7 @@ export default function Cronograma() {
               padding: "7px 14px", borderRadius: 99,
               background: "#dbeafe", color: "#1d4ed8",
               fontSize: 12, fontWeight: 600,
-              fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+              whiteSpace: "nowrap",
             }}>
               {filtrados.length} proyecto{filtrados.length !== 1 ? "s" : ""}
             </span>
@@ -379,7 +379,7 @@ export default function Cronograma() {
                       padding: "6px 12px", fontSize: 12, borderRadius: 99,
                       border: "none", background: "transparent",
                       color: "#6b7280", cursor: "pointer",
-                      fontFamily: "'DM Sans', sans-serif", transition: "color 0.15s",
+                      transition: "color 0.15s",
                     }}
                     onMouseEnter={e => (e.currentTarget.style.color = "#111827")}
                     onMouseLeave={e => (e.currentTarget.style.color = "#6b7280")}
@@ -409,7 +409,7 @@ export default function Cronograma() {
                     background: view === v ? "#1e293b" : "transparent",
                     color: view === v ? "white" : "#64748b",
                     cursor: "pointer", transition: "all 0.15s",
-                    fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+                    whiteSpace: "nowrap",
                   }}>
                     {VIEW_LABELS[v]}
                   </button>
@@ -425,7 +425,7 @@ export default function Cronograma() {
             display: "inline-flex", alignItems: "center", flexWrap: "wrap", gap: 0,
             borderRadius: 99, padding: "8px 16px", fontSize: 11,
             background: "white", color: "#374151", border: "1px solid #e2e8f0",
-            fontFamily: "'DM Sans', sans-serif", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", marginTop: 12,
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)", marginTop: 12,
           }}>
             <span style={{ fontWeight: 600, marginRight: 10, color: "#1e293b" }}>Proyectos</span>
             {([
@@ -480,8 +480,8 @@ export default function Cronograma() {
                   background: "white", borderRadius: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
                 }}>
                   <div style={{ textAlign: "center" }}>
-                    <p style={{ fontSize: 16, fontWeight: 600, color: "#374151", marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>Sin proyectos</p>
-                    <p style={{ fontSize: 13, color: "#9ca3af", fontFamily: "'DM Sans', sans-serif" }}>No hay proyectos que coincidan con los filtros.</p>
+                    <p style={{ fontSize: 16, fontWeight: 600, color: "#374151", marginBottom: 4 }}>Sin proyectos</p>
+                    <p style={{ fontSize: 13, color: "#9ca3af" }}>No hay proyectos que coincidan con los filtros.</p>
                   </div>
                 </div>
               ) : (
@@ -500,7 +500,7 @@ export default function Cronograma() {
                         borderRight: "1px solid #e2e8f0", background: "#f8fafc",
                         display: "flex", alignItems: "center", padding: "0 14px",
                       }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.10em", color: "#64748b", textTransform: "uppercase", fontFamily: "'DM Sans', sans-serif" }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.10em", color: "#64748b", textTransform: "uppercase" }}>
                           Proyecto / Líder
                         </span>
                       </div>
@@ -516,7 +516,6 @@ export default function Cronograma() {
                               transform: "translate(4px, -50%)",
                               fontSize: 12, fontWeight: 700, letterSpacing: "0.05em",
                               color: "#475569", textTransform: "uppercase",
-                              fontFamily: "'DM Sans', sans-serif",
                               pointerEvents: "none", userSelect: "none",
                             }}>
                               {m.label}
@@ -531,7 +530,6 @@ export default function Cronograma() {
                               background: "#f97316", color: "white",
                               fontWeight: 700, fontSize: 9, whiteSpace: "nowrap",
                               borderRadius: 99, padding: "2px 7px",
-                              fontFamily: "'DM Sans', sans-serif",
                               animation: "today-pulse 2s ease-in-out infinite",
                               zIndex: 5,
                             }}>
@@ -549,7 +547,6 @@ export default function Cronograma() {
                               top: "50%", transform: "translate(-50%, -50%)",
                               fontSize: 9, fontWeight: 300,
                               color: d.isWeekend ? "#d1d5db" : "#94a3b8",
-                              fontFamily: "'DM Sans', sans-serif",
                               pointerEvents: "none", userSelect: "none",
                             }}>
                               {d.label}
@@ -560,7 +557,6 @@ export default function Cronograma() {
                               position: "absolute", left: `${sw.pct}%`, top: "50%",
                               transform: "translate(-50%, -50%)",
                               fontSize: 9, fontWeight: 300, color: "#94a3b8",
-                              fontFamily: "'DM Sans', sans-serif",
                               pointerEvents: "none", userSelect: "none",
                             }}>
                               {sw.label}
@@ -644,7 +640,6 @@ export default function Cronograma() {
                                 background: avatarBg(p.lider.nombre),
                                 display: "flex", alignItems: "center", justifyContent: "center",
                                 fontSize: 9, fontWeight: 700, color: "white",
-                                fontFamily: "'DM Sans', sans-serif",
                               }}>
                                 {initials(p.lider.nombre)}
                               </div>
@@ -652,7 +647,7 @@ export default function Cronograma() {
                                 <p style={{
                                   fontSize: 11.5, fontWeight: 600, color: "#1e293b",
                                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                                  fontFamily: "'DM Sans', sans-serif", margin: "0 0 2px",
+                                  margin: "0 0 2px",
                                 }}>
                                   {p.nombre}
                                 </p>
@@ -661,7 +656,7 @@ export default function Cronograma() {
                                   padding: "1px 6px", borderRadius: 99,
                                   background: (ETAPA_COLOR[p.etapa] ?? "#94a3b8") + "22",
                                   color: ETAPA_COLOR[p.etapa] ?? "#94a3b8",
-                                  fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+                                  whiteSpace: "nowrap",
                                 }}>
                                   {ETAPA_LABEL[p.etapa] ?? p.etapa}
                                 </span>
@@ -793,7 +788,7 @@ export default function Cronograma() {
           display: "flex", alignItems: "center", gap: 16,
           padding: "14px 20px", borderRadius: 12, background: "white",
           boxShadow: "0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04)",
-          fontSize: 13, fontFamily: "'DM Sans', sans-serif", flexWrap: "wrap",
+          fontSize: 13, flexWrap: "wrap",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ width: 28, height: 28, borderRadius: 8, background: "#dbeafe", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -849,7 +844,6 @@ export default function Cronograma() {
                 <p style={{
                   fontSize: 13, fontWeight: 700, color: "white", margin: "0 0 8px",
                   maxWidth: 210, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  fontFamily: "'DM Sans', sans-serif",
                 }}>
                   {tooltip.nombre}
                 </p>
@@ -861,11 +855,10 @@ export default function Cronograma() {
                     background: avatarBg(tooltip.lider),
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: 8, fontWeight: 700, color: "white", flexShrink: 0,
-                    fontFamily: "'DM Sans', sans-serif",
                   }}>
                     {initials(tooltip.lider)}
                   </div>
-                  <span style={{ fontSize: 11, color: "#94a3b8", fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ fontSize: 11, color: "#94a3b8" }}>
                     {tooltip.lider}
                   </span>
                 </div>
@@ -873,8 +866,8 @@ export default function Cronograma() {
                 {/* % Avance */}
                 <div style={{ marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontSize: 10, color: "#64748b", fontFamily: "'DM Sans', sans-serif" }}>Avance temporal</span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: "white", fontFamily: "'DM Sans', sans-serif" }}>
+                    <span style={{ fontSize: 10, color: "#64748b" }}>Avance temporal</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "white" }}>
                       {tooltip.pctAvance}%
                     </span>
                   </div>
@@ -892,7 +885,6 @@ export default function Cronograma() {
                   <p style={{
                     fontSize: 11, fontWeight: 600, margin: "0 0 4px",
                     color: tooltip.diasRestantes < 0 ? "#f87171" : "#e2e8f0",
-                    fontFamily: "'DM Sans', sans-serif",
                   }}>
                     {tooltip.diasRestantes < 0
                       ? `Vencido hace ${Math.abs(tooltip.diasRestantes)} días`
@@ -903,7 +895,7 @@ export default function Cronograma() {
                   <p style={{ fontSize: 10, color: "#64748b", margin: 0, fontFamily: "'JetBrains Mono', monospace" }}>
                     {tooltip.inicio} → {tooltip.fin}
                   </p>
-                  <p style={{ fontSize: 10, color: "#64748b", margin: "3px 0 0", fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ fontSize: 10, color: "#64748b", margin: "3px 0 0" }}>
                     {tooltip.estadoLabel} · {tooltip.numEntregables} entregable{tooltip.numEntregables !== 1 ? "s" : ""}
                   </p>
                 </div>
@@ -918,12 +910,11 @@ export default function Cronograma() {
                 <p style={{
                   fontSize: 12, fontWeight: 700, color: "white", margin: 0,
                   maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  fontFamily: "'DM Sans', sans-serif",
                 }}>
                   {tooltip.nombre}
                 </p>
                 <p style={{ fontSize: 11, color: "#94a3b8", marginTop: 4, fontFamily: "'JetBrains Mono', monospace" }}>{tooltip.fecha}</p>
-                <p style={{ fontSize: 11, color: "#64748b", marginTop: 2, fontFamily: "'DM Sans', sans-serif" }}>{tooltip.estadoLabel}</p>
+                <p style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>{tooltip.estadoLabel}</p>
               </div>
             )}
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -950,7 +941,6 @@ function FilterSelect({ value, onChange, placeholder, children }: {
         background: "transparent", border: "none", outline: "none",
         cursor: "pointer", fontSize: 13, padding: "6px 12px",
         color: value ? "#111827" : "#6b7280",
-        fontFamily: "'DM Sans', sans-serif",
       }}
     >
       <option value="">{placeholder}</option>
@@ -1020,10 +1010,10 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
     <div style={{ background: "white", borderRadius: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.08)", overflow: "hidden" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 24px", borderBottom: "1px solid #f1f5f9" }}>
         <div>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#1e293b", fontFamily: "'DM Sans', sans-serif", margin: 0, textTransform: "capitalize" }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#1e293b", margin: 0, textTransform: "capitalize" }}>
             {monthLabel}
           </h2>
-          <p style={{ fontSize: 12, color: "#94a3b8", margin: "3px 0 0", fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 12, color: "#94a3b8", margin: "3px 0 0" }}>
             Haz clic en un día para ver sus eventos
           </p>
         </div>
@@ -1035,7 +1025,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
               {btn.child}
             </button>
           ))}
-          <button onClick={goToday} style={{ padding: "0 14px", height: 34, borderRadius: 99, border: "1px solid #e2e8f0", background: "white", cursor: "pointer", fontSize: 12, fontWeight: 600, color: "#1e293b", fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s" }} onMouseEnter={e => { e.currentTarget.style.background = "#f8fafc" }} onMouseLeave={e => { e.currentTarget.style.background = "white" }}>
+          <button onClick={goToday} style={{ padding: "0 14px", height: 34, borderRadius: 99, border: "1px solid #e2e8f0", background: "white", cursor: "pointer", fontSize: 12, fontWeight: 600, color: "#1e293b", transition: "all 0.15s" }} onMouseEnter={e => { e.currentTarget.style.background = "#f8fafc" }} onMouseLeave={e => { e.currentTarget.style.background = "white" }}>
             Hoy
           </button>
           <button onClick={nextMonth} style={{ width: 34, height: 34, borderRadius: 99, border: "1px solid #e2e8f0", background: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#374151", transition: "all 0.15s" }} onMouseEnter={e => { e.currentTarget.style.background = "#f8fafc" }} onMouseLeave={e => { e.currentTarget.style.background = "white" }}>
@@ -1047,7 +1037,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
       <div style={{ padding: "16px 24px 0" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", marginBottom: 6 }}>
           {DOW.map(d => (
-            <div key={d} style={{ textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#94a3b8", paddingBottom: 8, fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase" }}>{d}</div>
+            <div key={d} style={{ textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#94a3b8", paddingBottom: 8, textTransform: "uppercase" }}>{d}</div>
           ))}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
@@ -1074,11 +1064,11 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
                 onMouseLeave={e => { if (!isSel && !isToday) e.currentTarget.style.background = "transparent" }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 5 }}>
-                  <span style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: circleColor ? 700 : 400, background: circleColor ?? "transparent", color: circleColor ? "white" : isWeekend ? "#9ca3af" : "#1e293b", fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: circleColor ? 700 : 400, background: circleColor ?? "transparent", color: circleColor ? "white" : isWeekend ? "#9ca3af" : "#1e293b" }}>
                     {dayNum}
                   </span>
                   {hasEvts && (
-                    <span style={{ fontSize: 9, fontWeight: 700, color: "#1d4ed8", background: "#dbeafe", borderRadius: 99, padding: "1px 5px", fontFamily: "'DM Sans', sans-serif" }}>{events.length}</span>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: "#1d4ed8", background: "#dbeafe", borderRadius: 99, padding: "1px 5px" }}>{events.length}</span>
                   )}
                 </div>
                 {hasEvts && (
@@ -1093,7 +1083,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
                       <span key={`d${j}`} style={{ width: 6, height: 6, transform: "rotate(45deg)", flexShrink: 0, background: "#f97316" }} />
                     ))}
                     {events.length > 7 && (
-                      <span style={{ fontSize: 8, color: "#94a3b8", fontFamily: "'DM Sans', sans-serif" }}>+{events.length - 7}</span>
+                      <span style={{ fontSize: 8, color: "#94a3b8" }}>+{events.length - 7}</span>
                     )}
                   </div>
                 )}
@@ -1103,7 +1093,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 24px 0", fontSize: 11, color: "#94a3b8", fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 24px 0", fontSize: 11, color: "#94a3b8" }}>
         <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
           Inicio proyecto
@@ -1127,7 +1117,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
             style={{ overflow: "hidden" }}
           >
             <div style={{ borderTop: "1px solid #f1f5f9", padding: "16px 24px 20px", background: "#f8fafc", marginTop: 16 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 10, fontFamily: "'DM Sans', sans-serif", textTransform: "capitalize" }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 10, textTransform: "capitalize" }}>
                 {new Date(selDay + "T12:00:00").toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1141,8 +1131,8 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
                     <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "white", borderRadius: 10, padding: "10px 14px", border: "1px solid #e2e8f0" }}>
                       <div style={{ width: 8, height: 8, flexShrink: 0, marginTop: 5, borderRadius: isEnt ? 1 : "50%", transform: isEnt ? "rotate(45deg)" : "none", background: isFin ? "transparent" : fixedDot, border: isFin ? `2px solid ${fixedDot}` : "none", boxSizing: "border-box" }} />
                       <div style={{ minWidth: 0 }}>
-                        <p style={{ fontSize: 12, fontWeight: 600, color: "#1e293b", margin: 0, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 480 }}>{ev.nombre}</p>
-                        <p style={{ fontSize: 11, color: "#94a3b8", margin: "2px 0 0", fontFamily: "'DM Sans', sans-serif" }}>{typeLabel} · {stateLabel}</p>
+                        <p style={{ fontSize: 12, fontWeight: 600, color: "#1e293b", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 480 }}>{ev.nombre}</p>
+                        <p style={{ fontSize: 11, color: "#94a3b8", margin: "2px 0 0" }}>{typeLabel} · {stateLabel}</p>
                       </div>
                     </div>
                   )

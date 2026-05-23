@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react"
+﻿import React, { createContext, useContext, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { CheckCircle2, XCircle, AlertTriangle, Info, X } from "lucide-react"
 
@@ -93,7 +93,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 </div>
                 <span style={{
                   fontSize: 13, fontWeight: 500, color: cfg.text, flex: 1,
-                  fontFamily: "'DM Sans', sans-serif",
                 }}>
                   {t.message}
                 </span>

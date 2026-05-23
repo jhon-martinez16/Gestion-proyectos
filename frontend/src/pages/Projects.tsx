@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { api } from "../services/api"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Search, X, ChevronDown, FolderOpen } from "lucide-react"
@@ -108,13 +108,13 @@ export default function Projects() {
   if (loading) return (
     <div style={{ height: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16 }}>
       <div style={{ width: 40, height: 40, border: "3px solid var(--card-border)", borderTopColor: "var(--primary)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-      <p style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>Cargando proyectos…</p>
+      <p style={{ fontSize: 13, color: "var(--text-muted)" }}>Cargando proyectos…</p>
     </div>
   )
 
   if (error) return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", gap: 16 }}>
-      <p style={{ color: "var(--danger)", fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>{error}</p>
+      <p style={{ color: "var(--danger)", fontWeight: 500 }}>{error}</p>
       <button onClick={loadProjects} className="btn-primary">Reintentar</button>
     </div>
   )
@@ -138,7 +138,6 @@ export default function Projects() {
           </h1>
           <p style={{
             fontSize: 14, color: "var(--text-muted)", marginTop: 6,
-            fontFamily: "'DM Sans', sans-serif",
           }}>
             {projects.length} proyecto{projects.length !== 1 ? "s" : ""} en total
           </p>
@@ -153,7 +152,6 @@ export default function Projects() {
             background: "var(--primary)", color: "white",
             border: "none", borderRadius: 50, cursor: "pointer",
             fontSize: 14, fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
             boxShadow: "0 4px 14px rgba(22,163,74,0.25)",
             transition: "var(--transition)",
           }}
@@ -192,7 +190,6 @@ export default function Projects() {
             style={{
               border: "none", outline: "none", background: "transparent",
               fontSize: 14, color: "var(--text-primary)", width: "100%",
-              fontFamily: "'DM Sans', sans-serif",
             }}
           />
           {busqueda && (
@@ -224,7 +221,6 @@ export default function Projects() {
                 fontSize: 13, fontWeight: 500,
                 color: "var(--text-primary)",
                 cursor: "pointer", outline: "none",
-                fontFamily: "'DM Sans', sans-serif",
                 transition: "var(--transition)",
               }}
             >
@@ -248,7 +244,7 @@ export default function Projects() {
                 border: "1px solid rgba(239,68,68,0.2)",
                 borderRadius: "var(--radius-md)", padding: "8px 12px",
                 cursor: "pointer", fontWeight: 500,
-                fontFamily: "'DM Sans', sans-serif", transition: "var(--transition)",
+                transition: "var(--transition)",
               }}
             >
               <X size={13} /> Limpiar
@@ -260,7 +256,6 @@ export default function Projects() {
         {hasFilters && (
           <span style={{
             fontSize: 12, color: "var(--text-muted)",
-            fontFamily: "'DM Sans', sans-serif",
             marginLeft: "auto",
           }}>
             <strong style={{ color: "var(--text-primary)" }}>{filteredProjects.length}</strong> de {projects.length}
@@ -280,7 +275,6 @@ export default function Projects() {
               color: "var(--primary-dark)",
               fontSize: 12, fontWeight: 700,
               padding: "5px 14px", borderRadius: 50,
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               <FolderOpen size={13} />
               {categoria}
@@ -328,10 +322,10 @@ export default function Projects() {
           }}>
             <FolderOpen size={24} color="var(--primary)" />
           </div>
-          <p style={{ fontSize: 16, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 16, fontWeight: 600, color: "var(--text-secondary)" }}>
             No hay proyectos que mostrar
           </p>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
             {hasFilters ? "Intenta cambiar los filtros activos" : "Crea tu primer proyecto"}
           </p>
         </div>
@@ -345,7 +339,7 @@ export default function Projects() {
             <span style={{
               fontSize: 11, fontWeight: 700, color: "var(--text-muted)",
               textTransform: "uppercase", letterSpacing: "0.1em",
-              fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+              whiteSpace: "nowrap",
             }}>
               Proyectos cerrados ({finalizados.length})
             </span>

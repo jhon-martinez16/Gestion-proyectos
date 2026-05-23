@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Check, FolderOpen, Users, CalendarDays,
@@ -61,7 +61,6 @@ function StepIndicator({ current }: { current: number }) {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 color: i <= current ? "white" : "#94a3b8",
                 fontSize: 13, fontWeight: 700,
-                fontFamily: "'DM Sans', sans-serif",
                 transition: "all 0.2s ease",
               }}
             >
@@ -71,7 +70,6 @@ function StepIndicator({ current }: { current: number }) {
               fontSize: 11, fontWeight: i === current ? 600 : 400,
               color: i === current ? "var(--navy)" : i < current ? "var(--primary)" : "var(--text-muted)",
               whiteSpace: "nowrap",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {label}
             </span>
@@ -100,8 +98,7 @@ function FormField({
       <label style={{
         display: "flex", alignItems: "center", gap: 5,
         fontSize: 13, fontWeight: 500, color: "var(--text-secondary)",
-        marginBottom: 6, fontFamily: "'DM Sans', sans-serif",
-      }}>
+        marginBottom: 6,      }}>
         {label}
         {required && <span style={{ color: "var(--danger)", marginLeft: 2 }}>*</span>}
         {optional && (
@@ -117,7 +114,6 @@ function FormField({
       {hint && (
         <p style={{
           fontSize: 11, color: "var(--text-muted)", marginTop: 4,
-          fontFamily: "'DM Sans', sans-serif",
         }}>
           {hint}
         </p>
@@ -146,13 +142,11 @@ function CalculatedDateField({
           <div style={{ flex: 1 }}>
             <span style={{
               fontSize: 14, fontWeight: 500, color: "var(--text-primary)",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {value ? formatDateLabel(value) : "—"}
             </span>
             <p style={{
               fontSize: 11, color: "var(--text-muted)", marginTop: 1,
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               Calculado: 6 meses después del inicio
             </p>
@@ -164,7 +158,6 @@ function CalculatedDateField({
               background: "rgba(30,58,110,0.08)",
               border: "none", borderRadius: 6,
               padding: "5px 10px", cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif",
               display: "flex", alignItems: "center", gap: 4,
             }}
           >
@@ -183,7 +176,6 @@ function CalculatedDateField({
             <AlertCircle size={13} color="var(--warning)" />
             <span style={{
               fontSize: 11, color: "#92400e",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               Usando fecha personalizada
             </span>
@@ -192,7 +184,7 @@ function CalculatedDateField({
               style={{
                 marginLeft: "auto", fontSize: 11, color: "var(--warning)",
                 background: "none", border: "none", cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", textDecoration: "underline",
+                textDecoration: "underline",
               }}
             >
               Restaurar automático
@@ -221,13 +213,12 @@ function SummaryRow({ label, value, mono }: { label: string; value: string; mono
     }}>
       <span style={{
         width: 140, fontSize: 12, color: "var(--text-muted)", flexShrink: 0,
-        fontFamily: "'DM Sans', sans-serif",
       }}>
         {label}
       </span>
       <span style={{
         fontSize: 13, fontWeight: 500, color: "var(--text-primary)", flex: 1,
-        fontFamily: mono ? "'JetBrains Mono', monospace" : "'DM Sans', sans-serif",
+        fontFamily: mono ? "'JetBrains Mono', monospace" : undefined,
       }}>
         {value || "—"}
       </span>
@@ -344,7 +335,7 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                 </div>
                 <h2 style={{
                   fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-                  fontFamily: "'DM Sans', sans-serif", margin: 0,
+                  margin: 0,
                 }}>
                   Editar Proyecto
                 </h2>
@@ -372,7 +363,7 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
 
           <div style={{ padding: "16px 24px 24px", borderTop: "1px solid var(--card-border)", marginTop: 8 }}>
             {error && (
-              <p style={{ fontSize: 13, color: "var(--danger)", marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>
+              <p style={{ fontSize: 13, color: "var(--danger)", marginBottom: 12 }}>
                 {error}
               </p>
             )}
@@ -434,7 +425,7 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
             </div>
             <h2 style={{
               fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-              fontFamily: "'DM Sans', sans-serif", margin: 0,
+              margin: 0,
             }}>
               Nuevo Proyecto
             </h2>
@@ -509,7 +500,6 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                   <p style={{
                     fontSize: 11, fontWeight: 700, textTransform: "uppercase",
                     letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: -4,
-                    fontFamily: "'DM Sans', sans-serif",
                   }}>
                     Requerimientos iniciales
                   </p>
@@ -542,7 +532,6 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                           <AlertCircle size={13} color="var(--navy)" style={{ marginTop: 1, flexShrink: 0 }} />
                           <span style={{
                             fontSize: 12, color: "var(--navy)",
-                            fontFamily: "'DM Sans', sans-serif",
                           }}>
                             El proyecto no avanzará a Kick-off sin contrato firmado.
                           </span>
@@ -625,13 +614,11 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                         </div>
                         <span style={{
                           fontSize: 12, fontWeight: 500, color: "var(--text-primary)",
-                          fontFamily: "'DM Sans', sans-serif",
                         }}>
                           {u.nombre}
                         </span>
                         <span style={{
                           fontSize: 10, color: "var(--text-muted)",
-                          fontFamily: "'DM Sans', sans-serif",
                         }}>
                           {i === 0 ? "Líder" : "Socio 2"}
                         </span>
@@ -686,7 +673,6 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                     <FolderOpen size={16} color="var(--navy)" />
                     <span style={{
                       fontSize: 14, fontWeight: 700, color: "var(--navy)",
-                      fontFamily: "'DM Sans', sans-serif",
                     }}>
                       {nombre}
                     </span>
@@ -713,7 +699,6 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
                   <Check size={14} color="var(--primary)" />
                   <span style={{
                     fontSize: 12, color: "var(--primary-dark)",
-                    fontFamily: "'DM Sans', sans-serif",
                   }}>
                     Todo listo. Haz clic en "Crear Proyecto" para continuar.
                   </span>
@@ -733,7 +718,6 @@ export default function ProjectModal({ onClose, proyecto }: Props) {
           {error && (
             <p style={{
               fontSize: 13, color: "var(--danger)", marginBottom: 12,
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {error}
             </p>

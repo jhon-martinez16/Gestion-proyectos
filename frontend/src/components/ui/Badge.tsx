@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+﻿import type { ReactNode } from "react"
 
 interface Props {
   variant: "success" | "warning" | "danger" | "info" | "neutral"
@@ -27,7 +27,6 @@ export default function Badge({ variant, children, dot = false }: Props) {
       fontWeight: 600,
       background: cfg.bg,
       color: cfg.text,
-      fontFamily: "'DM Sans', sans-serif",
       whiteSpace: "nowrap",
     }}>
       {dot && (

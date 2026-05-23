@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+﻿import React, { useEffect, useState } from "react"
 import { api } from "../services/api"
 import Modal from "../components/ui/Modal"
 
@@ -17,13 +17,12 @@ const pvInputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "var(--content-bg)", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 const pvLabelStyle: React.CSSProperties = {
   fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
-  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
+  display: "block", marginBottom: 6,
 }
 
 function ProveedorModal({
@@ -81,11 +80,11 @@ function ProveedorModal({
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
           <h2 style={{
             fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+            margin: 0, lineHeight: 1.3,
           }}>
             {editando ? "Editar Proveedor" : "Nuevo Proveedor"}
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             {editando ? "Actualiza los datos del proveedor" : "Registra un nuevo proveedor en el sistema"}
           </p>
         </div>
@@ -175,7 +174,7 @@ function ProveedorModal({
           </div>
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>{error}</p>
           )}
         </div>
 
@@ -187,7 +186,7 @@ function ProveedorModal({
               padding: "9px 20px", borderRadius: 10,
               border: "1.5px solid var(--card-border)", background: "white",
               color: "var(--text-secondary)", fontSize: 14, fontWeight: 500,
-              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+              cursor: "pointer", transition: "all 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -202,7 +201,6 @@ function ProveedorModal({
               background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
               color: "white", fontSize: 14, fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "'DM Sans', sans-serif",
               opacity: loading ? 0.6 : 1, transition: "opacity 0.15s",
             }}
           >

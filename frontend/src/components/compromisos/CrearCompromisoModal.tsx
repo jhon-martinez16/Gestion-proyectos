@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+﻿import { useState, useEffect } from "react"
 import { api } from "../../services/api"
 import Modal from "../ui/Modal"
 
@@ -13,14 +13,13 @@ const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "var(--content-bg)", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 
 const labelStyle: React.CSSProperties = {
   fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
-  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
+  display: "block", marginBottom: 6,
 }
 
 type Prioridad = "BAJA" | "MEDIA" | "ALTA"
@@ -95,11 +94,11 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
           <h2 style={{
             fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+            margin: 0, lineHeight: 1.3,
           }}>
             {editando ? "Reprogramar Compromiso" : "Nuevo Compromiso"}
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             {editando
               ? "Establece una nueva fecha límite para este compromiso"
               : "Define un compromiso y asígnalo a un responsable"}
@@ -130,10 +129,10 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
               padding: "12px 14px", borderRadius: 10,
               background: "var(--content-bg)", border: "1px solid var(--card-border)",
             }}>
-              <p style={{ fontSize: 12, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>
+              <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 4 }}>
                 Compromiso a reprogramar
               </p>
-              <p style={{ fontSize: 14, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
+              <p style={{ fontSize: 14, color: "var(--text-primary)", fontWeight: 500 }}>
                 {compromiso.descripcion}
               </p>
             </div>
@@ -158,7 +157,6 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
                         background: active ? cfg.bg : "var(--content-bg)",
                         color: active ? cfg.color : "var(--text-muted)",
                         fontSize: 12, fontWeight: active ? 700 : 500,
-                        fontFamily: "'DM Sans', sans-serif",
                         transition: "all 0.15s",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
                       }}
@@ -211,7 +209,7 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
           )}
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>
               {error}
             </p>
           )}
@@ -226,7 +224,7 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
               border: "1.5px solid var(--card-border)",
               background: "white", color: "var(--text-secondary)",
               fontSize: 14, fontWeight: 500, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+              transition: "all 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -239,8 +237,7 @@ export default function CompromisoModal({ proyectoId, onClose, compromiso, reuni
               padding: "9px 20px", borderRadius: 10, border: "none",
               background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
               color: "white", fontSize: 14, fontWeight: 600,
-              cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-              transition: "opacity 0.15s",
+              cursor: "pointer",              transition: "opacity 0.15s",
             }}
           >
             {editando ? "Reprogramar" : "Crear Compromiso"}

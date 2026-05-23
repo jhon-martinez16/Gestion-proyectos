@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { api } from "../../services/api"
 import Modal from "../ui/Modal"
 import CrearCompromisoModal from "../compromisos/CrearCompromisoModal"
@@ -90,14 +90,14 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
             <div>
               <p style={{
                 fontSize: 11, fontWeight: 700, color: "var(--text-muted)",
-                fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.08em",
+                letterSpacing: "0.08em",
                 textTransform: "uppercase", marginBottom: 4,
               }}>
                 Reunión de seguimiento
               </p>
               <h2 style={{
                 fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-                fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+                margin: 0, lineHeight: 1.3,
               }}>
                 {new Date(reunion.fecha).toLocaleDateString("es-CO", {
                   weekday: "long", year: "numeric", month: "long", day: "numeric",
@@ -108,8 +108,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
               <span style={{
                 padding: "5px 12px", borderRadius: 99, flexShrink: 0,
                 background: "#dcfce7", color: "#15803d", border: "1px solid #bbf7d0",
-                fontSize: 11, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                display: "flex", alignItems: "center", gap: 5,
+                fontSize: 11, fontWeight: 700,                display: "flex", alignItems: "center", gap: 5,
               }}>
                 <CheckCircle2 size={12} /> Calidad aprobada
               </span>
@@ -121,8 +120,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                   padding: "5px 12px", borderRadius: 99, flexShrink: 0, cursor: "pointer",
                   background: "rgba(249,115,22,0.10)", color: "var(--accent)",
                   border: "1px solid rgba(249,115,22,0.25)",
-                  fontSize: 11, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                  transition: "all 0.15s", opacity: aprobando ? 0.6 : 1,
+                  fontSize: 11, fontWeight: 700,                  transition: "all 0.15s", opacity: aprobando ? 0.6 : 1,
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = "rgba(249,115,22,0.18)")}
                 onMouseLeave={e => (e.currentTarget.style.background = "rgba(249,115,22,0.10)")}
@@ -142,7 +140,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                   <FileText size={12} color="var(--navy, #1e3a6e)" />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--navy, #1e3a6e)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     Objetivos
                   </span>
                 </div>
@@ -150,7 +148,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                   <IaButton onClick={() => setShowActaModal(true)} loading={aplicandoActa} />
                 )}
               </div>
-              <p style={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: 14, color: "var(--text-secondary)", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
                 {reunion.objetivos}
               </p>
             </div>
@@ -163,7 +161,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                   <ArrowRight size={12} color="var(--accent)" />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     Próximos pasos
                   </span>
                 </div>
@@ -171,7 +169,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                   <IaButton onClick={() => setShowActaModal(true)} loading={aplicandoActa} />
                 )}
               </div>
-              <p style={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: 14, color: "var(--text-secondary)", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
                 {reunion.proximospasos || <span style={{ color: "var(--text-muted)", fontStyle: "italic" }}>Sin próximos pasos registrados</span>}
               </p>
             </div>
@@ -185,10 +183,10 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
               }}>
                 <Clock size={14} color="var(--text-muted)" />
                 <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", margin: 0 }}>
                     Próxima reunión
                   </p>
-                  <p style={{ fontSize: 13, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0, fontWeight: 500 }}>
+                  <p style={{ fontSize: 13, color: "var(--text-primary)", margin: 0, fontWeight: 500 }}>
                     {new Date(reunion.proximaReunion).toLocaleDateString("es-CO", {
                       weekday: "long", year: "numeric", month: "long", day: "numeric",
                     })}
@@ -201,12 +199,12 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
                 <Calendar size={12} color="var(--navy, #1e3a6e)" />
-                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--navy, #1e3a6e)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                   Compromisos asociados ({reunion.compromisos.length})
                 </span>
               </div>
               {reunion.compromisos.length === 0 ? (
-                <p style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", padding: "12px 0" }}>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", padding: "12px 0" }}>
                   Sin compromisos vinculados a esta reunión.
                 </p>
               ) : (
@@ -220,7 +218,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                         border: "1px solid var(--card-border)",
                       }}>
                         <div style={{ minWidth: 0, flex: 1 }}>
-                          <p style={{ fontSize: 13, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          <p style={{ fontSize: 13, color: "var(--text-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {c.descripcion}
                           </p>
                           <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace", margin: 0, marginTop: 2 }}>
@@ -230,8 +228,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                         <span style={{
                           padding: "3px 8px", borderRadius: 99, flexShrink: 0,
                           background: est.bg, color: est.color,
-                          fontSize: 10, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                        }}>
+                          fontSize: 10, fontWeight: 700,                        }}>
                           {est.label}
                         </span>
                       </div>
@@ -251,8 +248,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                 padding: "8px 14px", borderRadius: 10, cursor: "pointer",
                 background: "rgba(249,115,22,0.08)", color: "var(--accent)",
                 border: "1px solid rgba(249,115,22,0.20)",
-                fontSize: 13, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-                transition: "all 0.15s",
+                fontSize: 13, fontWeight: 600,                transition: "all 0.15s",
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(249,115,22,0.14)")}
               onMouseLeave={e => (e.currentTarget.style.background = "rgba(249,115,22,0.08)")}
@@ -267,7 +263,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                 border: "1.5px solid var(--card-border)",
                 background: "white", color: "var(--text-secondary)",
                 fontSize: 14, fontWeight: 500, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+                transition: "all 0.15s",
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
               onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -303,7 +299,7 @@ function IaButton({ onClick, loading }: { onClick: () => void; loading?: boolean
         padding: "3px 9px", borderRadius: 7, border: "none",
         background: "rgba(249,115,22,0.10)", color: "var(--accent, #f97316)",
         fontSize: 11, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer",
-        fontFamily: "'DM Sans', sans-serif", transition: "background 0.15s",
+        transition: "background 0.15s",
         flexShrink: 0, opacity: loading ? 0.5 : 1,
       }}
       onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = "rgba(249,115,22,0.20)" }}

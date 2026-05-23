@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { api } from "../../services/api"
 import Modal from "../ui/Modal"
 import { CheckCircle2, RotateCcw, Package } from "lucide-react"
@@ -15,8 +15,7 @@ const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "white", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 
@@ -73,21 +72,21 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
             </div>
             <h2 style={{
               fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-              fontFamily: "'DM Sans', sans-serif", margin: 0,
+              margin: 0,
             }}>
               Entregable vencido
             </h2>
           </div>
           <p style={{
             fontSize: 14, fontWeight: 600, color: "var(--text-secondary)",
-            fontFamily: "'DM Sans', sans-serif", paddingLeft: 42,
+            paddingLeft: 42,
           }}>
             {entregable.nombre}
           </p>
           {entregable.descripcion && (
             <p style={{
               fontSize: 13, color: "var(--text-muted)",
-              fontFamily: "'DM Sans', sans-serif", paddingLeft: 42, marginTop: 2,
+              paddingLeft: 42, marginTop: 2,
             }}>
               {entregable.descripcion}
             </p>
@@ -113,8 +112,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                 width: "100%", display: "flex", alignItems: "center", gap: 12,
                 padding: "12px 16px", textAlign: "left", cursor: "pointer", border: "none",
                 background: action === "COMPLETADO" ? "#f0fdf4" : "var(--content-bg)",
-                transition: "background 0.15s", fontFamily: "'DM Sans', sans-serif",
-              }}
+                transition: "background 0.15s",              }}
             >
               <div style={{
                 width: 28, height: 28, borderRadius: 8,
@@ -145,7 +143,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                   <div style={{ padding: "12px 16px 14px", borderTop: "1px solid #dcfce7", background: "#f0fdf4" }}>
                     <p style={{
                       fontSize: 12, color: "#15803d",
-                      fontFamily: "'DM Sans', sans-serif", marginBottom: 10,
+                      marginBottom: 10,
                     }}>
                       Se registrará en el historial con los días de retraso correspondientes.
                     </p>
@@ -156,7 +154,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                         width: "100%", padding: "10px", borderRadius: 10,
                         border: "none", background: "#16a34a", color: "white",
                         fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
-                        fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+                        opacity: loading ? 0.6 : 1,
                         transition: "opacity 0.15s",
                       }}
                     >
@@ -179,8 +177,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                 width: "100%", display: "flex", alignItems: "center", gap: 12,
                 padding: "12px 16px", textAlign: "left", cursor: "pointer", border: "none",
                 background: action === "REPROGRAMAR" ? "#eff6ff" : "var(--content-bg)",
-                transition: "background 0.15s", fontFamily: "'DM Sans', sans-serif",
-              }}
+                transition: "background 0.15s",              }}
             >
               <div style={{
                 width: 28, height: 28, borderRadius: 8,
@@ -211,7 +208,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                   <div style={{ padding: "12px 16px 14px", borderTop: "1px solid #dbeafe", background: "#eff6ff" }}>
                     <label style={{
                       fontSize: 12, fontWeight: 600, color: "#1d4ed8",
-                      fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8,
+                      display: "block", marginBottom: 8,
                     }}>
                       Nueva fecha de entrega
                     </label>
@@ -224,7 +221,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                     />
                     <label style={{
                       fontSize: 12, fontWeight: 600, color: "#1d4ed8",
-                      fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8, marginTop: 10,
+                      display: "block", marginBottom: 8, marginTop: 10,
                     }}>
                       Motivo
                       <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
@@ -243,7 +240,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
                         width: "100%", marginTop: 10, padding: "10px", borderRadius: 10,
                         border: "none", background: "var(--info)", color: "white",
                         fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
-                        fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+                        opacity: loading ? 0.6 : 1,
                         transition: "opacity 0.15s",
                       }}
                     >
@@ -256,7 +253,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
           </div>
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>
               {error}
             </p>
           )}
@@ -268,7 +265,6 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
             style={{
               background: "none", border: "none", cursor: "pointer",
               fontSize: 12, color: "var(--text-muted)",
-              fontFamily: "'DM Sans', sans-serif",
               textDecoration: "underline", textUnderlineOffset: 2,
               transition: "color 0.15s",
             }}

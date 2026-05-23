@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion"
+﻿import { motion, AnimatePresence } from "framer-motion"
 
 interface Props {
   checked: boolean
@@ -19,14 +19,12 @@ export default function SmartToggle({ checked, onChange, labelOn, labelOff, desc
       <div style={{ flex: 1 }}>
         <span style={{
           fontSize: 14, fontWeight: 500, color: "var(--text-primary)",
-          fontFamily: "'DM Sans', sans-serif",
         }}>
           {checked ? labelOn : (labelOff ?? labelOn)}
         </span>
         {description && (
           <p style={{
             fontSize: 12, color: "var(--text-muted)", marginTop: 2,
-            fontFamily: "'DM Sans', sans-serif",
           }}>
             {description}
           </p>
@@ -43,7 +41,6 @@ export default function SmartToggle({ checked, onChange, labelOn, labelOff, desc
             style={{
               fontSize: 12, fontWeight: 600,
               color: checked ? "var(--primary)" : "var(--text-muted)",
-              fontFamily: "'DM Sans', sans-serif",
             }}
           >
             {checked ? "✓ Sí" : "No"}

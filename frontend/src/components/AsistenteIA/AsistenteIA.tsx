@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+﻿import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { api } from "../../services/api"
 
@@ -121,7 +121,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
           color: "white",
           fontSize: 14,
           fontWeight: 700,
-          fontFamily: "'DM Sans', sans-serif",
           cursor: "pointer",
           boxShadow: "0 4px 20px rgba(0,0,0,0.22)",
           transition: "background 0.2s",
@@ -186,7 +185,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
                     fontSize: 14,
                     fontWeight: 700,
                     color: "white",
-                    fontFamily: "'DM Sans', sans-serif",
                   }}
                 >
                   Asistente IA
@@ -196,7 +194,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
                     margin: 0,
                     fontSize: 11,
                     color: "rgba(255,255,255,0.45)",
-                    fontFamily: "'DM Sans', sans-serif",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -244,7 +241,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
                     style={{
                       fontSize: 12,
                       color: "rgba(255,255,255,0.45)",
-                      fontFamily: "'DM Sans', sans-serif",
                       textAlign: "center",
                       margin: "8px 0 12px",
                     }}
@@ -266,7 +262,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
                         padding: "10px 14px",
                         color: "rgba(255,255,255,0.85)",
                         fontSize: 13,
-                        fontFamily: "'DM Sans', sans-serif",
                         cursor: "pointer",
                         textAlign: "left",
                         transition: "background 0.15s",
@@ -305,7 +300,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
                         m.role === "user" ? "var(--primary, #f97316)" : "#2d3e50",
                       color: "white",
                       fontSize: 13,
-                      fontFamily: "'DM Sans', sans-serif",
                       lineHeight: 1.55,
                       whiteSpace: "pre-wrap",
                       wordBreak: "break-word",
@@ -379,7 +373,6 @@ export default function AsistenteIA({ project, entregables, compromisos }: Props
                   background: "rgba(255,255,255,0.07)",
                   color: "white",
                   fontSize: 13,
-                  fontFamily: "'DM Sans', sans-serif",
                   outline: "none",
                   transition: "border-color 0.15s",
                 }}

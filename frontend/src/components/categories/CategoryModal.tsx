@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import Modal from "../ui/Modal"
 import { api } from "../../services/api"
 
@@ -17,8 +17,7 @@ const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "var(--content-bg)", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 
@@ -56,11 +55,11 @@ export default function CategoryModal({ onClose, categoria }: Props) {
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
           <h2 style={{
             fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+            margin: 0, lineHeight: 1.3,
           }}>
             {editando ? "Editar Categoría" : "Nueva Categoría"}
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             {editando ? "Modifica los datos de la categoría" : "Agrega una nueva categoría de proyectos"}
           </p>
         </div>
@@ -68,7 +67,7 @@ export default function CategoryModal({ onClose, categoria }: Props) {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Nombre */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
               Nombre <span style={{ color: "var(--danger)", marginLeft: 2 }}>*</span>
             </label>
             <input
@@ -84,7 +83,7 @@ export default function CategoryModal({ onClose, categoria }: Props) {
 
           {/* Color + preview */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
               Color de identificación
             </label>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -109,7 +108,7 @@ export default function CategoryModal({ onClose, categoria }: Props) {
                   width: 10, height: 10, borderRadius: "50%",
                   background: color, flexShrink: 0,
                 }} />
-                <span style={{ fontSize: 13, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
+                <span style={{ fontSize: 13, color: "var(--text-primary)", fontWeight: 500 }}>
                   {nombre || "Vista previa"}
                 </span>
               </div>
@@ -117,7 +116,7 @@ export default function CategoryModal({ onClose, categoria }: Props) {
           </div>
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>
               {error}
             </p>
           )}
@@ -132,7 +131,7 @@ export default function CategoryModal({ onClose, categoria }: Props) {
               border: "1.5px solid var(--card-border)",
               background: "white", color: "var(--text-secondary)",
               fontSize: 14, fontWeight: 500, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+              transition: "all 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -147,7 +146,7 @@ export default function CategoryModal({ onClose, categoria }: Props) {
               background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
               color: "white", fontSize: 14, fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+              opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
             }}
           >

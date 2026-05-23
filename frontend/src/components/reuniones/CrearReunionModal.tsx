@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { api } from "../../services/api"
 import Modal from "../ui/Modal"
 import { CalendarDays, FileText, ArrowRight, Clock, Sparkles } from "lucide-react"
@@ -23,8 +23,7 @@ const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "var(--content-bg)", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 
@@ -36,7 +35,7 @@ const textareaStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
-  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
+  display: "block", marginBottom: 6,
 }
 
 export default function CrearReunionModal({ proyectoId, onClose, reunion, proyecto }: Props) {
@@ -109,11 +108,11 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
           <h2 style={{
             fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+            margin: 0, lineHeight: 1.3,
           }}>
             {editando ? "Editar Reunión" : "Nueva Reunión de Seguimiento"}
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             {editando ? "Actualiza los datos de la reunión" : "Registra los puntos tratados y próximos pasos"}
           </p>
         </div>
@@ -127,7 +126,7 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <CalendarDays size={14} color="var(--navy, #1e3a6e)" />
-              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--navy, #1e3a6e)", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                 Fecha
               </span>
             </div>
@@ -151,7 +150,7 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <FileText size={14} color="var(--navy, #1e3a6e)" />
-              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--navy, #1e3a6e)", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                 Contenido
               </span>
             </div>
@@ -207,7 +206,7 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <Clock size={14} color="var(--text-muted)" />
-              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                 Seguimiento
               </span>
             </div>
@@ -226,7 +225,7 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
           </div>
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>
               {error}
             </p>
           )}
@@ -241,7 +240,7 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
               border: "1.5px solid var(--card-border)",
               background: "white", color: "var(--text-secondary)",
               fontSize: 14, fontWeight: 500, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+              transition: "all 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -256,7 +255,7 @@ export default function CrearReunionModal({ proyectoId, onClose, reunion, proyec
               background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
               color: "white", fontSize: 14, fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+              opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
               display: "flex", alignItems: "center", gap: 6,
             }}
@@ -285,7 +284,7 @@ function IaButton({ onClick }: { onClick: () => void }) {
         padding: "3px 9px", borderRadius: 7, border: "none",
         background: "rgba(249,115,22,0.10)", color: "var(--accent, #f97316)",
         fontSize: 11, fontWeight: 700, cursor: "pointer",
-        fontFamily: "'DM Sans', sans-serif", transition: "background 0.15s",
+        transition: "background 0.15s",
         flexShrink: 0,
       }}
       onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(249,115,22,0.20)")}

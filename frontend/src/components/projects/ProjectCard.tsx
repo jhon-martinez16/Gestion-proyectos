@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+﻿import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import { Calendar, Edit2, Trash2 } from "lucide-react"
 
@@ -87,7 +87,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
             fontSize: 15, fontWeight: 600,
             color: esFinalizado ? "var(--text-muted)" : "var(--text-primary)",
             lineHeight: 1.3, flex: 1, minWidth: 0,
-            fontFamily: "'DM Sans', sans-serif",
           }}>
             {proyecto.nombre}
           </h2>
@@ -97,7 +96,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
               padding: "3px 9px", borderRadius: 50,
               fontSize: 11, fontWeight: 600,
               background: estadoCfg.badge.bg, color: estadoCfg.badge.text,
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: estadoCfg.badge.dot }} />
               {esFinalizado ? "Cerrado" : estadoCfg.label}
@@ -107,7 +105,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
                 display: "inline-flex", padding: "3px 9px", borderRadius: 50,
                 fontSize: 11, fontWeight: 600,
                 background: etapaCfg.bg, color: etapaCfg.text,
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 {etapaCfg.label}
               </span>
@@ -119,7 +116,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <span style={{
             fontSize: 12, fontWeight: 600, color: "var(--primary)",
-            fontFamily: "'DM Sans', sans-serif",
           }}>
             {proyecto.categoria?.nombre}
           </span>
@@ -138,7 +134,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
                   color: "white", fontSize: 10, fontWeight: 700,
                   marginLeft: i > 0 ? -8 : 0,
                   boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
-                  fontFamily: "'DM Sans', sans-serif",
                 }}>
                 {initials(u.nombre)}
               </div>
@@ -166,7 +161,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
               <span style={{
                 fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 50,
                 background: "var(--danger-light)", color: "var(--danger)",
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 {compromisosVencidos} compromiso{compromisosVencidos > 1 ? "s" : ""}
               </span>
@@ -175,7 +169,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
               <span style={{
                 fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 50,
                 background: "var(--danger-light)", color: "var(--danger)",
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 {advertenciasCriticas} crítica{advertenciasCriticas > 1 ? "s" : ""}
               </span>
@@ -184,7 +177,6 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
               <span style={{
                 fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 50,
                 background: "var(--warning-light)", color: "var(--warning)",
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 {advertenciasMedias} media{advertenciasMedias > 1 ? "s" : ""}
               </span>
@@ -212,7 +204,7 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
             fontSize: 12, fontWeight: 600, cursor: "pointer",
             background: "var(--info-light)", color: "var(--info)",
             border: "1px solid rgba(59,130,246,0.15)",
-            fontFamily: "'DM Sans', sans-serif", transition: "var(--transition)",
+            transition: "var(--transition)",
           }}
           onMouseEnter={e => { (e.currentTarget.style.background = "var(--info)"); (e.currentTarget.style.color = "white") }}
           onMouseLeave={e => { (e.currentTarget.style.background = "var(--info-light)"); (e.currentTarget.style.color = "var(--info)") }}
@@ -231,7 +223,7 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
               fontSize: 12, fontWeight: 600, cursor: "pointer",
               background: "var(--danger-light)", color: "var(--danger)",
               border: "1px solid rgba(239,68,68,0.15)",
-              fontFamily: "'DM Sans', sans-serif", transition: "var(--transition)",
+              transition: "var(--transition)",
             }}
             onMouseEnter={e => { (e.currentTarget.style.background = "var(--danger)"); (e.currentTarget.style.color = "white") }}
             onMouseLeave={e => { (e.currentTarget.style.background = "var(--danger-light)"); (e.currentTarget.style.color = "var(--danger)") }}

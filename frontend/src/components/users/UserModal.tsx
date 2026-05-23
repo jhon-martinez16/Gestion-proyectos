@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import Modal from "../ui/Modal"
 import { api } from "../../services/api"
 
@@ -18,14 +18,13 @@ const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "var(--content-bg)", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 
 const labelStyle: React.CSSProperties = {
   fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
-  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
+  display: "block", marginBottom: 6,
 }
 
 const ROL_OPTIONS = [
@@ -80,11 +79,11 @@ export default function UserModal({ onClose, usuario }: Props) {
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
           <h2 style={{
             fontSize: 18, fontWeight: 700, color: "var(--text-primary)",
-            fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3,
+            margin: 0, lineHeight: 1.3,
           }}>
             {editando ? "Editar Usuario" : "Nuevo Usuario"}
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             {editando ? "Actualiza el nombre o email del usuario" : "Crea una nueva cuenta de acceso al sistema"}
           </p>
         </div>
@@ -183,10 +182,10 @@ export default function UserModal({ onClose, usuario }: Props) {
                         )}
                       </div>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
                           {opt.label}
                         </div>
-                        <div style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
                           {opt.desc}
                         </div>
                       </div>
@@ -198,7 +197,7 @@ export default function UserModal({ onClose, usuario }: Props) {
           )}
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>
               {error}
             </p>
           )}
@@ -213,7 +212,7 @@ export default function UserModal({ onClose, usuario }: Props) {
               border: "1.5px solid var(--card-border)",
               background: "white", color: "var(--text-secondary)",
               fontSize: 14, fontWeight: 500, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+              transition: "all 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -228,7 +227,7 @@ export default function UserModal({ onClose, usuario }: Props) {
               background: editando ? "var(--accent)" : "var(--navy, #1e3a6e)",
               color: "white", fontSize: 14, fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+              opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
             }}
           >

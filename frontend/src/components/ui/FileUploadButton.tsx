@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+﻿import { useRef, useState } from "react"
 import { api } from "../../services/api"
 import { motion, AnimatePresence } from "framer-motion"
 import { Upload, FileText, X } from "lucide-react"
@@ -106,7 +106,6 @@ export default function FileUploadButton({
             <div style={{
               fontSize: 13, fontWeight: 600, color: "#14532d",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {nombre}
             </div>
@@ -115,8 +114,7 @@ export default function FileUploadButton({
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                fontSize: 11, color: "#16a34a", fontFamily: "'DM Sans', sans-serif",
-                textDecoration: "none",
+                fontSize: 11, color: "#16a34a",                textDecoration: "none",
               }}
               onMouseEnter={e => (e.currentTarget.style.textDecoration = "underline")}
               onMouseLeave={e => (e.currentTarget.style.textDecoration = "none")}
@@ -130,8 +128,7 @@ export default function FileUploadButton({
               title="Cambiar archivo"
               style={{
                 background: "none", border: "none", cursor: "pointer",
-                fontSize: 11, color: "#16a34a", fontFamily: "'DM Sans', sans-serif",
-                textDecoration: "underline", padding: 0,
+                fontSize: 11, color: "#16a34a",                textDecoration: "underline", padding: 0,
               }}
             >
               Cambiar
@@ -196,7 +193,7 @@ export default function FileUploadButton({
             }} />
           </div>
           <div>
-            <p style={{ fontSize: 13, fontWeight: 600, color: "var(--navy, #1e3a6e)", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: "var(--navy, #1e3a6e)", margin: 0 }}>
               Subiendo... {uploadProgress}%
             </p>
             <div style={{
@@ -224,11 +221,10 @@ export default function FileUploadButton({
             <p style={{
               fontSize: 13, fontWeight: 600, margin: 0,
               color: dragOver ? "var(--navy, #1e3a6e)" : "#374151",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {dragOver ? "Suelta el archivo aquí" : label}
             </p>
-            <p style={{ fontSize: 11, color: "#94a3b8", margin: "3px 0 0", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 11, color: "#94a3b8", margin: "3px 0 0" }}>
               {hint}
             </p>
           </div>

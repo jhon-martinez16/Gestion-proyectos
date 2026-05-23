@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+﻿import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { api } from "../services/api"
 import { Sparkles, Copy, Check, FileText, Target, Package, CalendarDays, Briefcase, X, Plus, Wand2 } from "lucide-react"
@@ -85,10 +85,10 @@ function EmptyState() {
         <path d="M57 64 L62 69 L71 58" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
       <div>
-        <p style={{ fontSize: 16, fontWeight: 600, color: "#374151", fontFamily: "'DM Sans', sans-serif", margin: "0 0 8px" }}>
+        <p style={{ fontSize: 16, fontWeight: 600, color: "#374151", margin: "0 0 8px" }}>
           Tu propuesta aparecerá aquí
         </p>
-        <p style={{ fontSize: 13, color: "#9ca3af", fontFamily: "'DM Sans', sans-serif", margin: 0, maxWidth: 280, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13, color: "#9ca3af", margin: 0, maxWidth: 280, lineHeight: 1.6 }}>
           Completa el formulario a la izquierda y haz clic en "Generar Propuesta con IA"
         </p>
       </div>
@@ -216,14 +216,13 @@ export default function Propuestas() {
     width: "100%", padding: "10px 14px", borderRadius: 10,
     border: "1.5px solid #e2e8f0",
     background: "white", color: "#374151",
-    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-    outline: "none", transition: "border-color 0.15s, box-shadow 0.15s",
+    fontSize: 14,    outline: "none", transition: "border-color 0.15s, box-shadow 0.15s",
     boxSizing: "border-box",
   }
 
   const labelBase: React.CSSProperties = {
     fontSize: 13, fontWeight: 600, color: "#374151",
-    fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 7,
+    display: "block", marginBottom: 7,
   }
 
   const canSugerir = !cargandoSug && form.tipoProyecto.trim().length >= 3
@@ -253,10 +252,10 @@ export default function Propuestas() {
             <Sparkles size={22} color="#f97316" />
           </div>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: "white", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 700, color: "white", margin: 0 }}>
               Propuestas Comerciales
             </h1>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.60)", fontFamily: "'DM Sans', sans-serif", margin: "4px 0 0" }}>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.60)", margin: "4px 0 0" }}>
               Genera propuestas profesionales con inteligencia artificial en segundos
             </p>
           </div>
@@ -287,10 +286,10 @@ export default function Propuestas() {
                 <FileText size={16} color="#f97316" />
               </div>
               <div>
-                <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#1e2a3a", fontFamily: "'DM Sans', sans-serif" }}>
+                <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#1e2a3a" }}>
                   Nueva Propuesta
                 </p>
-                <p style={{ margin: 0, fontSize: 12, color: "#9ca3af", fontFamily: "'DM Sans', sans-serif" }}>
+                <p style={{ margin: 0, fontSize: 12, color: "#9ca3af" }}>
                   Completa los campos para generar con IA
                 </p>
               </div>
@@ -333,7 +332,6 @@ export default function Propuestas() {
                       border: "1.5px solid #f97316",
                       background: "white", color: "#f97316",
                       fontSize: 12, fontWeight: 600,
-                      fontFamily: "'DM Sans', sans-serif",
                       cursor: canSugerir ? "pointer" : "not-allowed",
                       opacity: canSugerir ? 1 : 0.4,
                       display: "flex", alignItems: "center", gap: 5,
@@ -386,7 +384,7 @@ export default function Propuestas() {
                     display: "flex", alignItems: "center", gap: 9,
                   }}>
                     <Wand2 size={14} color="#f97316" style={{ animation: "spin 1.2s linear infinite", flexShrink: 0 }} />
-                    <span style={{ fontSize: 12, color: "#f97316", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
+                    <span style={{ fontSize: 12, color: "#f97316", fontWeight: 500 }}>
                       Generando objetivos sugeridos con IA...
                     </span>
                   </div>
@@ -408,7 +406,6 @@ export default function Propuestas() {
                               background: activo ? "#f97316" : "#fff7ed",
                               color: activo ? "white" : "#c2410c",
                               fontSize: 12, fontWeight: activo ? 600 : 400,
-                              fontFamily: "'DM Sans', sans-serif",
                               cursor: "pointer", transition: "all 0.18s",
                               textAlign: "left", lineHeight: 1.4,
                             }}
@@ -436,7 +433,6 @@ export default function Propuestas() {
                           padding: "9px 14px", borderRadius: 10, border: "none",
                           background: objetivoInput.trim() ? "#f97316" : "rgba(249,115,22,0.2)",
                           color: "white", fontSize: 12, fontWeight: 600,
-                          fontFamily: "'DM Sans', sans-serif",
                           cursor: objetivoInput.trim() ? "pointer" : "not-allowed",
                           display: "flex", alignItems: "center", gap: 5,
                           flexShrink: 0, transition: "background 0.15s",
@@ -458,7 +454,6 @@ export default function Propuestas() {
                               padding: "5px 11px", borderRadius: 20,
                               background: "#1e2a3a", color: "white",
                               fontSize: 11, fontWeight: 500,
-                              fontFamily: "'DM Sans', sans-serif",
                             }}
                           >
                             {obj}
@@ -515,7 +510,7 @@ export default function Propuestas() {
                   display: "flex", alignItems: "flex-start", gap: 9,
                 }}>
                   <span style={{ fontSize: 15, flexShrink: 0 }}>⚠️</span>
-                  <p style={{ margin: 0, fontSize: 13, color: "#dc2626", fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ margin: 0, fontSize: 13, color: "#dc2626" }}>
                     {error}
                   </p>
                 </div>
@@ -531,7 +526,6 @@ export default function Propuestas() {
                     ? "rgba(249,115,22,0.28)"
                     : "linear-gradient(135deg, #f97316 0%, #ea6c0a 100%)",
                   color: "white", fontSize: 14, fontWeight: 700,
-                  fontFamily: "'DM Sans', sans-serif",
                   cursor: generando || !camposValidos ? "not-allowed" : "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
                   boxShadow: generando || !camposValidos ? "none" : "0 4px 20px rgba(249,115,22,0.35)",
@@ -621,7 +615,6 @@ export default function Propuestas() {
                       background: copiado ? "#f0fdf4" : "white",
                       color: copiado ? "#16a34a" : "#374151",
                       fontSize: 13, fontWeight: 600,
-                      fontFamily: "'DM Sans', sans-serif",
                       cursor: "pointer",
                       boxShadow: "0 1px 5px rgba(0,0,0,0.07)",
                       transition: "all 0.18s",
@@ -682,14 +675,14 @@ function SeccionCard({ emoji, icon: Icon, label, contenido, color }: {
         }}>
           <Icon size={14} color="white" />
         </div>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "white", fontFamily: "'DM Sans', sans-serif" }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "white" }}>
           {emoji} {label}
         </span>
       </div>
       <div style={{ padding: "16px 20px" }}>
         <p style={{
           margin: 0, fontSize: 14, color: "#374151",
-          fontFamily: "'DM Sans', sans-serif", lineHeight: 1.75,
+          lineHeight: 1.75,
           whiteSpace: "pre-wrap",
         }}>
           {contenido}

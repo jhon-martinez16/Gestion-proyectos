@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom"
+﻿import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import {
   LayoutDashboard, FolderOpen, CalendarDays, Users, Tag,
@@ -75,7 +75,6 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
               Logique
             </div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
               color: "var(--sidebar-text)",
               lineHeight: 1,
@@ -150,7 +149,6 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
             background: "linear-gradient(135deg, var(--primary), var(--accent))",
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 12, fontWeight: 700, color: "white", flexShrink: 0,
-            fontFamily: "'DM Sans', sans-serif",
           }}>
             {initials}
           </div>
@@ -158,11 +156,10 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
             <p style={{
               fontSize: 13, fontWeight: 600, color: "white",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {nombre ?? "Usuario"}
             </p>
-            <p style={{ fontSize: 11, color: rolColor, fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 11, color: rolColor }}>
               {rolLabel}
             </p>
           </div>
@@ -187,7 +184,6 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
         <p style={{
           fontSize: 10, color: "rgba(148,163,184,0.4)",
           textAlign: "center", marginTop: 10,
-          fontFamily: "'DM Sans', sans-serif",
         }}>
           © 2026 Logique
         </p>
@@ -219,7 +215,6 @@ function NavItem({ to, label, icon: Icon, matchPrefix }: {
           borderRadius: 8,
           fontSize: 14,
           fontWeight: isActive ? 600 : 500,
-          fontFamily: "'DM Sans', sans-serif",
           color: isActive ? "white" : "var(--sidebar-text)",
           background: isActive ? "rgba(255,255,255,0.10)" : "transparent",
           borderLeft: isActive ? "2px solid var(--sidebar-accent)" : "2px solid transparent",
@@ -263,7 +258,7 @@ function SidebarAction({ icon: Icon, label, onClick, badge, badgeColor, pulse }:
         padding: "8px 12px", borderRadius: 8, border: "none",
         background: "transparent", color: "var(--sidebar-text)",
         cursor: "pointer", marginBottom: 2,
-        fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+        fontSize: 14, fontWeight: 500,
         transition: "background 0.15s",
       }}
       onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}

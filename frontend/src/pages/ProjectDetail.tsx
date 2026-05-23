@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import { motion, AnimatePresence } from "framer-motion";
@@ -590,7 +590,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               {project.descripcion && (
                 <p style={{
                   fontSize: 13, color: "var(--text-muted)", margin: "6px 0 0",
-                  fontFamily: "'DM Sans', sans-serif", lineHeight: 1.5,
+                  lineHeight: 1.5,
                 }}>
                   {project.descripcion}
                 </p>
@@ -601,8 +601,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 padding: "5px 12px", borderRadius: 99,
                 background: ESTADO_BG[project.estado] ?? "#f1f5f9",
                 color: ESTADO_COLOR[project.estado] ?? "#64748b",
-                fontSize: 11, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                letterSpacing: "0.04em",
+                fontSize: 11, fontWeight: 700,                letterSpacing: "0.04em",
               }}>
                 {ESTADO_LABEL[project.estado] ?? project.estado?.replace(/_/g, " ")}
               </span>
@@ -611,8 +610,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   padding: "4px 10px", borderRadius: 99,
                   background: ETAPA_BG[project.etapa] ?? "#f1f5f9",
                   color: ETAPA_COLOR[project.etapa] ?? "#64748b",
-                  fontSize: 10, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-                }}>
+                  fontSize: 10, fontWeight: 600,                }}>
                   {ETAPA_LABELS[project.etapa] ?? project.etapa}
                 </span>
               )}
@@ -626,8 +624,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 display: "flex", alignItems: "center", gap: 5,
                 padding: "4px 10px", borderRadius: 8,
                 background: "var(--content-bg)", border: "1px solid var(--card-border)",
-                fontSize: 12, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif",
-              }}>
+                fontSize: 12, color: "var(--text-secondary)",              }}>
                 <div style={{ width: 8, height: 8, borderRadius: 2, background: project.categoria.color ?? "var(--navy, #1e3a6e)", flexShrink: 0 }} />
                 {project.categoria.nombre}
               </div>
@@ -642,12 +639,11 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   width: 20, height: 20, borderRadius: 99,
                   background: "var(--navy, #1e3a6e)", color: "white",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 8, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                  flexShrink: 0,
+                  fontSize: 8, fontWeight: 700,                  flexShrink: 0,
                 }}>
                   {initials(project.lider.nombre)}
                 </div>
-                <span style={{ fontSize: 12, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif" }}>
+                <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
                   {project.lider.nombre}
                 </span>
               </div>
@@ -662,12 +658,11 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   width: 20, height: 20, borderRadius: 99,
                   background: "var(--accent, #f97316)", color: "white",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 8, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                  flexShrink: 0,
+                  fontSize: 8, fontWeight: 700,                  flexShrink: 0,
                 }}>
                   {initials(project.socio2.nombre)}
                 </div>
-                <span style={{ fontSize: 12, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif" }}>
+                <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
                   {project.socio2.nombre}
                 </span>
               </div>
@@ -690,7 +685,6 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   border: `1px solid ${days < 0 ? "#fecaca" : days < 14 ? "#fed7aa" : "#bbf7d0"}`,
                   fontSize: 12, fontWeight: 600,
                   color: days < 0 ? "#dc2626" : days < 14 ? "#ea580c" : "#16a34a",
-                  fontFamily: "'DM Sans', sans-serif",
                 }}>
                   {days < 0 ? `${Math.abs(days)}d vencido` : days === 0 ? "Vence hoy" : `${days}d restantes`}
                 </div>
@@ -702,7 +696,6 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 padding: "4px 10px", borderRadius: 8,
                 background: "#fefce8", border: "1px solid #fde68a",
                 fontSize: 12, fontWeight: 600, color: "#92400e",
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 ★ {avgCalificacion}
               </div>
@@ -716,7 +709,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
             return (
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
                     Entregables aprobados por cliente
                   </span>
                   <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text-secondary)", fontFamily: "'JetBrains Mono', monospace" }}>
@@ -1218,18 +1211,18 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {/* FACTURAS EMITIDAS AL CLIENTE */}
       {esFinanciero && (
         <CollapsibleSection title="Facturas Emitidas al Cliente" sectionId="facturas-cliente" projectId={project.id} buttonText="+ Nueva factura" onClick={() => setShowFacturaClienteModal(true)}>
-          <p style={{ fontSize: 12, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", marginTop: -4, marginBottom: 12 }}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: -4, marginBottom: 12 }}>
             Facturas enviadas al cliente con seguimiento de pagos recibidos y saldo pendiente.
           </p>
           {facturasCliente.length === 0 ? (
-            <p style={{ fontSize: 14, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", padding: "8px 0" }}>No hay facturas registradas.</p>
+            <p style={{ fontSize: 14, color: "var(--text-muted)", padding: "8px 0" }}>No hay facturas registradas.</p>
           ) : (
             <div style={{ overflowX: "auto", borderRadius: 10, border: "1px solid var(--card-border)" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: "var(--content-bg)" }}>
                     {["N°", "Concepto", "Emisión", "Total", "Pagado", "Saldo", ""].map((h) => (
-                      <th key={h} style={{ padding: "8px 12px", textAlign: h === "" ? "right" : "left", fontSize: 11, fontWeight: 700, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", borderBottom: "1px solid var(--card-border)", whiteSpace: "nowrap" }}>{h}</th>
+                      <th key={h} style={{ padding: "8px 12px", textAlign: h === "" ? "right" : "left", fontSize: 11, fontWeight: 700, color: "var(--text-secondary)", borderBottom: "1px solid var(--card-border)", whiteSpace: "nowrap" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -1239,13 +1232,13 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     return (
                       <tr key={fc.id} style={{ background: idx % 2 === 0 ? "white" : "var(--content-bg)" }}>
                         <td style={{ padding: "10px 12px", fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>#{fc.numero}</td>
-                        <td style={{ padding: "10px 12px", color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", maxWidth: 200 }}>
+                        <td style={{ padding: "10px 12px", color: "var(--text-primary)", maxWidth: 200 }}>
                           <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{fc.concepto}</div>
                           {fc.observaciones && <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{fc.observaciones}</div>}
                         </td>
-                        <td style={{ padding: "10px 12px", color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{new Date(fc.fechaEmision).toLocaleDateString("es-CO")}</td>
+                        <td style={{ padding: "10px 12px", color: "var(--text-muted)", whiteSpace: "nowrap" }}>{new Date(fc.fechaEmision).toLocaleDateString("es-CO")}</td>
                         <td style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>${fc.monto.toLocaleString("es-CO")}</td>
-                        <td style={{ padding: "10px 12px", fontFamily: "'DM Sans', sans-serif" }}>
+                        <td style={{ padding: "10px 12px" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                             <div style={{ width: 50, height: 5, borderRadius: 99, background: "#e2e8f0", overflow: "hidden" }}>
                               <div style={{ width: `${pctPagado}%`, height: "100%", background: "#16a34a", borderRadius: 99 }} />
@@ -1259,7 +1252,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                         <td style={{ padding: "10px 12px", textAlign: "right" }}>
                           <button
                             onClick={async () => { if (!window.confirm(`¿Eliminar factura #${fc.numero}?`)) return; await api.delete(`/facturas-cliente/${fc.id}`); const r = await api.get(`/facturas-cliente/proyecto/${id}`); setFacturasCliente(r.data); }}
-                            style={{ padding: "3px 8px", borderRadius: 6, border: "1px solid #fecaca", background: "#fff5f5", color: "#dc2626", fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
+                            style={{ padding: "3px 8px", borderRadius: 6, border: "1px solid #fecaca", background: "#fff5f5", color: "#dc2626", fontSize: 11, cursor: "pointer" }}
                           >
                             Eliminar
                           </button>
@@ -1277,11 +1270,11 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {/* PAGOS RECIBIDOS DEL CLIENTE */}
       {esFinanciero && (
         <CollapsibleSection title="Pagos Recibidos del Cliente" sectionId="cuotas" projectId={project.id} buttonText="+ Registrar pago" onClick={() => setShowCuotaModal(true)}>
-          <p style={{ fontSize: 12, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", marginTop: -4, marginBottom: 4 }}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: -4, marginBottom: 4 }}>
             Comprobantes de los pagos que el cliente ya realizó. Adjunta el soporte de cada transferencia.
           </p>
           {pagosCliente.length === 0 ? (
-            <p style={{ fontSize: 14, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", padding: "8px 0" }}>No hay pagos registrados.</p>
+            <p style={{ fontSize: 14, color: "var(--text-muted)", padding: "8px 0" }}>No hay pagos registrados.</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {pagosCliente.map((pc) => {
@@ -1315,7 +1308,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                           {pc.numeroCuota}
                         </div>
                         <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          <p style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {pc.descripcion}
                           </p>
                           <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
@@ -1329,8 +1322,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                         <span style={{
                           padding: "4px 10px", borderRadius: 99,
                           background: pcfg.bg, color: pcfg.color, border: `1px solid ${pcfg.border}`,
-                          fontSize: 11, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                        }}>
+                          fontSize: 11, fontWeight: 700,                        }}>
                           {pcfg.label}
                         </span>
                         {!esRecibido && (
@@ -1339,8 +1331,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                             style={{
                               padding: "5px 12px", borderRadius: 8, cursor: "pointer",
                               background: "var(--navy, #1e3a6e)", color: "white", border: "none",
-                              fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-                              transition: "opacity 0.15s", whiteSpace: "nowrap",
+                              fontSize: 12, fontWeight: 600,                              transition: "opacity 0.15s", whiteSpace: "nowrap",
                             }}
                             onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
                             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
@@ -1355,7 +1346,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     <div style={{ padding: "14px 16px", display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
                       <div style={{ display: "flex", gap: 20, flexShrink: 0 }}>
                         <div>
-                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 3px", fontWeight: 600 }}>Acordado</p>
+                          <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "0 0 3px", fontWeight: 600 }}>Acordado</p>
                           <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
                             ${Number(pc.montoEsperado).toLocaleString("es-CO")}
                           </p>
@@ -1364,7 +1355,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                           <>
                             <div style={{ width: 1, background: "var(--card-border)", alignSelf: "stretch" }} />
                             <div>
-                              <p style={{ fontSize: 11, color: "#16a34a", fontFamily: "'DM Sans', sans-serif", margin: "0 0 3px", fontWeight: 600 }}>Recibido</p>
+                              <p style={{ fontSize: 11, color: "#16a34a", margin: "0 0 3px", fontWeight: 600 }}>Recibido</p>
                               <p style={{ fontSize: 16, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
                                 ${Number(pc.montoRecibido).toLocaleString("es-CO")}
                               </p>
@@ -1373,7 +1364,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                         )}
                       </div>
                       <div style={{ flex: 1, minWidth: 220 }}>
-                        <p style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 6px" }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", margin: "0 0 6px" }}>
                           Comprobante de pago
                         </p>
                         <FileUploadButton
@@ -1395,14 +1386,14 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 background: "var(--content-bg)", border: "1px solid var(--card-border)",
               }}>
                 <div style={{ textAlign: "right" }}>
-                  <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", margin: "0 0 2px" }}>Total acordado</p>
+                  <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "0 0 2px" }}>Total acordado</p>
                   <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
                     ${pagosCliente.reduce((s, p) => s + Number(p.montoEsperado), 0).toLocaleString("es-CO")}
                   </p>
                 </div>
                 <div style={{ width: 1, height: 32, background: "var(--card-border)" }} />
                 <div style={{ textAlign: "right" }}>
-                  <p style={{ fontSize: 11, color: "#16a34a", fontFamily: "'DM Sans', sans-serif", margin: "0 0 2px", fontWeight: 600 }}>Total recibido</p>
+                  <p style={{ fontSize: 11, color: "#16a34a", margin: "0 0 2px", fontWeight: 600 }}>Total recibido</p>
                   <p style={{ fontSize: 15, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
                     ${pagosCliente.reduce((s, p) => s + Number(p.montoRecibido ?? 0), 0).toLocaleString("es-CO")}
                   </p>
@@ -1455,7 +1446,6 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               color: "white",
               fontSize: 14,
               fontWeight: 700,
-              fontFamily: "'DM Sans', sans-serif",
               cursor: "pointer",
               boxShadow: "0 4px 20px rgba(0,0,0,0.22)",
               transition: "opacity 0.15s",
@@ -1518,10 +1508,10 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
         >
           <div style={{ padding: "28px 28px 24px" }}>
             <div style={{ marginBottom: 20, paddingRight: 40 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0, lineHeight: 1.3 }}>
                 Confirmar recepción de pago
               </h2>
-              <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+              <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
                 Cuota #{cuotaARecibir.numeroCuota} · {cuotaARecibir.descripcion}
               </p>
             </div>
@@ -1529,7 +1519,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {/* Monto esperado (referencia) */}
               <div style={{ padding: "12px 14px", borderRadius: 10, background: "#f0fdf4", border: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <p style={{ fontSize: 12, fontWeight: 600, color: "#16a34a", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>Monto esperado</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: "#16a34a", margin: 0 }}>Monto esperado</p>
                 <p style={{ fontSize: 18, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
                   ${Number(cuotaARecibir.montoEsperado).toLocaleString("es-CO")}
                 </p>
@@ -1538,13 +1528,13 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               {/* Factura cliente */}
               {facturasCliente.length > 0 && (
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
                     Factura correspondiente <span style={{ color: "var(--danger)" }}>*</span>
                   </label>
                   <select
                     value={facturaClienteIdParaRecibir}
                     onChange={e => setFacturaClienteIdParaRecibir(e.target.value)}
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "var(--content-bg)", color: "var(--text-primary)", fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none", boxSizing: "border-box" as const }}
+                    style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "var(--content-bg)", color: "var(--text-primary)", fontSize: 14, outline: "none", boxSizing: "border-box" as const }}
                   >
                     <option value="">— Seleccionar factura —</option>
                     {facturasCliente.map(fc => (
@@ -1556,7 +1546,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
 
               {/* Monto recibido */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
                   Monto recibido (COP) <span style={{ color: "var(--danger)" }}>*</span>
                 </label>
                 <input
@@ -1569,12 +1559,11 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     width: "100%", padding: "10px 12px", borderRadius: 10,
                     border: "1.5px solid var(--card-border)",
                     background: "var(--content-bg)", color: "var(--text-primary)",
-                    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-                    outline: "none", boxSizing: "border-box" as const,
+                    fontSize: 14,                    outline: "none", boxSizing: "border-box" as const,
                   }}
                 />
                 {Number(montoARecibir) < Number(cuotaARecibir.montoEsperado) && montoARecibir !== "" && (
-                  <p style={{ fontSize: 11, color: "#b45309", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ fontSize: 11, color: "#b45309", marginTop: 4 }}>
                     Pago parcial — activa "Forzar recibido" para marcarlo como completado.
                   </p>
                 )}
@@ -1582,7 +1571,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
 
               {/* FileUpload comprobante */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
                   Adjuntar comprobante
                   <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
                 </label>
@@ -1601,7 +1590,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   onChange={e => setForzarCuotaRecibida(e.target.checked)}
                   style={{ marginTop: 2, accentColor: "#16a34a" } as React.CSSProperties}
                 />
-                <span style={{ fontSize: 13, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.5 }}>
+                <span style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5 }}>
                   Marcar como recibido aunque el monto sea menor al esperado
                 </span>
               </label>
@@ -1614,8 +1603,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   padding: "9px 20px", borderRadius: 10,
                   border: "1.5px solid var(--card-border)", background: "white",
                   color: "var(--text-secondary)", fontSize: 14, fontWeight: 500,
-                  cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-                }}
+                  cursor: "pointer",                }}
                 onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
                 onMouseLeave={e => (e.currentTarget.style.background = "white")}
               >
@@ -1634,7 +1622,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   padding: "9px 20px", borderRadius: 10, border: "none",
                   background: "#16a34a", color: "white",
                   fontSize: 14, fontWeight: 600, cursor: "pointer",
-                  fontFamily: "'DM Sans', sans-serif", transition: "opacity 0.15s",
+                  transition: "opacity 0.15s",
                 }}
                 onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
                 onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
@@ -1656,13 +1644,12 @@ const _cuotaInputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10,
   border: "1.5px solid var(--card-border)",
   background: "var(--content-bg)", color: "var(--text-primary)",
-  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-  outline: "none", transition: "border-color 0.15s",
+  fontSize: 14,  outline: "none", transition: "border-color 0.15s",
   boxSizing: "border-box",
 }
 const _cuotaLabelStyle: React.CSSProperties = {
   fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
-  fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6,
+  display: "block", marginBottom: 6,
 }
 
 function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; nextCuota: number; onClose: () => void }) {
@@ -1707,10 +1694,10 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
     <Modal onClose={onClose} size="sm" accentColor="var(--navy, #1e3a6e)">
       <div style={{ padding: "28px 28px 24px" }}>
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0, lineHeight: 1.3 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0, lineHeight: 1.3 }}>
             Nuevo pago esperado
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             Cuota #{nextCuota} — define el monto y la fecha acordada
           </p>
         </div>
@@ -1774,7 +1761,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
           </div>
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>
+            <p style={{ fontSize: 13, color: "var(--danger)" }}>{error}</p>
           )}
         </div>
 
@@ -1785,8 +1772,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
               padding: "9px 20px", borderRadius: 10,
               border: "1.5px solid var(--card-border)", background: "white",
               color: "var(--text-secondary)", fontSize: 14, fontWeight: 500,
-              cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-            }}
+              cursor: "pointer",            }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
           >
@@ -1799,7 +1785,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
               padding: "9px 20px", borderRadius: 10, border: "none",
               background: "var(--navy, #1e3a6e)", color: "white",
               fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+              opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
             }}
           >
@@ -1825,8 +1811,7 @@ function FacturaClienteModal({ proyectoId, onClose }: { proyectoId: string; onCl
     width: "100%", padding: "10px 12px", borderRadius: 10,
     border: "1.5px solid var(--card-border)",
     background: "var(--content-bg)", color: "var(--text-primary)",
-    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-    outline: "none", boxSizing: "border-box" as const,
+    fontSize: 14,    outline: "none", boxSizing: "border-box" as const,
   }
 
   const handleSubmit = async () => {
@@ -1857,43 +1842,43 @@ function FacturaClienteModal({ proyectoId, onClose }: { proyectoId: string; onCl
     <Modal onClose={onClose} size="sm" accentColor="var(--navy, #1e3a6e)">
       <div style={{ padding: "28px 28px 24px" }}>
         <div style={{ marginBottom: 20, paddingRight: 40 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
             Nueva Factura al Cliente
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             Registra una factura emitida y realiza seguimiento de pagos
           </p>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 12 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>N° Factura *</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>N° Factura *</label>
               <input type="text" placeholder="001" value={numero} onChange={e => setNumero(e.target.value)} style={inputSt} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Concepto *</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>Concepto *</label>
               <input type="text" placeholder="Descripción del servicio" value={concepto} onChange={e => setConcepto(e.target.value)} style={inputSt} />
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Monto (COP) *</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>Monto (COP) *</label>
               <input type="number" min="0" placeholder="0" value={monto} onChange={e => setMonto(e.target.value)} style={inputSt} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Fecha emisión *</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>Fecha emisión *</label>
               <input type="date" value={fecha} onChange={e => setFecha(e.target.value)} style={inputSt} />
             </div>
           </div>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Observaciones <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>(opcional)</span></label>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>Observaciones <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>(opcional)</span></label>
             <input type="text" placeholder="Notas adicionales" value={observaciones} onChange={e => setObservaciones(e.target.value)} style={inputSt} />
           </div>
-          {error && <p style={{ fontSize: 12, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>}
+          {error && <p style={{ fontSize: 12, color: "var(--danger)" }}>{error}</p>}
         </div>
         <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
-          <button onClick={onClose} style={{ padding: "9px 20px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "white", color: "var(--text-secondary)", fontSize: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Cancelar</button>
-          <button onClick={handleSubmit} disabled={loading} style={{ padding: "9px 20px", borderRadius: 10, border: "none", background: "var(--navy, #1e3a6e)", color: "white", fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+          <button onClick={onClose} style={{ padding: "9px 20px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "white", color: "var(--text-secondary)", fontSize: 14, cursor: "pointer" }}>Cancelar</button>
+          <button onClick={handleSubmit} disabled={loading} style={{ padding: "9px 20px", borderRadius: 10, border: "none", background: "var(--navy, #1e3a6e)", color: "white", fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1 }}>
             {loading ? "Guardando..." : "Crear Factura"}
           </button>
         </div>
@@ -2076,8 +2061,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
     width: "100%", padding: "10px 12px", borderRadius: 10,
     border: "1.5px solid var(--card-border)",
     background: "var(--content-bg)", color: "var(--text-primary)",
-    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-    outline: "none", resize: "none" as const,
+    fontSize: 14,    outline: "none", resize: "none" as const,
     boxSizing: "border-box" as const,
   }
 
@@ -2085,10 +2069,10 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
     <Modal onClose={onClose} accentColor="var(--navy, #1e3a6e)">
       <div style={{ padding: "28px 28px 24px" }}>
         <div style={{ marginBottom: 20, paddingRight: 40 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
             Nuevo Feedback Interno
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
             Registra observaciones sobre el estado del proyecto
           </p>
         </div>
@@ -2096,7 +2080,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Tipo: 3 card buttons */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 8 }}>
               Tipo de feedback
             </label>
             <div style={{ display: "flex", gap: 8 }}>
@@ -2117,7 +2101,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
                     <div style={{ fontSize: 18, marginBottom: 4, color: isActive ? c.color : "var(--text-muted)" }}>
                       {c.emoji}
                     </div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: isActive ? c.color : "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.2 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: isActive ? c.color : "var(--text-secondary)", lineHeight: 1.2 }}>
                       {c.label}
                     </div>
                   </button>
@@ -2132,7 +2116,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                style={{ fontSize: 12, color: cfg.color, marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}
+                style={{ fontSize: 12, color: cfg.color, marginTop: 8 }}
               >
                 {cfg.desc}
               </motion.p>
@@ -2141,7 +2125,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
 
           {/* Descripción */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
               Descripción <span style={{ color: "var(--danger)" }}>*</span>
             </label>
             <textarea
@@ -2155,7 +2139,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
 
           {/* Acciones */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>
               Acciones tomadas
               <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
             </label>
@@ -2168,7 +2152,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
             />
           </div>
 
-          {error && <p style={{ fontSize: 13, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>}
+          {error && <p style={{ fontSize: 13, color: "var(--danger)" }}>{error}</p>}
         </div>
 
         <div style={{ display: "flex", gap: 10, marginTop: 24, justifyContent: "flex-end" }}>
@@ -2177,7 +2161,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
             style={{
               padding: "9px 20px", borderRadius: 10, border: "1.5px solid var(--card-border)",
               background: "white", color: "var(--text-secondary)", fontSize: 14, fontWeight: 500,
-              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
+              cursor: "pointer", transition: "all 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--content-bg)")}
             onMouseLeave={e => (e.currentTarget.style.background = "white")}
@@ -2191,7 +2175,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
               padding: "9px 20px", borderRadius: 10, border: "none",
               background: "var(--navy, #1e3a6e)", color: "white",
               fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+              opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
             }}
           >
@@ -2240,8 +2224,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
     width: "100%", padding: "9px 11px", borderRadius: 10,
     border: "1.5px solid var(--card-border)",
     background: "white", color: "var(--text-primary)",
-    fontSize: 13, fontFamily: "'DM Sans', sans-serif",
-    outline: "none", boxSizing: "border-box" as const,
+    fontSize: 13,    outline: "none", boxSizing: "border-box" as const,
   }
 
   return (
@@ -2261,7 +2244,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
         }}>
           ★
         </div>
-        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
           Registrar feedback del cliente
         </p>
       </div>
@@ -2269,7 +2252,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {/* Star rating */}
         <div>
-          <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 8 }}>
+          <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 8 }}>
             Calificación del cliente *
           </label>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -2294,7 +2277,6 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
             </div>
             <span style={{
               fontSize: 12, fontWeight: 600, color: "#92400e",
-              fontFamily: "'DM Sans', sans-serif",
             }}>
               {STAR_LABELS[displayRating]}
             </span>
@@ -2304,17 +2286,17 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
         {/* Fecha + Entregable */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 5 }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>
               Fecha
             </label>
             <div style={{ ...inputSt, background: "var(--content-bg)", cursor: "default", display: "flex", alignItems: "center" }}>
-              <span style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
                 {new Date(fecha).toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })}
               </span>
             </div>
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 5 }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>
               Entregable <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>(opcional)</span>
             </label>
             <select value={entregableId} onChange={e => setEntregableId(e.target.value)} style={{ ...inputSt, appearance: "none" } as React.CSSProperties}>
@@ -2326,7 +2308,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
 
         {/* Comentario */}
         <div>
-          <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 5 }}>
+          <label style={{ fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 5 }}>
             Comentario *
           </label>
           <textarea
@@ -2338,7 +2320,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
           />
         </div>
 
-        {error && <p style={{ fontSize: 12, color: "var(--danger)", fontFamily: "'DM Sans', sans-serif" }}>{error}</p>}
+        {error && <p style={{ fontSize: 12, color: "var(--danger)" }}>{error}</p>}
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
           <button
@@ -2346,8 +2328,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
             style={{
               padding: "8px 16px", borderRadius: 9, fontSize: 13, fontWeight: 500,
               border: "1.5px solid var(--card-border)", background: "var(--content-bg)",
-              color: "var(--text-secondary)", cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-            }}
+              color: "var(--text-secondary)", cursor: "pointer",            }}
           >
             Cancelar
           </button>
@@ -2358,7 +2339,7 @@ function FeedbackClienteForm({ proyectoId, entregables, onDone, onCancel }: { pr
               padding: "8px 16px", borderRadius: 9, fontSize: 13, fontWeight: 600,
               border: "none", background: "var(--primary)", color: "white",
               cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1,
-              fontFamily: "'DM Sans', sans-serif", transition: "opacity 0.15s",
+              transition: "opacity 0.15s",
             }}
           >
             {loading ? "Guardando..." : "Registrar"}
@@ -2450,7 +2431,7 @@ function CollapsibleSection({
         >
           <h2 style={{
             fontSize: 15, fontWeight: 700, color: "var(--text-primary)",
-            fontFamily: "'DM Sans', sans-serif", margin: 0,
+            margin: 0,
           }}>
             {title}
           </h2>
@@ -2470,7 +2451,7 @@ function CollapsibleSection({
               padding: "7px 14px", borderRadius: 9, border: "none",
               background: "var(--navy, #1e3a6e)", color: "white",
               fontSize: 12, fontWeight: 600, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", transition: "opacity 0.15s",
+              transition: "opacity 0.15s",
             }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}

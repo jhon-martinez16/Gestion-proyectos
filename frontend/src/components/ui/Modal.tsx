@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion"
+﻿import { motion, AnimatePresence } from "framer-motion"
 import { X } from "lucide-react"
 import type { ReactNode } from "react"
 
@@ -75,8 +75,7 @@ export default function Modal({ children, onClose, isOpen = true, title, size = 
               }}>
                 <h2 style={{
                   fontSize: 17, fontWeight: 700, color: "var(--text-primary)",
-                  margin: 0, fontFamily: "'DM Sans', sans-serif",
-                }}>
+                  margin: 0,                }}>
                   {title}
                 </h2>
                 <button

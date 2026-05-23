@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { api } from "../../services/api"
 import { Sparkles, Loader2 } from "lucide-react"
 
@@ -69,10 +69,10 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
             <Sparkles size={15} color="var(--accent, #f97316)" />
           </div>
           <div>
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
               Asistente IA — Generar acta
             </p>
-            <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>
               {contextoProyecto.nombre}
             </p>
           </div>
@@ -95,7 +95,7 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
             <div>
               <label style={{
                 fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
-                fontFamily: "'DM Sans', sans-serif", display: "block", marginBottom: 7,
+                display: "block", marginBottom: 7,
               }}>
                 ¿Qué pasó en la reunión? <span style={{ color: "var(--danger)" }}>*</span>
               </label>
@@ -109,8 +109,7 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
                   width: "100%", padding: "10px 12px", borderRadius: 10,
                   border: "1.5px solid var(--card-border)",
                   background: "var(--content-bg)", color: "var(--text-primary)",
-                  fontSize: 13, fontFamily: "'DM Sans', sans-serif",
-                  outline: "none", resize: "none", lineHeight: 1.55,
+                  fontSize: 13,                  outline: "none", resize: "none", lineHeight: 1.55,
                   boxSizing: "border-box",
                   transition: "border-color 0.15s",
                   opacity: generando ? 0.6 : 1,
@@ -129,7 +128,7 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
                 color="var(--accent, #f97316)"
                 style={{ animation: "spin 0.9s linear infinite" }}
               />
-              <span style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
                 Generando acta...
               </span>
               <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
@@ -144,7 +143,7 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
               display: "flex", alignItems: "center", gap: 8,
             }}>
               <span style={{ fontSize: 16 }}>⚠️</span>
-              <p style={{ margin: 0, fontSize: 13, color: "#dc2626", fontFamily: "'DM Sans', sans-serif" }}>
+              <p style={{ margin: 0, fontSize: 13, color: "#dc2626" }}>
                 {error}
               </p>
             </div>
@@ -167,7 +166,7 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
                 border: "1.5px solid var(--card-border)",
                 background: "white", color: "var(--text-secondary)",
                 fontSize: 13, fontWeight: 500, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", transition: "background 0.15s",
+                transition: "background 0.15s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "var(--content-bg)")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "white")}
@@ -184,7 +183,6 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
                   background: generando || !resumen.trim() ? "rgba(249,115,22,0.35)" : "var(--accent, #f97316)",
                   color: "white", fontSize: 13, fontWeight: 600,
                   cursor: generando || !resumen.trim() ? "not-allowed" : "pointer",
-                  fontFamily: "'DM Sans', sans-serif",
                   display: "flex", alignItems: "center", gap: 6,
                   transition: "opacity 0.15s",
                 }}
@@ -199,8 +197,7 @@ export default function GenerarActaModal({ contextoProyecto, onUsar, onCancelar 
                   padding: "8px 18px", borderRadius: 10, border: "none",
                   background: "var(--accent, #f97316)",
                   color: "white", fontSize: 13, fontWeight: 600,
-                  cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-                  transition: "opacity 0.15s",
+                  cursor: "pointer",                  transition: "opacity 0.15s",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
@@ -220,7 +217,6 @@ function ResultadoField({ label, value }: { label: string; value: string }) {
     <div>
       <p style={{
         fontSize: 11, fontWeight: 700, color: "var(--text-secondary)",
-        fontFamily: "'DM Sans', sans-serif",
         textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 6px",
       }}>
         {label}
@@ -232,7 +228,7 @@ function ResultadoField({ label, value }: { label: string; value: string }) {
       }}>
         <p style={{
           margin: 0, fontSize: 13, color: "var(--text-primary)",
-          fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6,
+          lineHeight: 1.6,
           whiteSpace: "pre-wrap",
         }}>
           {value}

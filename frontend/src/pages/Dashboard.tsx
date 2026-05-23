@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+﻿import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
@@ -199,7 +199,6 @@ function KpiCard({ title, value, icon: Icon, accentColor, numColor = "var(--text
         fontSize: 11, fontWeight: 600, textTransform: "uppercase",
         letterSpacing: "0.08em", color: "var(--text-muted)",
         marginBottom: 10, paddingRight: 48,
-        fontFamily: "'DM Sans', sans-serif",
       }}>
         {title}
       </p>
@@ -217,7 +216,6 @@ function KpiCard({ title, value, icon: Icon, accentColor, numColor = "var(--text
       {sub && (
         <p style={{
           fontSize: 11, color: "var(--text-muted)", marginTop: 4,
-          fontFamily: "'DM Sans', sans-serif",
         }}>
           {sub}
         </p>
@@ -243,7 +241,6 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
     <p style={{
       fontSize: 11, fontWeight: 600, textTransform: "uppercase",
       letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: 12,
-      fontFamily: "'DM Sans', sans-serif",
     }}>
       {children}
     </p>
@@ -259,7 +256,6 @@ function StatusBadge({ estado }: { estado: string }) {
       padding: "3px 10px", borderRadius: 50,
       fontSize: 11, fontWeight: 600,
       background: cfg.badge.bg, color: cfg.badge.text,
-      fontFamily: "'DM Sans', sans-serif",
     }}>
       <span style={{ width: 5, height: 5, borderRadius: "50%", background: cfg.bar }} />
       {cfg.label}
@@ -284,7 +280,6 @@ function DashboardHeader({ nombre, alertasCriticas, lideres, filterLider, setFil
         </h1>
         <p style={{
           fontSize: 14, color: "var(--text-muted)", marginTop: 6,
-          fontFamily: "'DM Sans', sans-serif",
         }}>
           {formatFecha(new Date())}
         </p>
@@ -297,15 +292,14 @@ function DashboardHeader({ nombre, alertasCriticas, lideres, filterLider, setFil
             borderRadius: 10, padding: "7px 14px",
             boxShadow: "var(--card-shadow)",
           }}>
-            <span style={{ fontSize: 12, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>Vista:</span>
+            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Vista:</span>
             <select
               value={filterLider}
               onChange={e => setFilterLider(e.target.value)}
               style={{
                 fontSize: 13, fontWeight: 600, color: "var(--text-primary)",
                 border: "none", background: "transparent", outline: "none",
-                cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-              }}
+                cursor: "pointer",              }}
             >
               <option value="">Todos los líderes</option>
               {lideres.map(u => <option key={u.id} value={u.id}>{u.nombre}</option>)}
@@ -332,7 +326,6 @@ function DashboardHeader({ nombre, alertasCriticas, lideres, filterLider, setFil
               }} />
               <span style={{
                 fontSize: 13, fontWeight: 700, color: "var(--danger)",
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 {alertasCriticas} alerta{alertasCriticas !== 1 ? "s" : ""} crítica{alertasCriticas !== 1 ? "s" : ""}
               </span>
@@ -356,7 +349,7 @@ function FacturasPendientesCard({ facturas, total, onNavigate }: {
         textAlign: "center", boxShadow: "var(--card-shadow)",
       }}>
         <CheckCircle2 size={24} color="var(--primary)" style={{ margin: "0 auto 8px" }} />
-        <p style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
           Sin facturas pendientes
         </p>
       </div>
@@ -381,7 +374,7 @@ function FacturasPendientesCard({ facturas, total, onNavigate }: {
             }}>
               #{f.numero}
             </p>
-            <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 11, color: "var(--text-muted)" }}>
               {f.proyecto?.nombre ?? "—"} · {hace(f.fechaEmision)}
             </p>
           </div>
@@ -450,7 +443,7 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "14px 20px", borderBottom: "1px solid var(--card-border)",
       }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
           Proyectos — vista mensual
         </p>
         <button
@@ -459,7 +452,6 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
             fontSize: 12, color: "var(--primary)", background: "none",
             border: "none", cursor: "pointer", fontWeight: 600,
             display: "flex", alignItems: "center", gap: 4,
-            fontFamily: "'DM Sans', sans-serif",
           }}
         >
           Ver cronograma completo <ChevronRight size={13} />
@@ -483,7 +475,6 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
                     top: "50%", transform: "translate(-50%, -50%)",
                     fontSize: 11, fontWeight: 600, color: "var(--text-muted)",
                     textTransform: "capitalize", whiteSpace: "nowrap",
-                    fontFamily: "'DM Sans', sans-serif",
                   }}>
                     {m.label}
                   </span>
@@ -537,7 +528,6 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
                     <p style={{
                       fontSize: 12, fontWeight: 600, color: "var(--text-primary)",
                       overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                      fontFamily: "'DM Sans', sans-serif",
                     }}>
                       {p.nombre}
                     </p>
@@ -587,7 +577,7 @@ function ProximosVencimientos({ entregables, reuniones, onNavigate }: {
       boxShadow: "var(--card-shadow)",
     }}>
       <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--card-border)" }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
           Próximos vencimientos
         </p>
       </div>
@@ -616,15 +606,13 @@ function ProximosVencimientos({ entregables, reuniones, onNavigate }: {
                   <p style={{
                     fontSize: 13, fontWeight: 600, color: "var(--text-primary)",
                     overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    fontFamily: "'DM Sans', sans-serif",
                   }}>
                     {e.nombre}
                   </p>
                   <span style={{
                     fontSize: 10, padding: "1px 7px", borderRadius: 99,
                     background: "var(--primary-light)", color: "var(--primary-dark)",
-                    fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-                  }}>
+                    fontWeight: 600,                  }}>
                     {e.proyecto.nombre}
                   </span>
                 </div>
@@ -667,7 +655,6 @@ function ProximosVencimientos({ entregables, reuniones, onNavigate }: {
                 <p style={{
                   fontSize: 11, color: "var(--text-muted)",
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  fontFamily: "'DM Sans', sans-serif",
                 }}>
                   {r.proyecto.nombre}
                 </p>
@@ -748,7 +735,7 @@ export default function Dashboard() {
         borderTopColor: "var(--primary)", borderRadius: "50%",
         animation: "spin 0.8s linear infinite",
       }} />
-      <p style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+      <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
         Cargando dashboard…
       </p>
     </div>
@@ -761,7 +748,7 @@ export default function Dashboard() {
       alignItems: "center", justifyContent: "center",
       height: "60vh", gap: 16,
     }}>
-      <p style={{ color: "var(--danger)", fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>
+      <p style={{ color: "var(--danger)", fontWeight: 500 }}>
         {error ?? "Error inesperado."}
       </p>
       <button onClick={loadData} className="btn-primary">Reintentar</button>
@@ -826,7 +813,7 @@ export default function Dashboard() {
                     cursor: "pointer", boxShadow: "var(--card-shadow)",
                   }}
                   onClick={() => navigate(`/projects/${p.id}`)}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>
                     {p.nombre}
                   </p>
                   <StatusBadge estado={p.estado} />
@@ -862,10 +849,10 @@ export default function Dashboard() {
                   onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.opacity = "1")}
                 >
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 13, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "'DM Sans', sans-serif" }}>
+                    <p style={{ fontSize: 13, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {c.descripcion}
                     </p>
-                    <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>
+                    <p style={{ fontSize: 11, color: "var(--text-muted)" }}>
                       {c.proyecto.nombre}
                     </p>
                   </div>
@@ -971,14 +958,13 @@ export default function Dashboard() {
             display: "flex", alignItems: "center", justifyContent: "space-between",
             padding: "16px 20px", borderBottom: "1px solid var(--card-border)",
           }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
               Actividad reciente
             </p>
             <span style={{
               fontSize: 12, padding: "2px 10px", borderRadius: 99,
               background: "var(--content-bg)", color: "var(--text-secondary)",
-              fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-            }}>
+              fontWeight: 600,            }}>
               {recentProyectos.length}
             </span>
           </div>
@@ -1010,11 +996,10 @@ export default function Dashboard() {
                       <p style={{
                         fontSize: 14, fontWeight: 600, color: "var(--text-primary)",
                         overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                        fontFamily: "'DM Sans', sans-serif",
                       }}>
                         {p.nombre}
                       </p>
-                      <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1, fontFamily: "'DM Sans', sans-serif" }}>
+                      <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}>
                         {p.categoria?.nombre ?? "—"}
                       </p>
                     </div>
@@ -1024,7 +1009,6 @@ export default function Dashboard() {
                         background: avatarBg(p.lider.nombre),
                         display: "flex", alignItems: "center", justifyContent: "center",
                         color: "white", fontSize: 10, fontWeight: 700,
-                        fontFamily: "'DM Sans', sans-serif",
                       }}>
                         {initials(p.lider.nombre)}
                       </div>
@@ -1068,7 +1052,6 @@ export default function Dashboard() {
               <p style={{
                 fontSize: 13, fontWeight: 700,
                 color: compVencidos.length > 0 ? "var(--danger)" : "var(--text-primary)",
-                fontFamily: "'DM Sans', sans-serif",
               }}>
                 Compromisos vencidos
               </p>
@@ -1076,8 +1059,7 @@ export default function Dashboard() {
                 <span style={{
                   marginLeft: "auto", fontSize: 11, padding: "1px 8px",
                   borderRadius: 99, background: "var(--danger)",
-                  color: "white", fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
-                }}>
+                  color: "white", fontWeight: 700,                }}>
                   {compVencidos.length}
                 </span>
               )}
@@ -1085,7 +1067,7 @@ export default function Dashboard() {
             {compVencidos.length === 0 ? (
               <div style={{ padding: "20px 16px", display: "flex", alignItems: "center", gap: 8 }}>
                 <CheckCircle2 size={16} color="var(--primary)" />
-                <span style={{ fontSize: 13, color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif" }}>
+                <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
                   Sin compromisos vencidos
                 </span>
               </div>
@@ -1113,7 +1095,6 @@ export default function Dashboard() {
                         <p style={{
                           fontSize: 12, color: "var(--text-primary)",
                           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                          fontFamily: "'DM Sans', sans-serif",
                         }}>
                           {c.descripcion}
                         </p>
@@ -1121,8 +1102,7 @@ export default function Dashboard() {
                           <span style={{
                             fontSize: 10, padding: "1px 6px", borderRadius: 99,
                             background: "rgba(239,68,68,0.12)", color: "var(--danger)",
-                            fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-                          }}>
+                            fontWeight: 600,                          }}>
                             {proy.nombre}
                           </span>
                         )}
@@ -1156,12 +1136,12 @@ export default function Dashboard() {
               padding: "12px 16px", borderBottom: "1px solid var(--card-border)",
             }}>
               <DollarSign size={14} color="var(--warning)" />
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'DM Sans', sans-serif" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)" }}>
                 Facturas pendientes
               </p>
             </div>
             {factsPendientes.length === 0 ? (
-              <div style={{ padding: "24px 16px", fontSize: 13, color: "var(--text-muted)", textAlign: "center", fontFamily: "'DM Sans', sans-serif" }}>
+              <div style={{ padding: "24px 16px", fontSize: 13, color: "var(--text-muted)", textAlign: "center" }}>
                 Sin facturas pendientes
               </div>
             ) : (
@@ -1176,7 +1156,7 @@ export default function Dashboard() {
                       <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
                         #{f.numero}
                       </p>
-                      <p style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "'DM Sans', sans-serif" }}>
+                      <p style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {f.proyecto?.nombre ?? "—"}
                       </p>
                     </div>
