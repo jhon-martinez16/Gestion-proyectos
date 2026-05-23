@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { UserPlus, Edit2, UserX } from "lucide-react"
+import clsx from "clsx"
 import { api } from "../services/api"
 import UserModal from "../components/users/UserModal"
+import Avatar from "../components/ui/Avatar"
+import Button from "../components/ui/Button"
+import PageHeader from "../components/ui/PageHeader"
+import Skeleton from "../components/ui/Skeleton"
 
 interface User {
   id: string
@@ -11,29 +18,39 @@ interface User {
 }
 
 const ROL_LABELS: Record<string, string> = {
-  ADMIN: "Administrador",
-  SOCIO: "Socio",
+  ADMIN:          "Administrador",
+  SOCIO:          "Socio",
   ADMINISTRATIVO: "Administrativo",
 }
 
+const ROL_STYLE: Record<string, string> = {
+  ADMIN:          "bg-state-violet-bg text-state-violet",
+  SOCIO:          "bg-state-blue-bg text-state-blue",
+  ADMINISTRATIVO: "bg-state-zinc-bg text-state-zinc",
+}
+
 const ROL_OPTIONS = [
-  { value: "todos", label: "Todos los roles" },
+  { value: "todos",          label: "Todos" },
   { value: "ADMIN",          label: "Administrador" },
   { value: "SOCIO",          label: "Socio" },
   { value: "ADMINISTRATIVO", label: "Administrativo" },
 ]
 
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.28, ease: "easeOut" as const } },
+}
+
 export default function Users() {
-  const [users, setUsers] = useState<User[]>([])
-  const [filtroRol, setFiltroRol] = useState("todos")
-  const [showModal, setShowModal] = useState(false)
-  const [usuarioEditando, setUsuarioEditando] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [users,            setUsers]            = useState<User[]>([])
+  const [filtroRol,        setFiltroRol]        = useState("todos")
+  const [showModal,        setShowModal]        = useState(false)
+  const [usuarioEditando,  setUsuarioEditando]  = useState<User | null>(null)
+  const [loading,          setLoading]          = useState(true)
+  const [error,            setError]            = useState<string | null>(null)
 
   const loadData = async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true); setError(null)
     try {
       const res = await api.get("/usuarios")
       setUsers(res.data)
@@ -44,9 +61,7 @@ export default function Users() {
     }
   }
 
-  useEffect(() => {
-    loadData()
-  }, [])
+  useEffect(() => { loadData() }, [])
 
   const handleDesactivar = async (u: User) => {
     if (!window.confirm(`¿Desactivar a ${u.nombre}? No podrá iniciar sesión.`)) return
@@ -59,103 +74,144 @@ export default function Users() {
   }
 
   const handleCloseModal = () => {
-    setShowModal(false)
-    setUsuarioEditando(null)
-    loadData()
+    setShowModal(false); setUsuarioEditando(null); loadData()
   }
 
-  const filteredUsers = filtroRol === "todos" ? users : users.filter((u) => u.rol === filtroRol)
+  const filteredUsers = filtroRol === "todos" ? users : users.filter(u => u.rol === filtroRol)
 
-  if (loading) {
-    return <div className="flex items-center justify-center h-64 text-gray-400">Cargando...</div>
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <p className="text-red-500 font-medium">{error}</p>
-        <button onClick={loadData} className="px-5 py-2 bg-[#16A34A] text-white rounded-xl font-medium hover:bg-[#15803D] transition">
-          Reintentar
-        </button>
+  if (loading) return (
+    <motion.div variants={pageVariants} initial="initial" animate="animate">
+      <PageHeader eyebrow="Equipo" title="Usuarios" subtitle="Cargando…" />
+      <div className="grid gap-2">
+        {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} variant="row" />)}
       </div>
-    )
-  }
+    </motion.div>
+  )
+
+  if (error) return (
+    <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
+      <p className="text-sm text-state-red font-medium">{error}</p>
+      <Button variant="secondary" onClick={loadData}>Reintentar</Button>
+    </div>
+  )
 
   return (
-    <div className="space-y-8 bg-[#F3FBF6] p-6 rounded-3xl">
+    <motion.div variants={pageVariants} initial="initial" animate="animate">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center bg-[#DDF7E6] px-6 py-4 rounded-2xl shadow-sm">
-        <div>
-          <h1 className="text-3xl font-bold text-[#14532D]">Usuarios</h1>
-          <p className="text-sm text-green-900/70 mt-1">Administración de usuarios del sistema</p>
-        </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-[#16A34A] hover:bg-[#15803D] text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm"
-        >
-          + Nuevo Usuario
-        </button>
-      </div>
+      <PageHeader
+        eyebrow="Equipo"
+        title="Usuarios"
+        subtitle="Administra los miembros del equipo y sus permisos."
+        stats={
+          <>
+            <span><strong className="text-ink font-semibold">{users.length}</strong> usuarios</span>
+            <span className="text-ink-4">·</span>
+            <span><strong className="text-ink font-semibold">{users.filter(u => u.rol === "ADMIN").length}</strong> administradores</span>
+            <span className="text-ink-4">·</span>
+            <span><strong className="text-ink font-semibold">{users.filter(u => u.rol === "SOCIO").length}</strong> socios</span>
+          </>
+        }
+        actions={
+          <Button variant="primary" leftIcon={UserPlus} onClick={() => setShowModal(true)}>
+            Nuevo Usuario
+          </Button>
+        }
+      />
 
-      {/* FILTRO POR ROL */}
-      <div className="flex gap-3 flex-wrap">
-        {ROL_OPTIONS.map((o) => (
+      {/* Pill tabs — role filter */}
+      <div className="flex items-center gap-1 bg-canvas-2 p-1 rounded-[10px] w-fit mb-6">
+        {ROL_OPTIONS.map(o => (
           <button
             key={o.value}
             onClick={() => setFiltroRol(o.value)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${filtroRol === o.value ? "bg-[#16A34A] text-white shadow-sm" : "bg-white border border-green-100 text-gray-600 hover:bg-green-50"}`}
+            className={clsx(
+              "relative px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors duration-150 whitespace-nowrap",
+              filtroRol === o.value ? "text-ink" : "text-ink-3 hover:text-ink-2",
+            )}
           >
+            {filtroRol === o.value && (
+              <motion.div
+                layoutId="users-tab-indicator"
+                className="absolute inset-0 bg-white rounded-[8px] shadow-sm border border-ui-border"
+                style={{ zIndex: -1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
             {o.label}
             {o.value !== "todos" && (
-              <span className="ml-1.5 text-xs opacity-70">({users.filter((u) => u.rol === o.value).length})</span>
+              <span className="ml-1.5 text-[11px] text-ink-3">
+                ({users.filter(u => u.rol === o.value).length})
+              </span>
             )}
           </button>
         ))}
       </div>
 
-      {/* LISTADO */}
-      <div className="grid gap-4">
-        {filteredUsers.map((u) => (
+      {/* Dense table */}
+      <div className="card-surface overflow-hidden">
+        {filteredUsers.map((u, i) => (
           <div
             key={u.id}
-            className="bg-white border border-green-100 p-5 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex justify-between items-center"
+            className={clsx(
+              "group flex items-center gap-4 px-4 hover:bg-canvas-2 transition-colors duration-100",
+              i < filteredUsers.length - 1 && "border-b border-ui-border",
+            )}
+            style={{ height: 56 }}
           >
-            <div>
-              <p className="font-semibold text-gray-800">{u.nombre}</p>
-              <p className="text-sm text-gray-500">{u.email}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{ROL_LABELS[u.rol] ?? u.rol}</p>
+            {/* Avatar */}
+            <Avatar name={u.nombre} size="md" />
+
+            {/* Name + email */}
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-semibold text-ink truncate">{u.nombre}</p>
+              <p className="text-[12px] text-ink-3 truncate">{u.email}</p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${u.activo ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+            {/* Role badge */}
+            <span className={clsx("text-[11px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap", ROL_STYLE[u.rol] ?? "bg-canvas-2 text-ink-2")}>
+              {ROL_LABELS[u.rol] ?? u.rol}
+            </span>
+
+            {/* Status */}
+            <div className="flex items-center gap-1.5" style={{ minWidth: 72 }}>
+              <span className={clsx("w-1.5 h-1.5 rounded-full flex-shrink-0", u.activo ? "bg-state-green" : "bg-state-zinc")} />
+              <span className={clsx("text-[13px]", u.activo ? "text-ink-2" : "text-ink-3")}>
                 {u.activo ? "Activo" : "Inactivo"}
               </span>
+            </div>
+
+            {/* Actions — hover only */}
+            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
               <button
+                aria-label="Editar"
+                className="flex items-center justify-center w-7 h-7 rounded text-ink-3 hover:text-ink hover:bg-canvas-2 transition-colors duration-100"
                 onClick={() => setUsuarioEditando(u)}
-                className="px-3 py-1.5 rounded-xl text-sm font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
               >
-                Editar
+                <Edit2 size={13} />
               </button>
               {u.activo && (
                 <button
+                  aria-label="Desactivar"
+                  className="flex items-center justify-center w-7 h-7 rounded text-ink-3 hover:text-state-red hover:bg-state-red-bg transition-colors duration-100"
                   onClick={() => handleDesactivar(u)}
-                  className="px-3 py-1.5 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition"
                 >
-                  Desactivar
+                  <UserX size={13} />
                 </button>
               )}
             </div>
           </div>
         ))}
+
         {filteredUsers.length === 0 && (
-          <p className="text-center text-gray-400 py-8">No hay usuarios con el filtro seleccionado.</p>
+          <div className="flex items-center justify-center py-12 text-[13px] text-ink-3">
+            No hay usuarios con el filtro seleccionado.
+          </div>
         )}
       </div>
 
       {(showModal || usuarioEditando) && (
         <UserModal onClose={handleCloseModal} usuario={usuarioEditando ?? undefined} />
       )}
-    </div>
+    </motion.div>
   )
 }
