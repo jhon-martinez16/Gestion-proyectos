@@ -10,6 +10,7 @@ import EmptyState from "../components/ui/EmptyState"
 import Skeleton from "../components/ui/Skeleton"
 import { getRolFromToken } from "../utils/auth"
 import { getCategoryStyle } from "../utils/categoryStyle"
+import PageHeader from "../components/ui/PageHeader"
 
 interface Usuario    { id: string; nombre: string }
 interface Advertencia { tipo: string; nivel: "CRITICA" | "MEDIA" | "BAJA"; mensaje: string }
@@ -118,16 +119,7 @@ export default function Projects() {
   // ── Loading ─────────────────────────────────────────────────────
   if (loading) return (
     <motion.div variants={pageVariants} initial="initial" animate="animate">
-      <div className="flex items-end justify-between mb-8 pb-6 border-b border-ui-border">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-ink-3">Gestión</span>
-          </div>
-          <h1 className="font-serif text-[36px] font-normal text-ink leading-[1.05] mb-2">Proyectos</h1>
-          <p className="text-[15px] text-ink-2 max-w-xl">Cargando proyectos…</p>
-        </div>
-      </div>
+      <PageHeader eyebrow="Gestión" title="Proyectos" subtitle="Cargando proyectos…" />
       <div className="grid gap-5" style={{ gridTemplateColumns: GRID_COLS }}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} variant="card" />
@@ -148,30 +140,25 @@ export default function Projects() {
     <motion.div variants={pageVariants} initial="initial" animate="animate">
 
       {/* ── PAGE HEADER ─────────────────────────────────────────── */}
-      <div className="flex items-end justify-between mb-8 pb-6 border-b border-ui-border">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-ink-3">Gestión</span>
-          </div>
-          <h1 className="font-serif text-[36px] font-normal text-ink leading-[1.05] mb-2">
-            Proyectos
-          </h1>
-          <p className="text-[15px] text-ink-2 max-w-xl mb-4">
-            Cartera completa de iniciativas activas y proyectos cerrados.
-          </p>
-          <div className="flex items-center gap-4 text-[13px] text-ink-3">
+      <PageHeader
+        eyebrow="Gestión"
+        title="Proyectos"
+        subtitle="Cartera completa de iniciativas activas y proyectos cerrados."
+        stats={
+          <>
             <span><strong className="text-ink font-semibold">{activos.length}</strong> activos</span>
             <span className="text-ink-4">·</span>
             <span><strong className="text-state-red font-semibold">{enRiesgo}</strong> en riesgo</span>
             <span className="text-ink-4">·</span>
             <span><strong className="text-ink-2 font-semibold">{finalizados.length}</strong> cerrados</span>
-          </div>
-        </div>
-        <Button variant="primary" leftIcon={Plus} onClick={() => setShowModal(true)}>
-          Nuevo Proyecto
-        </Button>
-      </div>
+          </>
+        }
+        actions={
+          <Button variant="primary" leftIcon={Plus} onClick={() => setShowModal(true)}>
+            Nuevo Proyecto
+          </Button>
+        }
+      />
 
       {/* ── FILTERS (floating — no card wrapper) ────────────────── */}
       <div className="flex flex-wrap gap-2.5 items-center mb-8">

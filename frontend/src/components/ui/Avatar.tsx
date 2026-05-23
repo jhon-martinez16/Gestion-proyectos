@@ -44,7 +44,12 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     return (
       <motion.div
         ref={ref}
-        whileHover={{ scale: 1.05 }}
+        whileHover={
+          ring
+            ? { scale: 1.1 }
+            : { scale: 1.1, boxShadow: "0 0 0 2px #FFFFFF, 0 0 0 4px #F97316" }
+        }
+        transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
         title={name}
         className={clsx(
           "rounded-full flex items-center justify-center flex-shrink-0",
