@@ -99,7 +99,7 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
               inset: 0,
               borderRadius: "50%",
               background: "var(--accent)",
-              animation: "pulse-dot 2s ease-in-out infinite",
+              animation: "pulse-dot 3s ease-in-out infinite",
             }} />
           </div>
         </div>
@@ -223,7 +223,7 @@ function NavItem({ to, label, icon: Icon, matchPrefix }: {
           marginLeft: isActive ? 0 : 0,
         }}
         onMouseEnter={e => {
-          if (!isActive) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.06)"
+          if (!isActive) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.05)"
         }}
         onMouseLeave={e => {
           if (!isActive) (e.currentTarget as HTMLDivElement).style.background = "transparent"
