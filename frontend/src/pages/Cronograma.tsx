@@ -1,8 +1,9 @@
 ﻿import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
+import clsx from "clsx"
 import { api } from "../services/api"
-import { Clock, AlertCircle, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react"
+import { Clock, AlertCircle, TrendingUp, ChevronLeft, ChevronRight, BarChart3, CalendarDays } from "lucide-react"
 
 // ── Types ────────────────────────────────────────────────────────
 type PageView       = "gantt" | "calendario"
@@ -306,39 +307,44 @@ export default function Cronograma() {
 
       {/* ── PAGE HEADER ── */}
       <div style={{ padding: "28px 36px 0" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
-          <div>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: "#1e293b", margin: 0 }}>
-              Cronograma
-            </h1>
-            <p style={{ fontSize: 13, color: "#64748b", marginTop: 3 }}>
-              Vista de proyectos y entregables en el tiempo
-            </p>
+        {/* Editorial header */}
+        <div className="flex items-end justify-between mb-6 pb-6 border-b border-ui-border">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent inline-block flex-shrink-0" />
+              <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-ink-3">Planificación</span>
+            </div>
+            <h1 className="font-serif text-[36px] font-normal text-ink leading-[1.05] mb-2">Cronograma</h1>
+            <p className="text-[15px] text-ink-2 max-w-xl mb-4">Vista temporal de proyectos y entregables.</p>
+            <div className="flex items-center gap-4 text-[13px] text-ink-3 flex-wrap">
+              <span><strong className="text-ink font-semibold">{proyectos.length}</strong> proyectos</span>
+              <span className="text-ink-4">·</span>
+              <span><strong className="text-ink font-semibold">{proyectos.flatMap(p => p.entregables).length}</strong> entregables</span>
+            </div>
           </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ display: "flex", background: "#f1f5f9", borderRadius: 12, padding: 4 }}>
+          {/* Segmented view toggle */}
+          <div className="flex-shrink-0 ml-6 flex items-center gap-2">
+            <div className="flex items-center bg-canvas-2 p-[3px] rounded-[10px]">
               {([
-                { value: "gantt"      as PageView, label: "📊 Gantt" },
-                { value: "calendario" as PageView, label: "📅 Calendario" },
-              ]).map(({ value, label }) => (
-                <button key={value} onClick={() => setPageView(value)} style={{
-                  padding: "7px 18px", borderRadius: 9, border: "none",
-                  background: pageView === value ? "white" : "transparent",
-                  color: pageView === value ? "#1e293b" : "#64748b",
-                  fontSize: 13, fontWeight: pageView === value ? 600 : 500,
-                  cursor: "pointer",
-                  boxShadow: pageView === value ? "0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04)" : "none",
-                  transition: "all 0.18s", whiteSpace: "nowrap",
-                }}>{label}</button>
+                { value: "gantt"      as PageView, label: "Gantt",      icon: BarChart3    },
+                { value: "calendario" as PageView, label: "Calendario", icon: CalendarDays },
+              ]).map(({ value, label, icon: Icon }) => (
+                <button
+                  key={value}
+                  onClick={() => setPageView(value)}
+                  className={clsx(
+                    "relative flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-[13px] font-medium transition-colors duration-150 whitespace-nowrap",
+                    pageView === value
+                      ? "text-ink bg-white shadow-sm border border-ui-border"
+                      : "text-ink-2 hover:text-ink",
+                  )}
+                >
+                  <Icon size={13} />
+                  {label}
+                </button>
               ))}
             </div>
-            <span style={{
-              padding: "7px 14px", borderRadius: 99,
-              background: "#dbeafe", color: "#1d4ed8",
-              fontSize: 12, fontWeight: 600,
-              whiteSpace: "nowrap",
-            }}>
+            <span className="text-[12px] font-semibold px-3 py-1.5 rounded-lg bg-state-blue-bg text-state-blue whitespace-nowrap">
               {filtrados.length} proyecto{filtrados.length !== 1 ? "s" : ""}
             </span>
           </div>
