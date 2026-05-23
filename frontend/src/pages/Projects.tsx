@@ -9,6 +9,7 @@ import SectionHeader from "../components/ui/SectionHeader"
 import EmptyState from "../components/ui/EmptyState"
 import Skeleton from "../components/ui/Skeleton"
 import { getRolFromToken } from "../utils/auth"
+import { getCategoryStyle } from "../utils/categoryStyle"
 
 interface Usuario    { id: string; nombre: string }
 interface Advertencia { tipo: string; nivel: "CRITICA" | "MEDIA" | "BAJA"; mensaje: string }
@@ -51,7 +52,7 @@ const cardVariants = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },
 }
 
-const GRID_COLS = "repeat(auto-fill, minmax(320px, 1fr))"
+const GRID_COLS = "repeat(auto-fill, minmax(340px, 1fr))"
 
 export default function Projects() {
   const esAdmin = getRolFromToken() === "ADMIN"
@@ -122,7 +123,7 @@ export default function Projects() {
           <p className="text-sm text-ink-3 mt-1.5">Cargando proyectos…</p>
         </div>
       </div>
-      <div className="grid gap-4" style={{ gridTemplateColumns: GRID_COLS }}>
+      <div className="grid gap-5" style={{ gridTemplateColumns: GRID_COLS }}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} variant="card" />
         ))}
@@ -224,14 +225,22 @@ export default function Projects() {
       </div>
 
       {/* ── ACTIVE PROJECTS grouped by category ─────────────────── */}
-      {Object.entries(activosAgrupados).map(([categoria, proyectosGrupo]) => (
-        <div key={categoria} className="mb-8">
-          <SectionHeader title={categoria} count={proyectosGrupo.length} className="mb-4" />
+      {Object.entries(activosAgrupados).map(([categoria, proyectosGrupo]) => {
+        const catStyle = getCategoryStyle(categoria)
+        return (
+        <div key={categoria} className="mb-12">
+          <SectionHeader
+            title={categoria}
+            count={proyectosGrupo.length}
+            icon={catStyle.icon}
+            iconColor={catStyle.fg}
+            className="mb-5"
+          />
           <motion.div
             variants={gridVariants}
             initial="initial"
             animate="animate"
-            className="grid gap-4"
+            className="grid gap-5"
             style={{ gridTemplateColumns: GRID_COLS }}
           >
             {proyectosGrupo.map(p => (
@@ -245,7 +254,8 @@ export default function Projects() {
             ))}
           </motion.div>
         </div>
-      ))}
+        )
+      })}
 
       {/* ── EMPTY STATE ─────────────────────────────────────────── */}
       {activos.length === 0 && finalizados.length === 0 && (
@@ -263,17 +273,17 @@ export default function Projects() {
 
       {/* ── FINALIZED PROJECTS ──────────────────────────────────── */}
       {finalizados.length > 0 && (
-        <div className="mb-8 opacity-70">
+        <div className="mb-12 opacity-70">
           <SectionHeader
-            title={`Proyectos cerrados`}
+            title="Proyectos cerrados"
             count={finalizados.length}
-            className="mb-4"
+            className="mb-5"
           />
           <motion.div
             variants={gridVariants}
             initial="initial"
             animate="animate"
-            className="grid gap-4"
+            className="grid gap-5"
             style={{ gridTemplateColumns: GRID_COLS }}
           >
             {finalizados.map(p => (

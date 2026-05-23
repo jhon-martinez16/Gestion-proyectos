@@ -315,18 +315,19 @@ body {
 /* ── CARDS ───────────────────────────────────────────────────── */
 /* Siempre blancas: nunca usar canvas (#FAFAF9) que confunde con el fondo de página */
 .card-surface {
+  position: relative;          /* necesario para hijos absolute (barra de estado, etc.) */
   background: #FFFFFF;
   border: 1px solid var(--card-border);
   box-shadow: var(--shadow-card);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl); /* 16px — más premium que 12px */
 }
 
 .card-surface-hover {
   /* No usar `all` para no interferir con las transiciones de framer-motion (transform) */
-  transition: box-shadow 200ms var(--ease), border-color 200ms var(--ease);
+  transition: box-shadow 250ms var(--ease), border-color 250ms var(--ease);
 }
 .card-surface-hover:hover {
-  box-shadow: var(--shadow-hover);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
   border-color: var(--text-faint);
 }
 

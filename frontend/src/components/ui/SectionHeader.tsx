@@ -1,19 +1,25 @@
 import { forwardRef } from "react"
 import clsx from "clsx"
-import type { ReactNode } from "react"
+import type { ElementType, ReactNode } from "react"
 
 interface SectionHeaderProps {
   title: string
   count?: number
   action?: ReactNode
+  icon?: ElementType
+  iconColor?: string
   className?: string
 }
 
 const SectionHeader = forwardRef<HTMLDivElement, SectionHeaderProps>(
-  ({ title, count, action, className }, ref) => {
+  ({ title, count, action, icon: Icon, iconColor, className }, ref) => {
     return (
-      <div ref={ref} className={clsx("flex items-center gap-2.5 mb-4", className)}>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3 whitespace-nowrap">
+      <div ref={ref} className={clsx("flex items-center gap-2.5", className)}>
+        {Icon && (
+          <Icon size={13} style={{ color: iconColor, flexShrink: 0 }} />
+        )}
+
+        <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-2 whitespace-nowrap">
           {title}
         </span>
 

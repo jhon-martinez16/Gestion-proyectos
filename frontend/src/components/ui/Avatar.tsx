@@ -10,13 +10,16 @@ interface AvatarProps {
   className?: string
 }
 
+// Hues restricted to: red/pink, blue, violet/purple, teal — no browns, olives, yellows
+const HUES = [345, 355, 5, 15, 210, 225, 240, 250, 275, 290, 310, 325, 165, 175, 185, 195]
+
 function nameToHsl(name: string): string {
   let hash = 0
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash)
   }
-  const h = Math.abs(hash) % 360
-  return `hsl(${h},48%,38%)`
+  const h = HUES[Math.abs(hash) % HUES.length]
+  return `hsl(${h}, 65%, 50%)`
 }
 
 function initials(name: string): string {
