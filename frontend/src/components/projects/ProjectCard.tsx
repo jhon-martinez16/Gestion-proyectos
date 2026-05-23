@@ -1,237 +1,173 @@
-﻿import { motion } from "framer-motion"
+import { useState, useRef, useEffect } from "react"
+import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
-import { Calendar, Edit2, Trash2 } from "lucide-react"
+import { Calendar, MoreVertical, Edit2, Trash2 } from "lucide-react"
+import clsx from "clsx"
+import Badge, { type ProjectStatus } from "../ui/Badge"
+import Avatar from "../ui/Avatar"
+import AvatarGroup from "../ui/AvatarGroup"
+import ProgressBar, { type ProgressColor } from "../ui/ProgressBar"
+import { formatDateRange } from "../../utils/dateFormat"
 
-interface Usuario  { id: string; nombre: string }
+interface Usuario { id: string; nombre: string }
 interface Advertencia { tipo: string; nivel: "CRITICA" | "MEDIA" | "BAJA"; mensaje: string }
 interface Proyecto {
-  id: string; nombre: string; descripcion: string
-  lider: Usuario; socio2?: Usuario
+  id: string
+  nombre: string
+  descripcion: string
+  lider: Usuario
+  socio2?: Usuario
   categoria: { id: string; nombre: string }
-  fechaInicio: string; fechaFin: string
-  estado: string; etapa?: string
+  fechaInicio: string
+  fechaFin: string
+  estado: string
+  etapa?: string
   advertencias?: Advertencia[]
 }
 
-interface Props { proyecto: Proyecto; onEdit: () => void; onDelete?: () => void }
-
-// ── Config ────────────────────────────────────────────────────────
-const ESTADO_CFG: Record<string, { border: string; badge: { bg: string; text: string; dot: string }; label: string }> = {
-  EN_CURSO:    { border: "var(--primary)",   badge: { bg: "#dcfce7", text: "#15803d", dot: "#16a34a" }, label: "En curso" },
-  ADVERTENCIA: { border: "var(--warning)",   badge: { bg: "#fef9c3", text: "#a16207", dot: "#f59e0b" }, label: "Advertencia" },
-  EN_RIESGO:   { border: "var(--danger)",    badge: { bg: "#fee2e2", text: "#dc2626", dot: "#ef4444" }, label: "En riesgo" },
-  FINALIZADO:  { border: "#94a3b8",          badge: { bg: "#f1f5f9", text: "#64748b", dot: "#94a3b8" }, label: "Finalizado" },
-  PROPUESTA:   { border: "#94a3b8",          badge: { bg: "#f1f5f9", text: "#475569", dot: "#94a3b8" }, label: "Propuesta" },
+interface Props {
+  proyecto: Proyecto
+  onEdit: () => void
+  onDelete?: () => void
 }
 
-const ETAPA_CFG: Record<string, { bg: string; text: string; label: string }> = {
-  PROPUESTA:    { bg: "#f3f0ff", text: "#7c3aed", label: "Propuesta" },
-  KICK_OFF:     { bg: "#eff6ff", text: "#1d4ed8", label: "Kick-off" },
-  EN_EJECUCION: { bg: "#dcfce7", text: "#15803d", label: "En ejecución" },
-  CIERRE:       { bg: "#f1f5f9", text: "#64748b", label: "Cierre" },
+const STATE_BAR: Record<string, string> = {
+  EN_CURSO:    "bg-state-green",
+  ADVERTENCIA: "bg-state-amber",
+  EN_RIESGO:   "bg-state-red",
+  FINALIZADO:  "bg-state-zinc",
+  PROPUESTA:   "bg-state-violet",
 }
 
-function avatarBg(name: string) {
-  const colors = ["#6366F1","#0EA5E9","#10B981","#F59E0B","#EC4899","#8B5CF6"]
-  return colors[name.charCodeAt(0) % colors.length]
-}
-
-function initials(name: string) {
-  return name.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase()
+const STATE_PROGRESS: Record<string, ProgressColor> = {
+  EN_CURSO:    "primary",
+  ADVERTENCIA: "warning",
+  EN_RIESGO:   "danger",
+  FINALIZADO:  "neutral",
+  PROPUESTA:   "info",
 }
 
 export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
   const navigate = useNavigate()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  const advertenciasCriticas = proyecto.advertencias?.filter(a => a.nivel === "CRITICA").length ?? 0
-  const advertenciasMedias   = proyecto.advertencias?.filter(a => a.nivel === "MEDIA").length ?? 0
-  const compromisosVencidos  = proyecto.advertencias?.filter(
-    a => a.tipo === "COMPROMISO_VENCIDO" || a.tipo === "COMPROMISO_NO_CUMPLIDO"
-  ).length ?? 0
+  useEffect(() => {
+    if (!menuOpen) return
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [menuOpen])
 
-  const esFinalizado = proyecto.estado === "FINALIZADO"
-  const estadoCfg    = ESTADO_CFG[proyecto.estado] ?? ESTADO_CFG.PROPUESTA
-  const etapaCfg     = proyecto.etapa ? ETAPA_CFG[proyecto.etapa] : null
+  const now = Date.now()
+  const start = new Date(proyecto.fechaInicio).getTime()
+  const end   = new Date(proyecto.fechaFin).getTime()
+  const progressPct =
+    proyecto.estado === "FINALIZADO" ? 100 :
+    end <= start ? 0 :
+    Math.min(100, Math.max(0, Math.round((now - start) / (end - start) * 100)))
 
-  const borderColor = esFinalizado ? "#e2e8f0"
-    : advertenciasCriticas > 0 ? "rgba(239,68,68,0.35)"
-    : advertenciasMedias   > 0 ? "rgba(245,158,11,0.35)"
-    : "var(--card-border)"
+  const teamNames = [proyecto.lider, proyecto.socio2]
+    .filter((u): u is Usuario => Boolean(u))
+    .map(u => u.nombre)
 
   return (
     <motion.div
-      whileHover={{ y: -4, boxShadow: "var(--card-shadow-hover)" }}
-      whileTap={{ scale: 0.99 }}
-      transition={{ duration: 0.18 }}
+      role="link"
+      tabIndex={0}
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="group relative rounded-xl border border-ui-border bg-canvas overflow-hidden cursor-pointer shadow-card hover:shadow-card-hover transition-shadow duration-200"
       onClick={() => navigate(`/projects/${proyecto.id}`)}
-      style={{
-        background: esFinalizado ? "#fafbfc" : "white",
-        border: `1px solid ${borderColor}`,
-        borderTop: `3px solid ${estadoCfg.border}`,
-        borderRadius: "var(--radius-lg)",
-        overflow: "hidden",
-        cursor: "pointer",
-        boxShadow: "var(--card-shadow)",
-        display: "flex",
-        flexDirection: "column",
-        opacity: esFinalizado ? 0.75 : 1,
-        transition: "box-shadow 0.18s ease",
-      }}
+      onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${proyecto.id}`)}
     >
-      {/* ── Body ── */}
-      <div style={{ padding: "16px 16px 12px", flex: 1 }}>
-
-        {/* Header: name + badges */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 10 }}>
-          <h2 style={{
-            fontSize: 15, fontWeight: 600,
-            color: esFinalizado ? "var(--text-muted)" : "var(--text-primary)",
-            lineHeight: 1.3, flex: 1, minWidth: 0,
-          }}>
-            {proyecto.nombre}
-          </h2>
-          <div style={{ display: "flex", gap: 5, flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 4,
-              padding: "3px 9px", borderRadius: 50,
-              fontSize: 11, fontWeight: 600,
-              background: estadoCfg.badge.bg, color: estadoCfg.badge.text,
-            }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: estadoCfg.badge.dot }} />
-              {esFinalizado ? "Cerrado" : estadoCfg.label}
-            </span>
-            {etapaCfg && !esFinalizado && (
-              <span style={{
-                display: "inline-flex", padding: "3px 9px", borderRadius: 50,
-                fontSize: 11, fontWeight: 600,
-                background: etapaCfg.bg, color: etapaCfg.text,
-              }}>
-                {etapaCfg.label}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Category + leaders */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-          <span style={{
-            fontSize: 12, fontWeight: 600, color: "var(--primary)",
-          }}>
-            {proyecto.categoria?.nombre}
-          </span>
-
-          {/* Avatar stack */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {[proyecto.lider, proyecto.socio2].filter(Boolean).map((u, i) => u && (
-              <div
-                key={u.id}
-                title={u.nombre}
-                style={{
-                  width: 26, height: 26, borderRadius: "50%",
-                  background: avatarBg(u.nombre),
-                  border: "2px solid white",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "white", fontSize: 10, fontWeight: 700,
-                  marginLeft: i > 0 ? -8 : 0,
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
-                }}>
-                {initials(u.nombre)}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Dates */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 6,
-          fontSize: 11, color: "var(--text-muted)", marginBottom: 10,
-        }}>
-          <Calendar size={12} color="var(--text-muted)" />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-            {new Date(proyecto.fechaInicio).toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric" })}
-            {" → "}
-            {new Date(proyecto.fechaFin).toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric" })}
-          </span>
-        </div>
-
-        {/* Alert badges */}
-        {(compromisosVencidos > 0 || advertenciasCriticas > 0 || advertenciasMedias > 0) && (
-          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 4 }}>
-            {compromisosVencidos > 0 && (
-              <span style={{
-                fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 50,
-                background: "var(--danger-light)", color: "var(--danger)",
-              }}>
-                {compromisosVencidos} compromiso{compromisosVencidos > 1 ? "s" : ""}
-              </span>
-            )}
-            {advertenciasCriticas > 0 && (
-              <span style={{
-                fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 50,
-                background: "var(--danger-light)", color: "var(--danger)",
-              }}>
-                {advertenciasCriticas} crítica{advertenciasCriticas > 1 ? "s" : ""}
-              </span>
-            )}
-            {advertenciasMedias > 0 && (
-              <span style={{
-                fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 50,
-                background: "var(--warning-light)", color: "var(--warning)",
-              }}>
-                {advertenciasMedias} media{advertenciasMedias > 1 ? "s" : ""}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* ── Footer actions ── */}
+      {/* Vertical state bar */}
       <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          display: "flex", gap: 6, padding: "10px 16px",
-          borderTop: "1px solid var(--card-border)",
-          background: "var(--content-bg)",
-        }}
-      >
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onEdit}
-          style={{
-            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-            padding: "6px 0", borderRadius: "var(--radius-sm)",
-            fontSize: 12, fontWeight: 600, cursor: "pointer",
-            background: "var(--info-light)", color: "var(--info)",
-            border: "1px solid rgba(59,130,246,0.15)",
-            transition: "var(--transition)",
-          }}
-          onMouseEnter={e => { (e.currentTarget.style.background = "var(--info)"); (e.currentTarget.style.color = "white") }}
-          onMouseLeave={e => { (e.currentTarget.style.background = "var(--info-light)"); (e.currentTarget.style.color = "var(--info)") }}
-        >
-          <Edit2 size={12} /> Editar
-        </motion.button>
-
-        {onDelete && (
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onDelete}
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-              padding: "6px 0", borderRadius: "var(--radius-sm)",
-              fontSize: 12, fontWeight: 600, cursor: "pointer",
-              background: "var(--danger-light)", color: "var(--danger)",
-              border: "1px solid rgba(239,68,68,0.15)",
-              transition: "var(--transition)",
-            }}
-            onMouseEnter={e => { (e.currentTarget.style.background = "var(--danger)"); (e.currentTarget.style.color = "white") }}
-            onMouseLeave={e => { (e.currentTarget.style.background = "var(--danger-light)"); (e.currentTarget.style.color = "var(--danger)") }}
-          >
-            <Trash2 size={12} /> Eliminar
-          </motion.button>
+        className={clsx(
+          "absolute left-0 top-0 h-full w-[3px] transition-all duration-200 group-hover:w-1",
+          STATE_BAR[proyecto.estado] ?? "bg-state-zinc",
         )}
+      />
+
+      {/* Main content */}
+      <div className="pl-5 pr-4 pt-4 pb-4">
+
+        {/* Row 1: name + badge + ⋯ */}
+        <div className="flex items-start justify-between gap-2 mb-2.5">
+          <h3 className="text-sm font-semibold text-ink leading-snug flex-1 min-w-0 line-clamp-2">
+            {proyecto.nombre}
+          </h3>
+          <div
+            className="flex items-center gap-1 flex-shrink-0"
+            onClick={e => e.stopPropagation()}
+          >
+            <Badge variant={proyecto.estado as ProjectStatus} size="sm" />
+            <div ref={menuRef} className="relative">
+              <button
+                aria-label="Opciones"
+                className={clsx(
+                  "flex items-center justify-center w-6 h-6 rounded",
+                  "text-ink-3 hover:text-ink hover:bg-canvas-2",
+                  "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+                )}
+                onClick={() => setMenuOpen(v => !v)}
+              >
+                <MoreVertical size={13} />
+              </button>
+              {menuOpen && (
+                <div className="absolute right-0 top-full mt-1 z-20 bg-canvas border border-ui-border rounded-lg shadow-elevated py-1 min-w-[120px]">
+                  <button
+                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-ink-2 hover:bg-canvas-2 hover:text-ink text-left"
+                    onClick={() => { setMenuOpen(false); onEdit() }}
+                  >
+                    <Edit2 size={11} /> Editar
+                  </button>
+                  {onDelete && (
+                    <button
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-state-red hover:bg-state-red-bg text-left"
+                      onClick={() => { setMenuOpen(false); onDelete() }}
+                    >
+                      <Trash2 size={11} /> Eliminar
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Row 2: Avatar xs + category · leader */}
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Avatar name={proyecto.lider.nombre} size="xs" />
+          <span className="text-[11px] text-ink-3 truncate">
+            {proyecto.categoria?.nombre} · {proyecto.lider.nombre}
+          </span>
+        </div>
+
+        {/* Row 3: Date range */}
+        <div className="flex items-center gap-1.5 mb-3">
+          <Calendar size={11} className="text-ink-4 flex-shrink-0" />
+          <span className="font-mono text-[10px] text-ink-3 leading-none tracking-tight">
+            {formatDateRange(new Date(proyecto.fechaInicio), new Date(proyecto.fechaFin))}
+          </span>
+        </div>
+
+        {/* Row 4: Team avatars */}
+        <AvatarGroup names={teamNames} size="sm" max={4} />
       </div>
+
+      {/* Progress bar — absolute bottom */}
+      <ProgressBar
+        value={progressPct}
+        color={STATE_PROGRESS[proyecto.estado] ?? "neutral"}
+        height={3}
+        animated={false}
+        className="absolute bottom-0 left-0 right-0"
+      />
     </motion.div>
   )
 }
