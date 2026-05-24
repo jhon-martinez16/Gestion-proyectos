@@ -72,11 +72,11 @@ interface FeedbackCliente {
   entregable?: { id: string; nombre: string } | null
 }
 
-const FACTURA_ESTADO_STYLES: Record<EstadoFactura, string> = {
-  PENDIENTE: "bg-yellow-100 text-yellow-700",
-  APROBADA:  "bg-blue-100 text-blue-700",
-  PAGADA:    "bg-green-100 text-green-700",
-  RECHAZADA: "bg-red-100 text-red-700",
+const FACTURA_ESTADO_STYLES: Record<EstadoFactura, React.CSSProperties> = {
+  PENDIENTE: { background: "transparent", color: "var(--state-amber)",  border: "1px solid var(--state-amber)" },
+  APROBADA:  { background: "transparent", color: "var(--state-blue)",   border: "1px solid var(--state-blue)" },
+  PAGADA:    { background: "transparent", color: "var(--state-green)",  border: "1px solid var(--state-green)" },
+  RECHAZADA: { background: "transparent", color: "var(--state-red)",    border: "1px solid var(--state-red)" },
 }
 
 const FACTURA_ESTADO_LABELS: Record<EstadoFactura, string> = {
@@ -129,63 +129,63 @@ const ETAPA_LABELS: Record<string, string> = {
   CIERRE:       "Cierre",
 }
 
-const ETAPA_BADGES: Record<string, string> = {
-  PROPUESTA:    "bg-purple-100 text-purple-700",
-  KICK_OFF:     "bg-blue-100 text-blue-700",
-  EN_EJECUCION: "bg-green-100 text-green-700",
-  CIERRE:       "bg-gray-100 text-gray-600",
+const ETAPA_BADGES: Record<string, React.CSSProperties> = {
+  PROPUESTA:    { background: "transparent", color: "var(--state-violet)", border: "1px solid var(--state-violet)" },
+  KICK_OFF:     { background: "transparent", color: "var(--state-blue)",   border: "1px solid var(--state-blue)" },
+  EN_EJECUCION: { background: "transparent", color: "var(--state-green)",  border: "1px solid var(--state-green)" },
+  CIERRE:       { background: "transparent", color: "var(--state-zinc)",   border: "1px solid var(--state-zinc)" },
 }
 
-const ESTADO_PROYECTO_STYLES: Record<string, string> = {
-  EN_CURSO:    "bg-green-100 text-green-700",
-  ADVERTENCIA: "bg-yellow-100 text-yellow-700",
-  EN_RIESGO:   "bg-red-100 text-red-700",
-  FINALIZADO:  "bg-gray-100 text-gray-600",
+const ESTADO_PROYECTO_STYLES: Record<string, React.CSSProperties> = {
+  EN_CURSO:    { background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)" },
+  ADVERTENCIA: { background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)" },
+  EN_RIESGO:   { background: "transparent", color: "var(--state-red)",   border: "1px solid var(--state-red)" },
+  FINALIZADO:  { background: "transparent", color: "var(--state-zinc)",  border: "1px solid var(--state-zinc)" },
 }
 
-const COMPROMISO_ESTADO_STYLES: Record<string, string> = {
-  PENDIENTE:    "bg-yellow-100 text-yellow-700",
-  CUMPLIDO:     "bg-green-100 text-green-700",
-  NO_CUMPLIDO:  "bg-red-100 text-red-700",
-  REPROGRAMADO: "bg-yellow-100 text-yellow-700",
+const COMPROMISO_ESTADO_STYLES: Record<string, React.CSSProperties> = {
+  PENDIENTE:    { background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)" },
+  CUMPLIDO:     { background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)" },
+  NO_CUMPLIDO:  { background: "transparent", color: "var(--state-red)",   border: "1px solid var(--state-red)" },
+  REPROGRAMADO: { background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)" },
 }
 
 const ENTREGABLE_COLOR: Record<string, string> = {
-  COMPLETADO: "#16A34A",
-  URGENTE:    "#F59E0B",
-  VENCIDO:    "#EF4444",
-  ADVERTENCIA:"#F97316",
-  PENDIENTE:  "#9CA3AF",
+  COMPLETADO: "var(--state-green)",
+  URGENTE:    "var(--state-amber)",
+  VENCIDO:    "var(--state-red)",
+  ADVERTENCIA:"var(--state-amber)",
+  PENDIENTE:  "var(--state-zinc)",
 }
 
-const FEEDBACK_STYLES: Record<TipoFeedback, { badge: string; label: string }> = {
-  POSITIVO: { badge: "bg-green-100 text-green-700", label: "Positivo" },
-  NEGATIVO: { badge: "bg-red-100 text-red-700",   label: "Negativo" },
-  MEJORA:   { badge: "bg-blue-100 text-blue-700", label: "Mejora" },
+const FEEDBACK_STYLES: Record<TipoFeedback, { badge: React.CSSProperties; label: string }> = {
+  POSITIVO: { badge: { background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)" }, label: "Positivo" },
+  NEGATIVO: { badge: { background: "transparent", color: "var(--state-red)",   border: "1px solid var(--state-red)" },   label: "Negativo" },
+  MEJORA:   { badge: { background: "transparent", color: "var(--state-blue)",  border: "1px solid var(--state-blue)" },  label: "Mejora" },
 }
 
 const ESTADO_GRADIENT: Record<string, string> = {
-  EN_CURSO:    "linear-gradient(90deg, #16a34a 0%, #4ade80 100%)",
-  ADVERTENCIA: "linear-gradient(90deg, #d97706 0%, #fbbf24 100%)",
+  EN_CURSO:    "linear-gradient(90deg, #2D6A4F 0%, #4A9B6F 100%)",
+  ADVERTENCIA: "linear-gradient(90deg, #D4851A 0%, #E8A040 100%)",
   EN_RIESGO:   "linear-gradient(90deg, #dc2626 0%, #f87171 100%)",
   FINALIZADO:  "linear-gradient(90deg, #475569 0%, #94a3b8 100%)",
   PROPUESTA:   "linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%)",
 }
 
 const ESTADO_BG: Record<string, string> = {
-  EN_CURSO:    "#f0fdf4",
-  ADVERTENCIA: "#fffbeb",
-  EN_RIESGO:   "#fef2f2",
-  FINALIZADO:  "#f8fafc",
-  PROPUESTA:   "#f5f3ff",
+  EN_CURSO:    "transparent",
+  ADVERTENCIA: "transparent",
+  EN_RIESGO:   "transparent",
+  FINALIZADO:  "transparent",
+  PROPUESTA:   "transparent",
 }
 
 const ESTADO_COLOR: Record<string, string> = {
-  EN_CURSO:    "#15803d",
-  ADVERTENCIA: "#b45309",
-  EN_RIESGO:   "#dc2626",
-  FINALIZADO:  "#475569",
-  PROPUESTA:   "#7c3aed",
+  EN_CURSO:    "var(--state-green)",
+  ADVERTENCIA: "var(--state-amber)",
+  EN_RIESGO:   "var(--state-red)",
+  FINALIZADO:  "var(--state-zinc)",
+  PROPUESTA:   "var(--state-violet)",
 }
 
 const ESTADO_LABEL: Record<string, string> = {
@@ -197,17 +197,17 @@ const ESTADO_LABEL: Record<string, string> = {
 }
 
 const ETAPA_BG: Record<string, string> = {
-  PROPUESTA:    "#f5f3ff",
-  KICK_OFF:     "#eff6ff",
-  EN_EJECUCION: "#f0fdf4",
-  CIERRE:       "#f8fafc",
+  PROPUESTA:    "transparent",
+  KICK_OFF:     "transparent",
+  EN_EJECUCION: "transparent",
+  CIERRE:       "transparent",
 }
 
 const ETAPA_COLOR: Record<string, string> = {
-  PROPUESTA:    "#7c3aed",
-  KICK_OFF:     "#1d4ed8",
-  EN_EJECUCION: "#15803d",
-  CIERRE:       "#475569",
+  PROPUESTA:    "var(--state-violet)",
+  KICK_OFF:     "var(--state-blue)",
+  EN_EJECUCION: "var(--state-green)",
+  CIERRE:       "var(--state-zinc)",
 }
 
 function getDaysRemaining(fechaFin: string): number {
@@ -540,29 +540,27 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
 
   if (loadError) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F3FBF6] gap-4">
-        <p className="text-red-500 font-medium">{loadError}</p>
-        <button onClick={loadData} className="px-5 py-2 bg-[#16A34A] text-white rounded-xl font-medium hover:bg-[#15803D] transition">
-          Reintentar
-        </button>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, minHeight: 320 }}>
+        <p style={{ color: "var(--danger)" }} className="font-medium">{loadError}</p>
+        <button onClick={loadData} className="btn-primary">Reintentar</button>
       </div>
     );
   }
 
   if (!project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F3FBF6] text-gray-700">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 320, color: "var(--text-secondary)" }}>
         Cargando...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F3FBF6] p-10 space-y-10 text-gray-800">
+    <div className="space-y-10" style={{ color: "var(--text-primary)" }}>
 
       {/* Breadcrumb + back */}
-      <div className="text-sm text-gray-500">Proyectos &gt; {project.nombre}</div>
-      <button onClick={() => navigate("/projects")} className="text-sm text-[#16A34A] hover:text-[#15803D] font-medium mb-4">
+      <div style={{ fontSize: 13, color: "var(--text-muted)" }}>Proyectos &gt; {project.nombre}</div>
+      <button onClick={() => navigate("/projects")} style={{ fontSize: 13, color: "var(--accent-gold)", background: "none", border: "none", cursor: "pointer", fontWeight: 500, marginBottom: 16, padding: 0 }}>
         ← Volver a Proyectos
       </button>
 
@@ -581,7 +579,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 12 }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1 style={{
-                fontFamily: "'Instrument Serif', serif",
+                fontFamily: "var(--font-serif)",
                 fontSize: 26, fontWeight: 400, color: "var(--text-primary)",
                 margin: 0, lineHeight: 1.2, letterSpacing: "-0.01em",
               }}>
@@ -598,19 +596,26 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
             </div>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
               <span style={{
-                padding: "5px 12px", borderRadius: 99,
-                background: ESTADO_BG[project.estado] ?? "#f1f5f9",
-                color: ESTADO_COLOR[project.estado] ?? "#64748b",
-                fontSize: 11, fontWeight: 700,                letterSpacing: "0.04em",
+                padding: "3px 10px", borderRadius: 4,
+                background: ESTADO_BG[project.estado] ?? "transparent",
+                color: ESTADO_COLOR[project.estado] ?? "var(--state-zinc)",
+                border: `1px solid ${ESTADO_COLOR[project.estado] ?? "var(--state-zinc)"}`,
+                fontSize: 10, fontWeight: 500,
+                fontFamily: "var(--font-ui)", letterSpacing: "0.06em",
+                textTransform: "uppercase", whiteSpace: "nowrap",
               }}>
                 {ESTADO_LABEL[project.estado] ?? project.estado?.replace(/_/g, " ")}
               </span>
               {project.etapa && (
                 <span style={{
-                  padding: "4px 10px", borderRadius: 99,
-                  background: ETAPA_BG[project.etapa] ?? "#f1f5f9",
-                  color: ETAPA_COLOR[project.etapa] ?? "#64748b",
-                  fontSize: 10, fontWeight: 600,                }}>
+                  padding: "3px 10px", borderRadius: 4,
+                  background: ETAPA_BG[project.etapa] ?? "transparent",
+                  color: ETAPA_COLOR[project.etapa] ?? "var(--state-zinc)",
+                  border: `1px solid ${ETAPA_COLOR[project.etapa] ?? "var(--state-zinc)"}`,
+                  fontSize: 10, fontWeight: 500,
+                  fontFamily: "var(--font-ui)", letterSpacing: "0.06em",
+                  textTransform: "uppercase", whiteSpace: "nowrap",
+                }}>
                   {ETAPA_LABELS[project.etapa] ?? project.etapa}
                 </span>
               )}
@@ -625,7 +630,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 padding: "4px 10px", borderRadius: 8,
                 background: "var(--content-bg)", border: "1px solid var(--card-border)",
                 fontSize: 12, color: "var(--text-secondary)",              }}>
-                <div style={{ width: 8, height: 8, borderRadius: 2, background: project.categoria.color ?? "var(--navy, #1e3a6e)", flexShrink: 0 }} />
+                <div style={{ width: 8, height: 8, borderRadius: 2, background: project.categoria.color ?? "var(--accent-forest)", flexShrink: 0 }} />
                 {project.categoria.nombre}
               </div>
             )}
@@ -637,7 +642,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               }}>
                 <div style={{
                   width: 20, height: 20, borderRadius: 99,
-                  background: "var(--navy, #1e3a6e)", color: "white",
+                  background: "var(--accent-forest)", color: "white",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 8, fontWeight: 700,                  flexShrink: 0,
                 }}>
@@ -671,7 +676,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               display: "flex", alignItems: "center", gap: 5,
               padding: "4px 10px", borderRadius: 8,
               background: "var(--content-bg)", border: "1px solid var(--card-border)",
-              fontSize: 12, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 12, color: "var(--text-muted)", fontFamily: "var(--font-mono)",
             }}>
               {new Date(project.fechaInicio).toLocaleDateString("es-CO")} → {new Date(project.fechaFin).toLocaleDateString("es-CO")}
             </div>
@@ -681,10 +686,10 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 <div style={{
                   display: "flex", alignItems: "center", gap: 5,
                   padding: "4px 10px", borderRadius: 8,
-                  background: days < 0 ? "#fef2f2" : days < 14 ? "#fff7ed" : "#f0fdf4",
-                  border: `1px solid ${days < 0 ? "#fecaca" : days < 14 ? "#fed7aa" : "#bbf7d0"}`,
+                  background: "transparent",
+                  border: `1px solid ${days < 0 ? "var(--state-red)" : days < 14 ? "var(--state-amber)" : "var(--state-green)"}`,
                   fontSize: 12, fontWeight: 600,
-                  color: days < 0 ? "#dc2626" : days < 14 ? "#ea580c" : "#16a34a",
+                  color: days < 0 ? "var(--state-red)" : days < 14 ? "var(--state-amber)" : "var(--state-green)",
                 }}>
                   {days < 0 ? `${Math.abs(days)}d vencido` : days === 0 ? "Vence hoy" : `${days}d restantes`}
                 </div>
@@ -694,8 +699,8 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               <div style={{
                 display: "flex", alignItems: "center", gap: 4,
                 padding: "4px 10px", borderRadius: 8,
-                background: "#fefce8", border: "1px solid #fde68a",
-                fontSize: 12, fontWeight: 600, color: "#92400e",
+                background: "transparent", border: "1px solid var(--accent-gold)",
+                fontSize: 12, fontWeight: 600, color: "var(--accent-gold)",
               }}>
                 ★ {avgCalificacion}
               </div>
@@ -712,7 +717,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
                     Entregables aprobados por cliente
                   </span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text-secondary)", fontFamily: "'JetBrains Mono', monospace" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text-secondary)", fontFamily: "var(--font-mono)" }}>
                     {aprobados}/{entregables.length} · {pct}%
                   </span>
                 </div>
@@ -723,7 +728,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                     style={{
                       height: "100%", borderRadius: 99,
-                      background: ESTADO_GRADIENT[project.estado] ?? "var(--navy, #1e3a6e)",
+                      background: ESTADO_GRADIENT[project.estado] ?? "var(--accent-forest)",
                     }}
                   />
                 </div>
@@ -744,30 +749,30 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
         if (entVencidos.length > 0) partes.push(`${entVencidos.length} entregable${entVencidos.length > 1 ? "s" : ""} vencido${entVencidos.length > 1 ? "s" : ""}`);
         if (entUrgentes.length > 0) partes.push(`${entUrgentes.length} entregable${entUrgentes.length > 1 ? "s" : ""} próximo${entUrgentes.length > 1 ? "s" : ""} a vencer`);
         return (
-          <div className="bg-amber-50 border border-amber-300 rounded-2xl overflow-hidden shadow-sm">
+          <div style={{ border: "1px solid var(--state-amber)", borderRadius: 10, overflow: "hidden" }}>
             <button
               onClick={() => setBannerVencidosOpen(p => !p)}
-              className="w-full flex items-center justify-between px-5 py-3 text-amber-800 hover:bg-amber-100 transition text-left"
+              style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 20px", background: "rgba(212,133,26,0.06)", border: "none", cursor: "pointer", textAlign: "left" }}
             >
-              <span className="font-semibold text-sm">⚠ {partes.join(" · ")}</span>
-              <span className="text-amber-600 text-xs shrink-0 ml-2">{bannerVencidosOpen ? "▲ Ocultar" : "▼ Ver"}</span>
+              <span style={{ fontWeight: 600, fontSize: 13, color: "var(--state-amber)", fontFamily: "var(--font-ui)" }}>⚠ {partes.join(" · ")}</span>
+              <span style={{ fontSize: 11, color: "var(--state-amber)", flexShrink: 0, marginLeft: 8 }}>{bannerVencidosOpen ? "▲ Ocultar" : "▼ Ver"}</span>
             </button>
             {bannerVencidosOpen && (
-              <div className="px-5 pb-4 pt-2 space-y-1.5 border-t border-amber-200">
+              <div style={{ padding: "8px 20px 16px", borderTop: "1px solid rgba(212,133,26,0.25)", display: "flex", flexDirection: "column", gap: 8 }}>
                 {compVencidos.map(c => (
-                  <div key={c.id} className="flex items-center gap-2 text-sm text-amber-900">
-                    <span className="text-red-500 shrink-0">●</span>
-                    <span className="font-medium truncate flex-1">{c.descripcion}</span>
-                    <span className="text-xs text-red-500 shrink-0">{calcDiasRetraso(c.fechaActual)} días</span>
-                    <button onClick={() => document.getElementById("section-compromisos")?.scrollIntoView({ behavior: "smooth" })} className="text-xs text-blue-600 hover:underline shrink-0">Ver</button>
+                  <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-primary)" }}>
+                    <span style={{ color: "var(--state-red)", flexShrink: 0 }}>●</span>
+                    <span style={{ fontWeight: 500, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.descripcion}</span>
+                    <span style={{ fontSize: 11, color: "var(--state-red)", flexShrink: 0 }}>{calcDiasRetraso(c.fechaActual)} días</span>
+                    <button onClick={() => document.getElementById("section-compromisos")?.scrollIntoView({ behavior: "smooth" })} style={{ fontSize: 11, color: "var(--accent-gold)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", flexShrink: 0 }}>Ver</button>
                   </div>
                 ))}
                 {[...entVencidos, ...entUrgentes].map(e => (
-                  <div key={e.id} className="flex items-center gap-2 text-sm text-amber-900">
-                    <span className={`shrink-0 ${e.estado === "VENCIDO" ? "text-red-500" : "text-orange-400"}`}>●</span>
-                    <span className="font-medium truncate flex-1">{e.nombre}</span>
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full shrink-0 ${e.estado === "VENCIDO" ? "bg-red-100 text-red-600" : "bg-orange-100 text-orange-600"}`}>{e.estado === "VENCIDO" ? "Vencido" : "Urgente"}</span>
-                    <button onClick={() => document.getElementById("section-entregables")?.scrollIntoView({ behavior: "smooth" })} className="text-xs text-blue-600 hover:underline shrink-0">Ver</button>
+                  <div key={e.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-primary)" }}>
+                    <span style={{ color: e.estado === "VENCIDO" ? "var(--state-red)" : "var(--state-amber)", flexShrink: 0 }}>●</span>
+                    <span style={{ fontWeight: 500, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.nombre}</span>
+                    <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "transparent", color: e.estado === "VENCIDO" ? "var(--state-red)" : "var(--state-amber)", border: `1px solid ${e.estado === "VENCIDO" ? "var(--state-red)" : "var(--state-amber)"}`, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em", flexShrink: 0 }}>{e.estado === "VENCIDO" ? "Vencido" : "Urgente"}</span>
+                    <button onClick={() => document.getElementById("section-entregables")?.scrollIntoView({ behavior: "smooth" })} style={{ fontSize: 11, color: "var(--accent-gold)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", flexShrink: 0 }}>Ver</button>
                   </div>
                 ))}
               </div>
@@ -778,11 +783,12 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
 
       {/* ADVERTENCIAS */}
       {advertencias.length > 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white border rounded-2xl p-6 shadow-md space-y-3">
-          <h3 className="text-lg font-semibold text-gray-800">Advertencias del Proyecto</h3>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", gap: 12 }}>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 20, fontWeight: 300, color: "var(--text-primary)", margin: 0 }}>Advertencias del Proyecto</h3>
           {advertencias.map((a, i) => {
-            const color = a.nivel === "CRITICA" ? "border-red-500 bg-red-50 text-red-700" : a.nivel === "MEDIA" ? "border-yellow-400 bg-yellow-50 text-yellow-700" : "border-blue-400 bg-blue-50 text-blue-700";
-            return <div key={i} className={`border-l-4 ${color} p-3 rounded-lg text-sm`}>{a.mensaje}</div>;
+            const borderColor = a.nivel === "CRITICA" ? "var(--state-red)" : a.nivel === "MEDIA" ? "var(--state-amber)" : "var(--state-blue)";
+            const textColor = a.nivel === "CRITICA" ? "var(--state-red)" : a.nivel === "MEDIA" ? "var(--state-amber)" : "var(--state-blue)";
+            return <div key={i} style={{ borderLeft: `3px solid ${borderColor}`, paddingLeft: 12, paddingTop: 10, paddingBottom: 10, paddingRight: 10, borderRadius: 4, background: "var(--canvas)", fontSize: 13, color: textColor }}>{a.mensaje}</div>;
           })}
         </motion.div>
       )}
@@ -798,63 +804,64 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 if (window.confirm("¿Cerrar este proyecto? Se marcará como FINALIZADO."))
                   patchProyecto({ etapa: "CIERRE", estado: "FINALIZADO" })
               }}
-              className="px-4 py-2 rounded-xl text-sm font-semibold bg-gray-800 text-white hover:bg-gray-900 transition disabled:opacity-40"
+              className="btn-primary" style={{ height: 36, padding: "0 16px", fontSize: 13 }}
             >
               Cerrar proyecto
             </button>
           </div>
         )}
         <div className="grid sm:grid-cols-2 gap-4 pt-2">
-          <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 bg-gray-50">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 16, borderRadius: 10, border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
             <div>
-              <p className="font-semibold text-gray-700 text-sm">Contrato firmado</p>
-              <p className="text-xs text-gray-400 mt-0.5">Requisito previo al Kick-off</p>
+              <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 13 }}>Contrato firmado</p>
+              <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>Requisito previo al Kick-off</p>
             </div>
             {project.contratoFirmado ? (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Firmado</span>
+              <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Firmado</span>
             ) : (
-              <button disabled={updatingEstado} onClick={() => patchProyecto({ contratoFirmado: true, etapa: "KICK_OFF" })} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#16A34A] text-white hover:bg-[#15803D] transition disabled:opacity-50">
+              <button disabled={updatingEstado} onClick={() => patchProyecto({ contratoFirmado: true, etapa: "KICK_OFF" })} className="btn-primary" style={{ height: 30, padding: "0 12px", fontSize: 11 }}>
                 Marcar firmado
               </button>
             )}
           </div>
-          <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 bg-gray-50">
+          <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
             <div>
-              <p className="font-semibold text-gray-700 text-sm">Kick-off realizado</p>
+              <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 13 }}>Kick-off realizado</p>
               {project.kickoffRealizado && project.kickoffFecha ? (
-                <p className="text-xs text-gray-400 mt-0.5">{new Date(project.kickoffFecha).toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" })}</p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>{new Date(project.kickoffFecha).toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" })}</p>
               ) : (
-                <p className="text-xs text-gray-400 mt-0.5">Inicia la fase de ejecución</p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>Inicia la fase de ejecución</p>
               )}
             </div>
             {project.kickoffRealizado ? (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Realizado</span>
+              <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Realizado</span>
             ) : (
-              <button disabled={updatingEstado || !project.contratoFirmado} onClick={() => patchProyecto({ kickoffRealizado: true, kickoffFecha: new Date().toISOString(), etapa: "EN_EJECUCION" })} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#16A34A] text-white hover:bg-[#15803D] transition disabled:opacity-50" title={!project.contratoFirmado ? "Primero firma el contrato" : undefined}>
+              <button disabled={updatingEstado || !project.contratoFirmado} onClick={() => patchProyecto({ kickoffRealizado: true, kickoffFecha: new Date().toISOString(), etapa: "EN_EJECUCION" })} className="btn-primary" style={{ height: 30, padding: "0 12px", fontSize: 11 }} title={!project.contratoFirmado ? "Primero firma el contrato" : undefined}>
                 Marcar realizado
               </button>
             )}
           </div>
-          <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 bg-gray-50 col-span-full sm:col-span-1">
+          <div className="flex items-center justify-between p-4 rounded-xl col-span-full sm:col-span-1" style={{ border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
             <div>
-              <p className="font-semibold text-gray-700 text-sm">Póliza</p>
-              <p className="text-xs text-gray-400 mt-0.5">{project.requierePoliza ? "Requerida" : "No requerida"}</p>
+              <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 13 }}>Póliza</p>
+              <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>{project.requierePoliza ? "Requerida" : "No requerida"}</p>
             </div>
             <div className="flex items-center gap-2">
               {esAdmin && (
-                <button disabled={updatingEstado} onClick={() => patchProyecto({ requierePoliza: !project.requierePoliza })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${project.requierePoliza ? "bg-[#16A34A]" : "bg-gray-300"}`}>
-                  <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${project.requierePoliza ? "translate-x-6" : "translate-x-1"}`} />
+                <button disabled={updatingEstado} onClick={() => patchProyecto({ requierePoliza: !project.requierePoliza })}
+                  style={{ position: "relative", display: "inline-flex", height: 24, width: 44, alignItems: "center", borderRadius: 99, transition: "background 200ms", background: project.requierePoliza ? "var(--accent-forest)" : "var(--text-faint)", border: "none", cursor: "pointer", padding: 0 }}>
+                  <span style={{ display: "inline-block", height: 16, width: 16, borderRadius: "50%", background: "white", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "transform 200ms", transform: project.requierePoliza ? "translateX(24px)" : "translateX(4px)" }} />
                 </button>
               )}
               {project.requierePoliza && (
                 project.polizaContratada ? (
-                  <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Contratada</span>
+                  <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Contratada</span>
                 ) : esAdmin ? (
-                  <button disabled={updatingEstado} onClick={() => patchProyecto({ polizaContratada: true })} className="px-2 py-1 rounded-xl text-xs font-semibold bg-orange-500 text-white hover:bg-orange-600 transition disabled:opacity-50">
+                  <button disabled={updatingEstado} onClick={() => patchProyecto({ polizaContratada: true })} className="btn-primary" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>
                     Marcar contratada
                   </button>
                 ) : (
-                  <span className="px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Pendiente</span>
+                  <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-red)", border: "1px solid var(--state-red)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Pendiente</span>
                 )
               )}
             </div>
@@ -866,61 +873,62 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {(project.etapa === "PROPUESTA" || esAdmin) && (
         <CollapsibleSection title="Gestión de Propuesta" sectionId="propuesta" projectId={project.id}>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 bg-gray-50">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 16, borderRadius: 10, border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
               <div>
-                <p className="font-semibold text-gray-700 text-sm">Propuesta aprobada</p>
-                <p className="text-xs text-gray-400 mt-0.5">Aprobación interna de la propuesta</p>
+                <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 13 }}>Propuesta aprobada</p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>Aprobación interna de la propuesta</p>
               </div>
               <div className="flex items-center gap-2">
                 {esAdmin ? (
-                  <button disabled={updatingEstado} onClick={() => patchProyecto({ propuestaAprobada: !project.propuestaAprobada })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${project.propuestaAprobada ? "bg-[#16A34A]" : "bg-gray-300"}`}>
-                    <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${project.propuestaAprobada ? "translate-x-6" : "translate-x-1"}`} />
+                  <button disabled={updatingEstado} onClick={() => patchProyecto({ propuestaAprobada: !project.propuestaAprobada })}
+                    style={{ position: "relative", display: "inline-flex", height: 24, width: 44, alignItems: "center", borderRadius: 99, transition: "background 200ms", background: project.propuestaAprobada ? "var(--accent-forest)" : "var(--text-faint)", border: "none", cursor: "pointer", padding: 0 }}>
+                    <span style={{ display: "inline-block", height: 16, width: 16, borderRadius: "50%", background: "white", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "transform 200ms", transform: project.propuestaAprobada ? "translateX(24px)" : "translateX(4px)" }} />
                   </button>
                 ) : (
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${project.propuestaAprobada ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                  <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: project.propuestaAprobada ? "var(--state-green)" : "var(--state-zinc)", border: `1px solid ${project.propuestaAprobada ? "var(--state-green)" : "var(--state-zinc)"}`, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                     {project.propuestaAprobada ? "Aprobada" : "Pendiente"}
                   </span>
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 bg-gray-50">
+            <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
               <div>
-                <p className="font-semibold text-gray-700 text-sm">¿Requiere contrato?</p>
-                <p className="text-xs text-gray-400 mt-0.5">Formalización contractual</p>
+                <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 13 }}>¿Requiere contrato?</p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>Formalización contractual</p>
               </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-semibold ${project.requiereContrato ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"}`}>
+              <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: project.requiereContrato ? "var(--state-blue)" : "var(--state-zinc)", border: `1px solid ${project.requiereContrato ? "var(--state-blue)" : "var(--state-zinc)"}`, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {project.requiereContrato ? "Sí" : "No"}
               </span>
             </div>
           </div>
           {esAdmin && project.propuestaAprobada && (
-            <div className="p-4 rounded-2xl border border-blue-200 bg-blue-50">
-              <p className="text-sm font-semibold text-blue-800 mb-2">Propuesta aprobada</p>
-              <p className="text-xs text-blue-600">La propuesta ha sido aprobada. Continúa con la firma del contrato y el proceso de póliza si aplica.</p>
+            <div style={{ padding: 16, borderRadius: 10, border: "1px solid var(--accent-gold)", background: "rgba(200,169,110,0.06)" }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "var(--accent-gold)", marginBottom: 4 }}>Propuesta aprobada</p>
+              <p style={{ fontSize: 12, color: "var(--text-secondary)" }}>La propuesta ha sido aprobada. Continúa con la firma del contrato y el proceso de póliza si aplica.</p>
             </div>
           )}
 
           {/* Documentación */}
-          <div className="mt-4 border-t border-gray-100 pt-4">
-            <p className="text-sm font-semibold text-gray-700 mb-3">Documentación</p>
+          <div style={{ marginTop: 16, borderTop: "1px solid var(--border-subtle)", paddingTop: 16 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 }}>Documentación</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { key: "documentosFacturacionRecibidos", label: "Docs facturación recibidos" },
                 { key: "proveedorValidado", label: "Logique validado como proveedor" },
                 ...(project.requierePoliza ? [{ key: "documentosPolizaConfirmados", label: "Docs póliza confirmados" }] : []),
               ].map(({ key, label }) => (
-                <div key={key} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 bg-gray-50">
-                  <p className="text-sm text-gray-700">{label}</p>
+                <div key={key} className="flex items-center justify-between p-3 rounded-xl" style={{ border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
+                  <p style={{ fontSize: 13, color: "var(--text-primary)" }}>{label}</p>
                   {esAdmin ? (
                     <button
                       disabled={updatingEstado}
                       onClick={() => patchProyecto({ [key]: !project[key] })}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${project[key] ? "bg-[#16A34A]" : "bg-gray-300"}`}
+                      style={{ position: "relative", display: "inline-flex", height: 24, width: 44, alignItems: "center", borderRadius: 99, transition: "background 200ms", background: project[key] ? "var(--accent-forest)" : "var(--text-faint)", border: "none", cursor: "pointer", padding: 0 }}
                     >
-                      <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform ${project[key] ? "translate-x-6" : "translate-x-1"}`} />
+                      <span style={{ display: "inline-block", height: 16, width: 16, borderRadius: "50%", background: "white", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "transform 200ms", transform: project[key] ? "translateX(24px)" : "translateX(4px)" }} />
                     </button>
                   ) : (
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${project[key] ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                    <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: project[key] ? "var(--state-green)" : "var(--state-zinc)", border: `1px solid ${project[key] ? "var(--state-green)" : "var(--state-zinc)"}`, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       {project[key] ? "✓" : "Pendiente"}
                     </span>
                   )}
@@ -942,63 +950,63 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       <div id="section-entregables">
       <CollapsibleSection title="Entregables" sectionId="entregables" projectId={project.id} buttonText="+ Crear Entregable" onClick={() => setShowEntregableModal(true)}>
         {entregables.length === 0 ? (
-          <p className="text-gray-500">No hay entregables registrados.</p>
+          <p style={{ fontSize: 14, color: "var(--text-muted)" }}>No hay entregables registrados.</p>
         ) : (
           <ul className="space-y-4">
             {entregables.map((e) => (
-              <li key={e.id} className={`rounded-2xl border shadow-sm overflow-hidden ${e.clienteAprobado ? "border-green-300" : e.observacionesCliente ? "border-red-200" : "border-gray-100"}`}>
-                <div className={`px-5 py-4 border-b ${e.clienteAprobado ? "bg-green-50 border-green-200" : e.observacionesCliente ? "bg-red-50 border-red-100" : "bg-[#DDF7E6] border-green-100"}`}>
+              <li key={e.id} style={{ borderRadius: 8, border: `1px solid ${e.clienteAprobado ? "var(--state-green)" : e.observacionesCliente ? "var(--state-red)" : "var(--border-subtle)"}`, overflow: "hidden", boxShadow: "var(--shadow-card)" }}>
+                <div style={{ padding: "16px 20px", borderBottom: `1px solid ${e.clienteAprobado ? "var(--state-green)" : e.observacionesCliente ? "var(--state-red)" : "var(--border-subtle)"}`, background: e.clienteAprobado ? "var(--primary-light)" : e.observacionesCliente ? "var(--danger-light)" : "var(--canvas)" }}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-semibold text-gray-800">{e.nombre}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">Entrega: {new Date(e.fechaEntrega).toLocaleDateString("es-CO")}</p>
+                      <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 14 }}>{e.nombre}</p>
+                      <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2, fontFamily: "var(--font-mono)" }}>Entrega: {new Date(e.fechaEntrega).toLocaleDateString("es-CO")}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {!e.clienteAprobado && (
-                        <button onClick={() => setEntregableEditando(e)} className="px-2.5 py-1 rounded-lg text-xs font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition">Editar</button>
+                        <button onClick={() => setEntregableEditando(e)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>Editar</button>
                       )}
-                      <button onClick={() => handleEliminarEntregable(e.id, e.nombre)} className="px-2.5 py-1 rounded-lg text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition">Eliminar</button>
+                      <button onClick={() => handleEliminarEntregable(e.id, e.nombre)} className="btn-danger" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>Eliminar</button>
                     </div>
                     {e.clienteAprobado && (
-                      <span className="shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200">
-                        Aprobado por cliente{e.fechaAprobacionCliente && <span className="ml-1 text-green-500">· {new Date(e.fechaAprobacionCliente).toLocaleDateString("es-CO")}</span>}
+                      <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap", flexShrink: 0 }}>
+                        ✓ Cliente aprobó{e.fechaAprobacionCliente && <span style={{ marginLeft: 4, opacity: 0.7 }}>· {new Date(e.fechaAprobacionCliente).toLocaleDateString("es-CO")}</span>}
                       </span>
                     )}
                   </div>
-                  {e.descripcion && <p className="text-sm text-gray-600 mt-1">{e.descripcion}</p>}
+                  {e.descripcion && <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6 }}>{e.descripcion}</p>}
                   {e.observacionesCliente && (
-                    <div className="mt-2 p-2.5 rounded-lg bg-red-100 border border-red-200">
-                      <p className="text-xs font-semibold text-red-600 mb-0.5">Observaciones del cliente</p>
-                      <p className="text-sm text-red-700">{e.observacionesCliente}</p>
+                    <div style={{ marginTop: 8, padding: "8px 12px", borderRadius: 4, background: "var(--danger-light)", border: "1px solid var(--state-red)" }}>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: "var(--state-red)", marginBottom: 2 }}>Observaciones del cliente</p>
+                      <p style={{ fontSize: 13, color: "var(--danger)" }}>{e.observacionesCliente}</p>
                     </div>
                   )}
                 </div>
                 {!e.clienteAprobado && (
-                  <div className="px-5 py-4 bg-white space-y-4">
+                  <div className="px-5 py-4 space-y-4" style={{ background: "var(--bg-card)" }}>
                     <div className="flex items-center gap-3">
-                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${e.revisionInternaAprobada ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${e.revisionInternaAprobada ? "bg-green-500 text-white" : "bg-gray-300 text-gray-600"}`}>{e.revisionInternaAprobada ? "✓" : "1"}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 99, fontSize: 11, fontWeight: 500, background: "transparent", color: e.revisionInternaAprobada ? "var(--state-green)" : "var(--state-zinc)", border: `1px solid ${e.revisionInternaAprobada ? "var(--state-green)" : "var(--state-zinc)"}`, fontFamily: "var(--font-ui)" }}>
+                        <span style={{ width: 16, height: 16, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, background: e.revisionInternaAprobada ? "var(--state-green)" : "var(--state-zinc)", color: "white" }}>{e.revisionInternaAprobada ? "✓" : "1"}</span>
                         Revisión interna
                       </div>
-                      <div className={`flex-1 h-0.5 ${e.revisionInternaAprobada ? "bg-green-300" : "bg-gray-200"}`} />
-                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${e.revisionInternaAprobada ? "bg-gray-100 text-gray-500" : "bg-gray-50 text-gray-300"}`}>
-                        <span className="w-4 h-4 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center text-[10px] font-bold">2</span>
+                      <div style={{ flex: 1, height: 1, background: e.revisionInternaAprobada ? "var(--state-green)" : "var(--border-subtle)" }} />
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 99, fontSize: 11, fontWeight: 500, background: "transparent", color: e.revisionInternaAprobada ? "var(--text-muted)" : "var(--text-faint)", border: `1px solid ${e.revisionInternaAprobada ? "var(--border-subtle)" : "var(--text-faint)"}`, fontFamily: "var(--font-ui)" }}>
+                        <span style={{ width: 16, height: 16, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, background: "var(--text-faint)", color: "white" }}>2</span>
                         Aprobación cliente
                       </div>
                     </div>
                     {!e.revisionInternaAprobada ? (
-                      <button onClick={() => patchEntregable(e.id, { revisionInternaAprobada: true })} className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#16A34A] text-white hover:bg-[#15803D] transition">Aprobar revisión interna</button>
+                      <button onClick={() => patchEntregable(e.id, { revisionInternaAprobada: true })} className="btn-primary" style={{ fontSize: 13 }}>Aprobar revisión interna</button>
                     ) : e.observacionesCliente ? (
                       <div className="space-y-3">
-                        <p className="text-xs text-gray-500">El cliente devolvió este entregable. Corrígelo y re-envía para aprobación.</p>
-                        <button onClick={() => patchEntregable(e.id, { observacionesCliente: null, estado: "PENDIENTE" })} className="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition">Re-enviar para aprobación</button>
+                        <p style={{ fontSize: 12, color: "var(--text-muted)" }}>El cliente devolvió este entregable. Corrígelo y re-envía para aprobación.</p>
+                        <button onClick={() => patchEntregable(e.id, { observacionesCliente: null, estado: "PENDIENTE" })} className="btn-primary" style={{ fontSize: 13 }}>Re-enviar para aprobación</button>
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <textarea rows={2} placeholder="Observaciones del cliente (opcional para devolución)..." value={obsMap[e.id] ?? ""} onChange={(ev) => setObsMap((prev) => ({ ...prev, [e.id]: ev.target.value }))} className="w-full p-3 rounded-xl border border-gray-200 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-[#16A34A]" />
+                        <textarea rows={2} placeholder="Observaciones del cliente (opcional para devolución)..." value={obsMap[e.id] ?? ""} onChange={(ev) => setObsMap((prev) => ({ ...prev, [e.id]: ev.target.value }))} className="form-input" style={{ height: "auto", resize: "none" }} />
                         <div className="flex gap-3">
-                          <button onClick={() => patchEntregable(e.id, { clienteAprobado: true, fechaAprobacionCliente: new Date().toISOString() })} className="flex-1 py-2 rounded-xl text-sm font-semibold bg-[#16A34A] text-white hover:bg-[#15803D] transition">Cliente aprobó</button>
-                          <button disabled={!(obsMap[e.id] ?? "").trim()} onClick={() => patchEntregable(e.id, { observacionesCliente: obsMap[e.id], estado: "PENDIENTE" })} className="flex-1 py-2 rounded-xl text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition disabled:opacity-40">Cliente devolvió</button>
+                          <button onClick={() => patchEntregable(e.id, { clienteAprobado: true, fechaAprobacionCliente: new Date().toISOString() })} className="btn-primary" style={{ flex: 1, fontSize: 13 }}>Cliente aprobó</button>
+                          <button disabled={!(obsMap[e.id] ?? "").trim()} onClick={() => patchEntregable(e.id, { observacionesCliente: obsMap[e.id], estado: "PENDIENTE" })} className="btn-danger" style={{ flex: 1, fontSize: 13 }}>Cliente devolvió</button>
                         </div>
                       </div>
                     )}
@@ -1015,39 +1023,39 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       <div id="section-compromisos">
       <CollapsibleSection title="Compromisos Internos" sectionId="compromisos" projectId={project.id} buttonText="+ Nuevo Compromiso" onClick={() => setShowCompromisoModal(true)}>
         {compromisos.length === 0 ? (
-          <p className="text-gray-500">No hay compromisos registrados.</p>
+          <p style={{ fontSize: 14, color: "var(--text-muted)" }}>No hay compromisos registrados.</p>
         ) : (
           <ul className="space-y-3">
             {compromisos.map((c) => {
               const vencido = c.estado === "PENDIENTE" && esVencidoOCumpleHoy(c.fechaActual);
               return (
-                <li key={c.id} className={`p-4 border rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${vencido ? "border-red-200 bg-red-50" : "border-[#DDF7E6] bg-white"}`}>
+                <li key={c.id} style={{ padding: 16, borderRadius: 10, border: `1px solid ${vencido ? "var(--state-red)" : "var(--border-subtle)"}`, background: vencido ? "rgba(192,57,43,0.04)" : "var(--bg-card)", display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }} className="sm:flex-row sm:items-center justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-gray-800">{c.descripcion}</p>
+                      <p style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{c.descripcion}</p>
                       {vencido ? (
-                        <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-red)", border: "1px solid var(--state-red)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                           VENCIDO · {calcDiasRetraso(c.fechaActual)} día{calcDiasRetraso(c.fechaActual) === 1 ? "" : "s"}
                         </span>
                       ) : c.estado === "REPROGRAMADO" ? (
-                        <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">REPROGRAMADO</span>
+                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>REPROGRAMADO</span>
                       ) : (
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${COMPROMISO_ESTADO_STYLES[c.estado] ?? "bg-gray-100 text-gray-600"}`}>{c.estado}</span>
+                        <span style={{ ...(COMPROMISO_ESTADO_STYLES[c.estado] ?? { background: "transparent", color: "var(--state-zinc)", border: "1px solid var(--state-zinc)" }), padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{c.estado}</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500 mt-0.5">
+                    <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>
                       Fecha: {new Date(c.fechaActual).toLocaleDateString("es-CO")}
                       {c.reunion && (
-                        <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100">
+                        <span style={{ marginLeft: 8, padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--accent-forest)", border: "1px solid var(--accent-forest)", fontFamily: "var(--font-ui)" }}>
                           Reunión {new Date(c.reunion.fecha).toLocaleDateString("es-CO")}
                         </span>
                       )}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {(c.estado === "PENDIENTE" || c.estado === "REPROGRAMADO") && !vencido && <button onClick={() => handleCumplido(c.id)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition">Cumplido</button>}
-                    {(c.estado === "PENDIENTE" || c.estado === "REPROGRAMADO") && esVencidoOCumpleHoy(c.fechaActual) && <button onClick={() => setVencidoModal(c)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-orange-50 text-orange-600 hover:bg-orange-100 transition">Resolver</button>}
-                    <button onClick={() => handleEliminarCompromiso(c.id)} className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition">Eliminar</button>
+                    {(c.estado === "PENDIENTE" || c.estado === "REPROGRAMADO") && !vencido && <button onClick={() => handleCumplido(c.id)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-green)", borderColor: "var(--state-green)" }}>Cumplido</button>}
+                    {(c.estado === "PENDIENTE" || c.estado === "REPROGRAMADO") && esVencidoOCumpleHoy(c.fechaActual) && <button onClick={() => setVencidoModal(c)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-amber)", borderColor: "var(--state-amber)" }}>Resolver</button>}
+                    <button onClick={() => handleEliminarCompromiso(c.id)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-red)", borderColor: "var(--state-red)" }}>Eliminar</button>
                   </div>
                 </li>
               );
@@ -1060,24 +1068,24 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {/* REUNIONES */}
       <CollapsibleSection title="Reuniones de Seguimiento" sectionId="reuniones" projectId={project.id} buttonText="+ Nueva Reunión" onClick={() => setShowReunionModal(true)}>
         {reuniones.length === 0 ? (
-          <p className="text-gray-500">No hay reuniones registradas.</p>
+          <p style={{ fontSize: 14, color: "var(--text-muted)" }}>No hay reuniones registradas.</p>
         ) : (
           <ul className="space-y-3">
             {reuniones.map((r) => (
-              <li key={r.id} className="p-4 border border-[#DDF7E6] bg-white rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <li key={r.id} style={{ padding: 16, borderRadius: 10, border: "1px solid var(--border-subtle)", background: "var(--bg-card)", display: "flex", flexDirection: "column", gap: 12 }} className="sm:flex-row sm:items-center justify-between">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-700">{new Date(r.fecha).toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" })}</p>
-                  <p className="text-sm text-gray-500 mt-0.5 truncate">{r.objetivos.length > 90 ? r.objetivos.slice(0, 90) + "…" : r.objetivos}</p>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>{new Date(r.fecha).toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" })}</p>
+                  <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.objetivos.length > 90 ? r.objetivos.slice(0, 90) + "…" : r.objetivos}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {r.calidadAprobada ? (
-                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Calidad aprobada</span>
+                    <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Calidad aprobada</span>
                   ) : (
-                    <button onClick={async () => { await api.patch(`/reuniones/${r.id}`, { calidadAprobada: true }); loadData(); }} className="px-2 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-600 hover:bg-orange-100 transition border border-orange-200">Aprobar calidad</button>
+                    <button onClick={async () => { await api.patch(`/reuniones/${r.id}`, { calidadAprobada: true }); loadData(); }} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-amber)", borderColor: "var(--state-amber)" }}>Aprobar calidad</button>
                   )}
-                  <button onClick={() => setReunionDetalle(r)} className="px-3 py-1.5 rounded-xl text-sm font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition">Ver detalle</button>
-                  <button onClick={() => setReunionEditando(r)} className="px-3 py-1.5 rounded-xl text-sm font-medium bg-gray-50 text-gray-600 hover:bg-gray-100 transition">Editar</button>
-                  <button onClick={() => handleEliminarReunion(r.id)} className="px-3 py-1.5 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition">Eliminar</button>
+                  <button onClick={() => setReunionDetalle(r)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>Ver detalle</button>
+                  <button onClick={() => setReunionEditando(r)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>Editar</button>
+                  <button onClick={() => handleEliminarReunion(r.id)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-red)", borderColor: "var(--state-red)" }}>Eliminar</button>
                 </div>
               </li>
             ))}
@@ -1089,21 +1097,21 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {esSocioOAdmin && (
         <CollapsibleSection title="Feedback Interno" sectionId="feedback" projectId={project.id} buttonText="+ Nuevo Feedback" onClick={() => setShowFeedbackModal(true)}>
           {feedbacks.length === 0 ? (
-            <p className="text-gray-500">No hay feedback registrado.</p>
+            <p style={{ fontSize: 14, color: "var(--text-muted)" }}>No hay feedback registrado.</p>
           ) : (
             <ul className="space-y-3">
               {feedbacks.map((fb) => (
-                <li key={fb.id} className="p-4 border border-gray-100 rounded-xl bg-gray-50">
+                <li key={fb.id} style={{ padding: 16, borderRadius: 10, border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${FEEDBACK_STYLES[fb.tipo].badge}`}>{FEEDBACK_STYLES[fb.tipo].label}</span>
-                        <span className="text-xs text-gray-400">{new Date(fb.createdAt).toLocaleDateString("es-CO")}</span>
+                        <span style={{ ...FEEDBACK_STYLES[fb.tipo].badge, padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{FEEDBACK_STYLES[fb.tipo].label}</span>
+                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{new Date(fb.createdAt).toLocaleDateString("es-CO")}</span>
                       </div>
-                      <p className="text-sm text-gray-700">{fb.descripcion}</p>
-                      {fb.accionesTomadas && <p className="text-xs text-gray-500 mt-1"><span className="font-semibold">Acciones:</span> {fb.accionesTomadas}</p>}
+                      <p style={{ fontSize: 13, color: "var(--text-primary)" }}>{fb.descripcion}</p>
+                      {fb.accionesTomadas && <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 4 }}><span style={{ fontWeight: 600 }}>Acciones:</span> {fb.accionesTomadas}</p>}
                     </div>
-                    {esAdmin && <button onClick={() => handleEliminarFeedback(fb.id)} className="shrink-0 px-2 py-1 rounded-lg text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition">Eliminar</button>}
+                    {esAdmin && <button onClick={() => handleEliminarFeedback(fb.id)} className="btn-secondary" style={{ height: 26, padding: "0 8px", fontSize: 11, color: "var(--state-red)", borderColor: "var(--state-red)", flexShrink: 0 }}>Eliminar</button>}
                   </div>
                 </li>
               ))}
@@ -1119,7 +1127,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
           {(esAdmin || esSocioOAdmin) && (
             <div className="mb-4">
               {!showFeedbackClienteForm ? (
-                <button onClick={() => setShowFeedbackClienteForm(true)} className="px-3 py-1.5 rounded-xl text-sm font-semibold bg-[#16A34A] text-white hover:bg-[#15803D] transition">
+                <button onClick={() => setShowFeedbackClienteForm(true)} className="btn-primary" style={{ height: 34, padding: "0 14px", fontSize: 13 }}>
                   + Registrar feedback
                 </button>
               ) : (
@@ -1133,21 +1141,21 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
             </div>
           )}
           {feedbacksCliente.length === 0 ? (
-            <p className="text-gray-500">No hay feedback del cliente registrado.</p>
+            <p style={{ fontSize: 14, color: "var(--text-muted)" }}>No hay feedback del cliente registrado.</p>
           ) : (
             <ul className="space-y-3">
               {feedbacksCliente.map((fb) => (
-                <li key={fb.id} className="p-4 border border-gray-100 rounded-xl bg-gray-50">
+                <li key={fb.id} style={{ padding: 16, borderRadius: 10, border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className="text-yellow-500 text-sm">{"⭐".repeat(fb.calificacion)}{"☆".repeat(5 - fb.calificacion)}</span>
-                        <span className="text-xs text-gray-400">{new Date(fb.fechaFeedback).toLocaleDateString("es-CO")}</span>
-                        {fb.entregable && <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{fb.entregable.nombre}</span>}
+                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{new Date(fb.fechaFeedback).toLocaleDateString("es-CO")}</span>
+                        {fb.entregable && <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--accent-forest)", border: "1px solid var(--accent-forest)", fontFamily: "var(--font-ui)" }}>{fb.entregable.nombre}</span>}
                       </div>
-                      <p className="text-sm text-gray-700">{fb.comentario}</p>
+                      <p style={{ fontSize: 13, color: "var(--text-primary)" }}>{fb.comentario}</p>
                     </div>
-                    {esAdmin && <button onClick={() => handleEliminarFeedbackCliente(fb.id)} className="shrink-0 px-2 py-1 rounded-lg text-xs bg-red-50 text-red-600 hover:bg-red-100 transition">Eliminar</button>}
+                    {esAdmin && <button onClick={() => handleEliminarFeedbackCliente(fb.id)} className="btn-secondary" style={{ height: 26, padding: "0 8px", fontSize: 11, color: "var(--state-red)", borderColor: "var(--state-red)", flexShrink: 0 }}>Eliminar</button>}
                   </div>
                 </li>
               ))}
@@ -1159,33 +1167,29 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
       {/* FACTURAS EMITIDAS AL CLIENTE */}
       {esFinanciero && (
         <CollapsibleSection title="Facturas Emitidas al Cliente" sectionId="facturas" projectId={project.id}>
-          <p className="text-xs text-gray-400 -mt-2 mb-1">Documentos de cobro que enviamos al cliente. El pago lo registras en "Pagos Recibidos del Cliente".</p>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: -4, marginBottom: 4 }}>Documentos de cobro que enviamos al cliente. El pago lo registras en "Pagos Recibidos del Cliente".</p>
           {facturas.length === 0 ? (
-            <p className="text-gray-500">No hay facturas registradas para este proyecto.</p>
+            <p style={{ fontSize: 14, color: "var(--text-muted)" }}>No hay facturas registradas para este proyecto.</p>
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-blue-100">
+            <div style={{ borderRadius: 10, border: "1px solid var(--border-subtle)", overflow: "hidden" }}>
               <table className="w-full text-sm">
-                <thead className="bg-blue-50 text-xs uppercase tracking-wider text-blue-600">
+                <thead style={{ background: "var(--canvas)" }}>
                   <tr>
-                    <th className="px-4 py-3 text-left">N° Factura</th>
-                    <th className="px-4 py-3 text-left">Concepto</th>
-                    <th className="px-4 py-3 text-left">Proveedor</th>
-                    <th className="px-4 py-3 text-right">Monto (COP)</th>
-                    <th className="px-4 py-3 text-center">Estado</th>
-                    <th className="px-4 py-3 text-left">Fecha emisión</th>
-                    <th className="px-4 py-3 text-left">PDF Factura</th>
+                    {["N° Factura","Concepto","Proveedor","Monto (COP)","Estado","Fecha emisión","PDF Factura"].map((h, i) => (
+                      <th key={h} style={{ padding: "10px 16px", textAlign: i === 3 ? "right" : "left", fontSize: 10, fontWeight: 600, color: "var(--text-muted)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.08em", borderBottom: "1px solid var(--border-subtle)" }}>{h}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {facturas.map((f) => (
-                    <tr key={f.id} className="bg-white hover:bg-gray-50 transition">
-                      <td className="px-4 py-3 font-mono font-semibold text-gray-700">{f.numero}</td>
-                      <td className="px-4 py-3 text-gray-700">{f.concepto}</td>
-                      <td className="px-4 py-3 text-gray-500 text-xs">{f.proveedor?.nombre ?? "—"}</td>
-                      <td className="px-4 py-3 text-right font-semibold">${Number(f.monto).toLocaleString("es-CO", { minimumFractionDigits: 2 })}</td>
-                      <td className="px-4 py-3 text-center"><span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${FACTURA_ESTADO_STYLES[f.estado]}`}>{FACTURA_ESTADO_LABELS[f.estado]}</span></td>
-                      <td className="px-4 py-3 text-gray-500">{new Date(f.fechaEmision).toLocaleDateString("es-CO")}</td>
-                      <td className="px-4 py-3">
+                    <tr key={f.id} style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)", transition: "background 150ms" }} onMouseEnter={e => (e.currentTarget.style.background = "var(--canvas)")} onMouseLeave={e => (e.currentTarget.style.background = "var(--bg-card)")}>
+                      <td style={{ padding: "10px 16px", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--text-primary)", fontSize: 12 }}>{f.numero}</td>
+                      <td style={{ padding: "10px 16px", color: "var(--text-primary)" }}>{f.concepto}</td>
+                      <td style={{ padding: "10px 16px", color: "var(--text-muted)", fontSize: 12 }}>{f.proveedor?.nombre ?? "—"}</td>
+                      <td style={{ padding: "10px 16px", textAlign: "right", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--text-primary)" }}>${Number(f.monto).toLocaleString("es-CO", { minimumFractionDigits: 2 })}</td>
+                      <td style={{ padding: "10px 16px", textAlign: "center" }}><span style={{ ...FACTURA_ESTADO_STYLES[f.estado], padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{FACTURA_ESTADO_LABELS[f.estado]}</span></td>
+                      <td style={{ padding: "10px 16px", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: 12 }}>{new Date(f.fechaEmision).toLocaleDateString("es-CO")}</td>
+                      <td style={{ padding: "10px 16px" }}>
                         <FileUploadButton
                           carpeta="facturas"
                           currentPath={f.archivoFacturaPath}
@@ -1195,10 +1199,10 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="bg-gray-50">
+                <tfoot style={{ background: "var(--canvas)" }}>
                   <tr>
-                    <td colSpan={3} className="px-4 py-3 text-sm font-semibold text-gray-600">Total emitido</td>
-                    <td className="px-4 py-3 text-right font-bold text-gray-800">${facturas.reduce((s, f) => s + Number(f.monto), 0).toLocaleString("es-CO", { minimumFractionDigits: 2 })}</td>
+                    <td colSpan={3} style={{ padding: "10px 16px", fontSize: 13, fontWeight: 600, color: "var(--text-secondary)" }}>Total emitido</td>
+                    <td style={{ padding: "10px 16px", textAlign: "right", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--text-primary)" }}>${facturas.reduce((s, f) => s + Number(f.monto), 0).toLocaleString("es-CO", { minimumFractionDigits: 2 })}</td>
                     <td colSpan={3} />
                   </tr>
                 </tfoot>
@@ -1231,28 +1235,28 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     const pctPagado = fc.monto > 0 ? Math.round((fc.montoPagado / fc.monto) * 100) : 0;
                     return (
                       <tr key={fc.id} style={{ background: idx % 2 === 0 ? "white" : "var(--content-bg)" }}>
-                        <td style={{ padding: "10px 12px", fontWeight: 700, color: "var(--navy, #1e3a6e)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>#{fc.numero}</td>
+                        <td style={{ padding: "10px 12px", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", whiteSpace: "nowrap" }}>#{fc.numero}</td>
                         <td style={{ padding: "10px 12px", color: "var(--text-primary)", maxWidth: 200 }}>
                           <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{fc.concepto}</div>
                           {fc.observaciones && <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{fc.observaciones}</div>}
                         </td>
-                        <td style={{ padding: "10px 12px", color: "var(--text-muted)", whiteSpace: "nowrap" }}>{new Date(fc.fechaEmision).toLocaleDateString("es-CO")}</td>
-                        <td style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>${fc.monto.toLocaleString("es-CO")}</td>
+                        <td style={{ padding: "10px 12px", color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: 12, whiteSpace: "nowrap" }}>{new Date(fc.fechaEmision).toLocaleDateString("es-CO")}</td>
+                        <td style={{ padding: "10px 12px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-mono)", whiteSpace: "nowrap" }}>${fc.monto.toLocaleString("es-CO")}</td>
                         <td style={{ padding: "10px 12px" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <div style={{ width: 50, height: 5, borderRadius: 99, background: "#e2e8f0", overflow: "hidden" }}>
-                              <div style={{ width: `${pctPagado}%`, height: "100%", background: "#16a34a", borderRadius: 99 }} />
+                            <div style={{ width: 50, height: 5, borderRadius: 99, background: "var(--border-subtle)", overflow: "hidden" }}>
+                              <div style={{ width: `${pctPagado}%`, height: "100%", background: "var(--state-green)", borderRadius: 99 }} />
                             </div>
-                            <span style={{ color: "#16a34a", fontWeight: 600, fontSize: 12, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>${fc.montoPagado.toLocaleString("es-CO")}</span>
+                            <span style={{ color: "var(--state-green)", fontWeight: 600, fontSize: 12, fontFamily: "var(--font-mono)", whiteSpace: "nowrap" }}>${fc.montoPagado.toLocaleString("es-CO")}</span>
                           </div>
                         </td>
-                        <td style={{ padding: "10px 12px", fontWeight: 600, color: fc.saldoPendiente > 0 ? "#dc2626" : "#16a34a", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>
+                        <td style={{ padding: "10px 12px", fontWeight: 600, color: fc.saldoPendiente > 0 ? "var(--state-red)" : "var(--state-green)", fontFamily: "var(--font-mono)", whiteSpace: "nowrap" }}>
                           {fc.saldoPendiente > 0 ? `$${fc.saldoPendiente.toLocaleString("es-CO")}` : "—"}
                         </td>
                         <td style={{ padding: "10px 12px", textAlign: "right" }}>
                           <button
                             onClick={async () => { if (!window.confirm(`¿Eliminar factura #${fc.numero}?`)) return; await api.delete(`/facturas-cliente/${fc.id}`); const r = await api.get(`/facturas-cliente/proyecto/${id}`); setFacturasCliente(r.data); }}
-                            style={{ padding: "3px 8px", borderRadius: 6, border: "1px solid #fecaca", background: "#fff5f5", color: "#dc2626", fontSize: 11, cursor: "pointer" }}
+                            className="btn-secondary" style={{ height: 26, padding: "0 8px", fontSize: 11, color: "var(--state-red)", borderColor: "var(--state-red)" }}
                           >
                             Eliminar
                           </button>
@@ -1279,18 +1283,18 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {pagosCliente.map((pc) => {
                 const PAGO_CFG: Record<string, { bg: string; color: string; border: string; label: string }> = {
-                  PENDIENTE: { bg: "#fffbeb", color: "#b45309", border: "#fde68a",  label: "Pendiente" },
-                  RECIBIDO:  { bg: "#f0fdf4", color: "#15803d", border: "#bbf7d0", label: "Recibido" },
-                  VENCIDO:   { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "Vencido" },
-                  PARCIAL:   { bg: "#eff6ff", color: "#1d4ed8", border: "#bfdbfe", label: "Parcial" },
+                  PENDIENTE: { bg: "transparent", color: "var(--state-amber)", border: "var(--state-amber)",  label: "Pendiente" },
+                  RECIBIDO:  { bg: "transparent", color: "var(--state-green)", border: "var(--state-green)", label: "Recibido" },
+                  VENCIDO:   { bg: "transparent", color: "var(--state-red)",   border: "var(--state-red)",   label: "Vencido" },
+                  PARCIAL:   { bg: "transparent", color: "var(--accent-forest)", border: "var(--accent-forest)", label: "Parcial" },
                 }
-                const pcfg = PAGO_CFG[pc.estado] ?? { bg: "#f8fafc", color: "#64748b", border: "#e2e8f0", label: pc.estado }
+                const pcfg = PAGO_CFG[pc.estado] ?? { bg: "transparent", color: "var(--state-zinc)", border: "var(--state-zinc)", label: pc.estado }
                 const esRecibido = pc.estado === "RECIBIDO"
                 return (
                   <div key={pc.id} style={{
                     borderRadius: 12, overflow: "hidden",
-                    border: `1px solid ${esRecibido ? "#bbf7d0" : "var(--card-border)"}`,
-                    background: esRecibido ? "#fafffe" : "white",
+                    border: `1px solid ${esRecibido ? "var(--state-green)" : "var(--border-subtle)"}`,
+                    background: esRecibido ? "rgba(45,106,79,0.03)" : "var(--bg-card)",
                   }}>
                     {/* Header */}
                     <div style={{
@@ -1301,9 +1305,9 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                       <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                         <div style={{
                           width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-                          background: "var(--navy, #1e3a6e)", color: "white",
+                          background: "var(--accent-forest)", color: "white",
                           display: "flex", alignItems: "center", justifyContent: "center",
-                          fontSize: 12, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 12, fontWeight: 700, fontFamily: "var(--font-mono)",
                         }}>
                           {pc.numeroCuota}
                         </div>
@@ -1311,7 +1315,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                           <p style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {pc.descripcion}
                           </p>
-                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
+                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-mono)", margin: 0 }}>
                             {pc.fechaRecibido
                               ? `Recibido el ${new Date(pc.fechaRecibido).toLocaleDateString("es-CO")}`
                               : `Esperado: ${new Date(pc.fechaEsperada).toLocaleDateString("es-CO")}`}
@@ -1330,7 +1334,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                             onClick={() => { setCuotaARecibir(pc); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); setMontoARecibir(String(pc.montoEsperado)); }}
                             style={{
                               padding: "5px 12px", borderRadius: 8, cursor: "pointer",
-                              background: "var(--navy, #1e3a6e)", color: "white", border: "none",
+                              background: "var(--accent-forest)", color: "white", border: "none",
                               fontSize: 12, fontWeight: 600,                              transition: "opacity 0.15s", whiteSpace: "nowrap",
                             }}
                             onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
@@ -1347,7 +1351,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                       <div style={{ display: "flex", gap: 20, flexShrink: 0 }}>
                         <div>
                           <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "0 0 3px", fontWeight: 600 }}>Acordado</p>
-                          <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
+                          <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", margin: 0 }}>
                             ${Number(pc.montoEsperado).toLocaleString("es-CO")}
                           </p>
                         </div>
@@ -1355,8 +1359,8 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                           <>
                             <div style={{ width: 1, background: "var(--card-border)", alignSelf: "stretch" }} />
                             <div>
-                              <p style={{ fontSize: 11, color: "#16a34a", margin: "0 0 3px", fontWeight: 600 }}>Recibido</p>
-                              <p style={{ fontSize: 16, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
+                              <p style={{ fontSize: 11, color: "var(--state-green)", margin: "0 0 3px", fontWeight: 600 }}>Recibido</p>
+                              <p style={{ fontSize: 16, fontWeight: 700, color: "var(--state-green)", fontFamily: "var(--font-mono)", margin: 0 }}>
                                 ${Number(pc.montoRecibido).toLocaleString("es-CO")}
                               </p>
                             </div>
@@ -1387,14 +1391,14 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               }}>
                 <div style={{ textAlign: "right" }}>
                   <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "0 0 2px" }}>Total acordado</p>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", margin: 0 }}>
                     ${pagosCliente.reduce((s, p) => s + Number(p.montoEsperado), 0).toLocaleString("es-CO")}
                   </p>
                 </div>
                 <div style={{ width: 1, height: 32, background: "var(--card-border)" }} />
                 <div style={{ textAlign: "right" }}>
-                  <p style={{ fontSize: 11, color: "#16a34a", margin: "0 0 2px", fontWeight: 600 }}>Total recibido</p>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
+                  <p style={{ fontSize: 11, color: "var(--state-green)", margin: "0 0 2px", fontWeight: 600 }}>Total recibido</p>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--state-green)", fontFamily: "var(--font-mono)", margin: 0 }}>
                     ${pagosCliente.reduce((s, p) => s + Number(p.montoRecibido ?? 0), 0).toLocaleString("es-CO")}
                   </p>
                 </div>
@@ -1412,12 +1416,12 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               .sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
               .slice(0, 50)
               .map((h: any) => (
-                <li key={h.id} className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                  <span className={`mt-0.5 shrink-0 px-2 py-0.5 rounded-full text-xs font-semibold ${h.accion === "CREACION" ? "bg-green-100 text-green-700" : h.accion === "ACTUALIZACION" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-600"}`}>
+                <li key={h.id} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--canvas)" }}>
+                  <span style={{ flexShrink: 0, marginTop: 2, padding: "2px 7px", borderRadius: 4, fontSize: 10, fontWeight: 500, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em", background: "transparent", color: h.accion === "CREACION" ? "var(--state-green)" : h.accion === "ACTUALIZACION" ? "var(--accent-forest)" : "var(--state-zinc)", border: `1px solid ${h.accion === "CREACION" ? "var(--state-green)" : h.accion === "ACTUALIZACION" ? "var(--accent-forest)" : "var(--state-zinc)"}` }}>
                     {ACCION_LABELS[h.accion] ?? h.accion}
                   </span>
-                  <div className="flex-1 min-w-0"><p className="text-sm text-gray-700">{h.detalle}</p></div>
-                  <span className="shrink-0 text-xs text-gray-400">{new Date(h.fecha).toLocaleString()}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}><p style={{ fontSize: 13, color: "var(--text-primary)", margin: 0 }}>{h.detalle}</p></div>
+                  <span style={{ flexShrink: 0, fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>{new Date(h.fecha).toLocaleString()}</span>
                 </li>
               ))}
           </ul>
@@ -1442,7 +1446,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
               padding: "11px 20px",
               borderRadius: 50,
               border: "none",
-              background: "#16A34A",
+              background: "var(--accent-forest)",
               color: "white",
               fontSize: 14,
               fontWeight: 700,
@@ -1464,12 +1468,12 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
           {notasOpen && (
             <div className="fixed inset-0 z-50 bg-black/20" onClick={() => setNotasOpen(false)}>
               <div className="absolute inset-y-0 right-0 w-full max-w-[400px] bg-white shadow-2xl flex flex-col" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-center justify-between p-5 border-b border-gray-100">
-                  <h3 className="text-lg font-bold text-gray-800">Notas del Proyecto</h3>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid var(--border-subtle)" }}>
+                  <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 20, fontWeight: 300, color: "var(--text-primary)", margin: 0 }}>Notas del Proyecto</h3>
                   <div className="flex items-center gap-3">
-                    {notaSaving && <span className="text-xs text-gray-400">Guardando...</span>}
-                    {!notaSaving && nota && <span className="text-xs text-green-500">Guardado</span>}
-                    <button onClick={() => setNotasOpen(false)} className="text-gray-400 hover:text-gray-600 transition text-xl leading-none">✕</button>
+                    {notaSaving && <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Guardando...</span>}
+                    {!notaSaving && nota && <span style={{ fontSize: 12, color: "var(--state-green)" }}>Guardado</span>}
+                    <button onClick={() => setNotasOpen(false)} style={{ color: "var(--text-muted)", fontSize: 18, lineHeight: 1, background: "none", border: "none", cursor: "pointer" }}>✕</button>
                   </div>
                 </div>
                 <div className="flex-1 p-5 overflow-y-auto">
@@ -1478,7 +1482,8 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                     value={nota}
                     onChange={(e) => handleNotaChange(e.target.value)}
                     placeholder="Escribe notas internas del proyecto... (se guardan automáticamente)"
-                    className="w-full min-h-[400px] p-4 rounded-xl border border-gray-200 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
+                    className="form-input w-full min-h-[400px] resize-none"
+                    style={{ height: "auto", fontFamily: "var(--font-ui)", fontSize: 14 }}
                   />
                 </div>
               </div>
@@ -1504,7 +1509,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
         <Modal
           onClose={() => { setCuotaARecibir(null); setForzarCuotaRecibida(false); setCuotaRecibirPath(""); setMontoARecibir(""); }}
           size="sm"
-          accentColor="#16a34a"
+          accentColor="var(--accent-forest)"
         >
           <div style={{ padding: "28px 28px 24px" }}>
             <div style={{ marginBottom: 20, paddingRight: 40 }}>
@@ -1518,9 +1523,9 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {/* Monto esperado (referencia) */}
-              <div style={{ padding: "12px 14px", borderRadius: 10, background: "#f0fdf4", border: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <p style={{ fontSize: 12, fontWeight: 600, color: "#16a34a", margin: 0 }}>Monto esperado</p>
-                <p style={{ fontSize: 18, fontWeight: 700, color: "#15803d", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>
+              <div style={{ padding: "12px 14px", borderRadius: 10, background: "rgba(45,106,79,0.04)", border: "1px solid var(--state-green)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <p style={{ fontSize: 12, fontWeight: 600, color: "var(--state-green)", margin: 0 }}>Monto esperado</p>
+                <p style={{ fontSize: 18, fontWeight: 700, color: "var(--state-green)", fontFamily: "var(--font-mono)", margin: 0 }}>
                   ${Number(cuotaARecibir.montoEsperado).toLocaleString("es-CO")}
                 </p>
               </div>
@@ -1563,7 +1568,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   }}
                 />
                 {Number(montoARecibir) < Number(cuotaARecibir.montoEsperado) && montoARecibir !== "" && (
-                  <p style={{ fontSize: 11, color: "#b45309", marginTop: 4 }}>
+                  <p style={{ fontSize: 11, color: "var(--state-amber)", marginTop: 4 }}>
                     Pago parcial — activa "Forzar recibido" para marcarlo como completado.
                   </p>
                 )}
@@ -1588,7 +1593,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                   type="checkbox"
                   checked={forzarCuotaRecibida}
                   onChange={e => setForzarCuotaRecibida(e.target.checked)}
-                  style={{ marginTop: 2, accentColor: "#16a34a" } as React.CSSProperties}
+                  style={{ marginTop: 2, accentColor: "var(--accent-forest)" } as React.CSSProperties}
                 />
                 <span style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5 }}>
                   Marcar como recibido aunque el monto sea menor al esperado
@@ -1620,7 +1625,7 @@ const handleMarcarCuotaRecibida = async (cuotaId: string, monto: number, forzar:
                 }}
                 style={{
                   padding: "9px 20px", borderRadius: 10, border: "none",
-                  background: "#16a34a", color: "white",
+                  background: "var(--accent-forest)", color: "white",
                   fontSize: 14, fontWeight: 600, cursor: "pointer",
                   transition: "opacity 0.15s",
                 }}
@@ -1661,7 +1666,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
   const [error, setError] = useState<string | null>(null)
 
   const focusInput = (e: React.FocusEvent<HTMLInputElement>) =>
-    (e.currentTarget.style.borderColor = "var(--navy, #1e3a6e)")
+    (e.currentTarget.style.borderColor = "var(--accent-forest)")
   const blurInput = (e: React.FocusEvent<HTMLInputElement>) =>
     (e.currentTarget.style.borderColor = "var(--card-border)")
 
@@ -1691,7 +1696,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
   }
 
   return (
-    <Modal onClose={onClose} size="sm" accentColor="var(--navy, #1e3a6e)">
+    <Modal onClose={onClose} size="sm" accentColor="var(--accent-forest)">
       <div style={{ padding: "28px 28px 24px" }}>
         <div style={{ marginBottom: 24, paddingRight: 40 }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0, lineHeight: 1.3 }}>
@@ -1783,7 +1788,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
             disabled={loading}
             style={{
               padding: "9px 20px", borderRadius: 10, border: "none",
-              background: "var(--navy, #1e3a6e)", color: "white",
+              background: "var(--accent-forest)", color: "white",
               fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
@@ -1791,6 +1796,7 @@ function CuotaModal({ proyectoId, nextCuota, onClose }: { proyectoId: string; ne
           >
             {loading ? "Guardando..." : "Registrar pago"}
           </button>
+
         </div>
       </div>
     </Modal>
@@ -1839,7 +1845,7 @@ function FacturaClienteModal({ proyectoId, onClose }: { proyectoId: string; onCl
   }
 
   return (
-    <Modal onClose={onClose} size="sm" accentColor="var(--navy, #1e3a6e)">
+    <Modal onClose={onClose} size="sm" accentColor="var(--accent-forest)">
       <div style={{ padding: "28px 28px 24px" }}>
         <div style={{ marginBottom: 20, paddingRight: 40 }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
@@ -1878,7 +1884,7 @@ function FacturaClienteModal({ proyectoId, onClose }: { proyectoId: string; onCl
         </div>
         <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
           <button onClick={onClose} style={{ padding: "9px 20px", borderRadius: 10, border: "1.5px solid var(--card-border)", background: "white", color: "var(--text-secondary)", fontSize: 14, cursor: "pointer" }}>Cancelar</button>
-          <button onClick={handleSubmit} disabled={loading} style={{ padding: "9px 20px", borderRadius: 10, border: "none", background: "var(--navy, #1e3a6e)", color: "white", fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1 }}>
+          <button onClick={handleSubmit} disabled={loading} style={{ padding: "9px 20px", borderRadius: 10, border: "none", background: "var(--accent-forest)", color: "white", fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1 }}>
             {loading ? "Guardando..." : "Crear Factura"}
           </button>
         </div>
@@ -1896,12 +1902,12 @@ const ESTADO_ENTREGABLE_LABEL: Record<string, string> = {
   PENDIENTE:   "Pendiente",
 }
 
-const ESTADO_BADGE_TIMELINE: Record<string, string> = {
-  COMPLETADO:  "bg-green-100 text-green-700",
-  URGENTE:     "bg-amber-100 text-amber-700",
-  VENCIDO:     "bg-red-100 text-red-700",
-  ADVERTENCIA: "bg-orange-100 text-orange-700",
-  PENDIENTE:   "bg-gray-100 text-gray-500",
+const ESTADO_BADGE_TIMELINE: Record<string, React.CSSProperties> = {
+  COMPLETADO:  { background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)" },
+  URGENTE:     { background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)" },
+  VENCIDO:     { background: "transparent", color: "var(--state-red)",   border: "1px solid var(--state-red)" },
+  ADVERTENCIA: { background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)" },
+  PENDIENTE:   { background: "transparent", color: "var(--state-zinc)",  border: "1px solid var(--state-zinc)" },
 }
 
 function CronogramaTimeline({
@@ -1925,15 +1931,16 @@ function CronogramaTimeline({
   return (
     <div className="relative pl-8">
       {/* Línea vertical */}
-      <div className="absolute left-3 top-3 bottom-3 w-0.5 bg-gray-200 rounded-full" />
+      <div style={{ position: "absolute", left: 12, top: 12, bottom: 12, width: 2, background: "var(--border-subtle)", borderRadius: 99 }} />
 
       <div className="space-y-0">
 
         {/* INICIO */}
         <TimelineRow
           dot={<span className="text-base leading-none">🚀</span>}
-          dotBg="bg-[#16A34A]"
-          label={<span className="font-semibold text-gray-700 text-sm">Inicio del proyecto</span>}
+          dotBg=""
+          dotStyle={{ background: "var(--state-green)" }}
+          label={<span style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 13 }}>Inicio del proyecto</span>}
           fecha={fmt(fechaInicio)}
           isFirst
         />
@@ -1941,24 +1948,26 @@ function CronogramaTimeline({
         {/* ENTREGABLES */}
         {ordenados.length === 0 ? (
           <TimelineRow
-            dot={<span className="text-xs text-gray-400">—</span>}
-            dotBg="bg-gray-100 border border-gray-200"
-            label={<span className="text-sm text-gray-400 italic">Sin entregables definidos</span>}
+            dot={<span style={{ fontSize: 11, color: "var(--text-muted)" }}>—</span>}
+            dotBg=""
+            dotStyle={{ background: "var(--border-subtle)", border: "1px solid var(--border-subtle)" }}
+            label={<span style={{ fontSize: 13, color: "var(--text-muted)", fontStyle: "italic" }}>Sin entregables definidos</span>}
           />
         ) : (
           ordenados.map((e) => (
             <TimelineRow
               key={e.id}
               dot={<div className="w-2.5 h-2.5 rounded-full" style={{ background: ENTREGABLE_COLOR[e.estado] ?? "#9CA3AF" }} />}
-              dotBg="bg-white border-2 border-gray-200"
+              dotBg=""
+              dotStyle={{ background: "var(--bg-card)", border: "2px solid var(--border-subtle)" }}
               label={
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-medium text-gray-700">{e.nombre}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${ESTADO_BADGE_TIMELINE[e.estado] ?? "bg-gray-100 text-gray-500"}`}>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: "var(--text-primary)" }}>{e.nombre}</span>
+                  <span style={{ ...(ESTADO_BADGE_TIMELINE[e.estado] ?? { background: "transparent", color: "var(--state-zinc)", border: "1px solid var(--state-zinc)" }), padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                     {ESTADO_ENTREGABLE_LABEL[e.estado] ?? e.estado}
                   </span>
                   {e.clienteAprobado && (
-                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">✓ Cliente aprobó</span>
+                    <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>✓ Cliente aprobó</span>
                   )}
                 </div>
               }
@@ -1970,8 +1979,9 @@ function CronogramaTimeline({
         {/* FIN */}
         <TimelineRow
           dot={<span className="text-base leading-none">🏁</span>}
-          dotBg="bg-gray-300"
-          label={<span className="font-semibold text-gray-500 text-sm">Fin del proyecto</span>}
+          dotBg=""
+          dotStyle={{ background: "var(--text-muted)" }}
+          label={<span style={{ fontWeight: 600, color: "var(--text-secondary)", fontSize: 13 }}>Fin del proyecto</span>}
           fecha={fmt(fechaFin)}
           isLast
         />
@@ -1979,11 +1989,11 @@ function CronogramaTimeline({
       </div>
 
       {/* Leyenda */}
-      <div className="flex flex-wrap gap-3 mt-5 pt-4 border-t border-gray-100">
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20, paddingTop: 16, borderTop: "1px solid var(--border-subtle)" }}>
         {Object.entries(ENTREGABLE_COLOR).map(([estado, color]) => (
-          <div key={estado} className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full" style={{ background: color }} />
-            <span className="text-xs text-gray-500">{ESTADO_ENTREGABLE_LABEL[estado] ?? estado}</span>
+          <div key={estado} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: "50%", background: color }} />
+            <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>{ESTADO_ENTREGABLE_LABEL[estado] ?? estado}</span>
           </div>
         ))}
       </div>
@@ -1994,13 +2004,15 @@ function CronogramaTimeline({
 function TimelineRow({
   dot,
   dotBg,
+  dotStyle,
   label,
   fecha,
   isFirst,
   isLast,
 }: {
   dot: React.ReactNode
-  dotBg: string
+  dotBg?: string
+  dotStyle?: React.CSSProperties
   label: React.ReactNode
   fecha?: string
   isFirst?: boolean
@@ -2009,14 +2021,17 @@ function TimelineRow({
   return (
     <div className={`relative flex items-start gap-4 ${isFirst ? "pb-5" : isLast ? "pt-5" : "py-5"} group`}>
       {/* Punto */}
-      <div className={`relative z-10 shrink-0 w-8 h-8 -ml-8 rounded-full flex items-center justify-center ${dotBg} shadow-sm`}>
+      <div
+        className={`relative z-10 shrink-0 w-8 h-8 -ml-8 rounded-full flex items-center justify-center shadow-sm ${dotBg ?? ""}`}
+        style={dotStyle}
+      >
         {dot}
       </div>
       {/* Contenido */}
       <div className="flex-1 min-w-0 flex items-start justify-between gap-3 -mt-0.5">
         <div className="flex-1 min-w-0">{label}</div>
         {fecha && (
-          <span className="shrink-0 text-xs text-gray-400 font-medium tabular-nums mt-0.5">{fecha}</span>
+          <span style={{ flexShrink: 0, fontSize: 11, color: "var(--text-muted)", fontWeight: 500, fontFamily: "var(--font-mono)" }}>{fecha}</span>
         )}
       </div>
     </div>
@@ -2025,9 +2040,9 @@ function TimelineRow({
 
 /* ─── FEEDBACK MODAL ─────────────────────────────────────────── */
 const FEEDBACK_TIPO_CFG = {
-  POSITIVO: { emoji: "✓", label: "Positivo", desc: "Algo que salió bien", bg: "#f0fdf4", border: "#16a34a", color: "#15803d" },
-  NEGATIVO: { emoji: "✗", label: "Negativo/Urgente", desc: "Problema que necesita atención", bg: "#fef2f2", border: "#ef4444", color: "#dc2626" },
-  MEJORA:   { emoji: "↑", label: "Oportunidad de mejora", desc: "Sugerencia o área a refinar", bg: "#eff6ff", border: "#3b82f6", color: "#1d4ed8" },
+  POSITIVO: { emoji: "✓", label: "Positivo", desc: "Algo que salió bien", bg: "rgba(45,106,79,0.05)", border: "var(--state-green)", color: "var(--state-green)" },
+  NEGATIVO: { emoji: "✗", label: "Negativo/Urgente", desc: "Problema que necesita atención", bg: "rgba(192,57,43,0.05)", border: "var(--state-red)", color: "var(--state-red)" },
+  MEJORA:   { emoji: "↑", label: "Oportunidad de mejora", desc: "Sugerencia o área a refinar", bg: "rgba(45,74,62,0.05)", border: "var(--accent-forest)", color: "var(--accent-forest)" },
 }
 
 function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: () => void }) {
@@ -2066,7 +2081,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
   }
 
   return (
-    <Modal onClose={onClose} accentColor="var(--navy, #1e3a6e)">
+    <Modal onClose={onClose} accentColor="var(--accent-forest)">
       <div style={{ padding: "28px 28px 24px" }}>
         <div style={{ marginBottom: 20, paddingRight: 40 }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
@@ -2173,7 +2188,7 @@ function FeedbackModal({ proyectoId, onClose }: { proyectoId: string; onClose: (
             disabled={loading}
             style={{
               padding: "9px 20px", borderRadius: 10, border: "none",
-              background: "var(--navy, #1e3a6e)", color: "white",
+              background: "var(--accent-forest)", color: "white",
               fontSize: 14, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.6 : 1,
               transition: "opacity 0.15s",
@@ -2362,17 +2377,17 @@ function StepperEtapa({ etapa }: { etapa: string }) {
   const currentIdx = ETAPAS.findIndex((e) => e.key === etapa)
   return (
     <div className="relative flex items-start">
-      <div className="absolute top-[18px] left-[12.5%] right-[12.5%] h-0.5 bg-gray-200" />
-      <div className="absolute top-[18px] left-[12.5%] h-0.5 bg-[#16A34A] transition-all duration-500" style={{ width: `${currentIdx * 25}%` }} />
+      <div style={{ position: "absolute", top: 18, left: "12.5%", right: "12.5%", height: 2, background: "var(--border-subtle)" }} />
+      <div style={{ position: "absolute", top: 18, left: "12.5%", height: 2, background: "var(--state-green)", transition: "width 500ms", width: `${currentIdx * 25}%` }} />
       {ETAPAS.map((step, idx) => {
         const done = idx < currentIdx
         const active = idx === currentIdx
         return (
           <div key={step.key} className="flex-1 flex flex-col items-center gap-2">
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold z-10 relative ${done ? "bg-[#16A34A] text-white" : active ? "bg-[#16A34A] text-white ring-4 ring-green-100" : "bg-white border-2 border-gray-300 text-gray-400"}`}>
+            <div style={{ width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, zIndex: 10, position: "relative", background: done || active ? "var(--state-green)" : "var(--bg-card)", color: done || active ? "white" : "var(--text-muted)", border: done || active ? "none" : "2px solid var(--border-subtle)", boxShadow: active ? "0 0 0 4px rgba(45,106,79,0.15)" : "none" }}>
               {done ? "✓" : idx + 1}
             </div>
-            <span className={`text-xs font-semibold text-center leading-tight ${active ? "text-[#16A34A]" : done ? "text-green-600" : "text-gray-400"}`}>
+            <span style={{ fontSize: 11, fontWeight: 600, textAlign: "center", lineHeight: 1.3, color: active ? "var(--state-green)" : done ? "var(--state-green)" : "var(--text-muted)", fontFamily: "var(--font-ui)" }}>
               {step.label}
             </span>
           </div>
@@ -2449,7 +2464,7 @@ function CollapsibleSection({
             onClick={onClick}
             style={{
               padding: "7px 14px", borderRadius: 9, border: "none",
-              background: "var(--navy, #1e3a6e)", color: "white",
+              background: "var(--accent-forest)", color: "white",
               fontSize: 12, fontWeight: 600, cursor: "pointer",
               transition: "opacity 0.15s",
             }}
@@ -2482,8 +2497,8 @@ function CollapsibleSection({
 function Info({ label, value }: any) {
   return (
     <div>
-      <p className="text-gray-500">{label}</p>
-      <p className="font-medium">{value || "-"}</p>
+      <p style={{ fontSize: 11, color: "var(--text-muted)" }}>{label}</p>
+      <p style={{ fontWeight: 500, color: "var(--text-primary)" }}>{value || "-"}</p>
     </div>
   )
 }

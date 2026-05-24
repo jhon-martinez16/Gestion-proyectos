@@ -82,7 +82,7 @@ export default function DashboardLayout() {
       />
 
       <main style={{ flex: 1, overflowY: "auto", minWidth: 0 }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "32px 32px 48px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 48px 48px" }}>
           <Outlet />
         </div>
       </main>
@@ -233,7 +233,7 @@ export default function DashboardLayout() {
                           <p style={{ fontSize: 11, color: "var(--primary)", fontWeight: 600, marginBottom: 2 }}>
                             {n.proyecto?.nombre}
                           </p>
-                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace" }}>
+                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
                             {new Date(n.createdAt).toLocaleString("es-CO", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
                           </p>
                         </div>

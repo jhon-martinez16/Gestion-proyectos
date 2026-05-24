@@ -104,20 +104,20 @@ function formatCompact(n: number) {
 }
 
 // ── Design tokens ──────────────────────────────────────────────────
-const ESTADO_COLOR: Record<string, { bar: string; badge: { bg: string; text: string }; label: string }> = {
-  EN_CURSO:    { bar: "#16a34a", badge: { bg: "#dcfce7", text: "#15803d" }, label: "En curso" },
-  ADVERTENCIA: { bar: "#f59e0b", badge: { bg: "#fef9c3", text: "#a16207" }, label: "Advertencia" },
-  EN_RIESGO:   { bar: "#ef4444", badge: { bg: "#fee2e2", text: "#dc2626" }, label: "En riesgo" },
-  FINALIZADO:  { bar: "#3b82f6", badge: { bg: "#dbeafe", text: "#1d4ed8" }, label: "Finalizado" },
-  PROPUESTA:   { bar: "#94a3b8", badge: { bg: "#f1f5f9", text: "#475569" }, label: "Propuesta" },
+const ESTADO_COLOR: Record<string, { bar: string; badge: { bg: string; text: string; border: string }; label: string }> = {
+  EN_CURSO:    { bar: "var(--state-green)", badge: { bg: "transparent", text: "var(--state-green)", border: "var(--state-green)" }, label: "En curso" },
+  ADVERTENCIA: { bar: "var(--state-amber)", badge: { bg: "transparent", text: "var(--state-amber)", border: "var(--state-amber)" }, label: "Advertencia" },
+  EN_RIESGO:   { bar: "var(--state-red)",   badge: { bg: "transparent", text: "var(--state-red)",   border: "var(--state-red)" },   label: "En riesgo" },
+  FINALIZADO:  { bar: "var(--state-blue)",  badge: { bg: "transparent", text: "var(--state-blue)",  border: "var(--state-blue)" },  label: "Finalizado" },
+  PROPUESTA:   { bar: "var(--state-zinc)",  badge: { bg: "transparent", text: "var(--state-zinc)",  border: "var(--state-zinc)" },  label: "Propuesta" },
 }
 
 const GANTT_GRADIENT: Record<string, string> = {
-  EN_CURSO:    "linear-gradient(90deg, #22c55e, #16a34a)",
-  ADVERTENCIA: "linear-gradient(90deg, #fcd34d, #f59e0b)",
-  EN_RIESGO:   "linear-gradient(90deg, #f87171, #dc2626)",
-  FINALIZADO:  "linear-gradient(90deg, #60a5fa, #2563eb)",
-  PROPUESTA:   "linear-gradient(90deg, #cbd5e1, #94a3b8)",
+  EN_CURSO:    "linear-gradient(90deg, #4A9B6F, #2D6A4F)",
+  ADVERTENCIA: "linear-gradient(90deg, #E8A040, #D4851A)",
+  EN_RIESGO:   "linear-gradient(90deg, #D4604E, #C0392B)",
+  FINALIZADO:  "linear-gradient(90deg, #5B8DD4, #2563eb)",
+  PROPUESTA:   "linear-gradient(90deg, #A09A94, #6B6560)",
 }
 
 // ── Motion variants ────────────────────────────────────────────────
@@ -168,7 +168,7 @@ function AnimatedNumber({ value, currency = false, format }: {
   return <>{display}</>
 }
 
-// ── KPI Card (nuevo estilo minimalista) ────────────────────────────
+// ── KPI Card (editorial premium) ───────────────────────────────────
 function KpiCard({ title, value, icon: Icon, sub, currency, compact, progress, redBorder, amberValue, onClick }: {
   title: string
   value: number
@@ -183,33 +183,59 @@ function KpiCard({ title, value, icon: Icon, sub, currency, compact, progress, r
 }) {
   const showRed   = !!redBorder && value > 0
   const showAmber = !!amberValue && value > 0
+  const dotColor  = showRed ? "var(--state-red)" : showAmber ? "var(--state-amber)" : "var(--state-green)"
   const numColor  = showRed ? "var(--state-red)" : showAmber ? "var(--state-amber)" : "var(--text-primary)"
 
   return (
     <motion.div
       variants={itemVariants}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -1, boxShadow: "0 4px 16px rgba(0,0,0,0.10)" }}
       onClick={onClick}
-      className="card-surface card-surface-hover flex flex-col"
+      className="card-surface flex flex-col"
       style={{
-        borderRadius: 14,
-        padding: 20,
-        minHeight: 140,
+        borderRadius: 8,
+        padding: "20px 20px 18px",
+        minHeight: 130,
         cursor: onClick ? "pointer" : "default",
-        borderLeft: showRed ? "2px solid var(--state-red)" : showAmber ? "2px solid var(--state-amber)" : undefined,
-        transition: "box-shadow 250ms var(--ease)",
+        transition: "box-shadow 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1)",
+        position: "relative",
       }}
     >
-      {/* Icon + label */}
-      <div className="flex items-center gap-1.5 mb-3">
-        <Icon size={14} className="text-ink-3 flex-shrink-0" />
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-2 leading-none">
-          {title}
-        </p>
-      </div>
+      {/* Status dot — top right */}
+      <div style={{
+        position: "absolute",
+        top: 16,
+        right: 16,
+        width: 6,
+        height: 6,
+        borderRadius: "50%",
+        background: dotColor,
+        flexShrink: 0,
+      }} />
 
-      {/* Number */}
-      <p className="leading-none" style={{ fontSize: 32, fontWeight: 600, letterSpacing: "-0.03em", color: numColor }}>
+      {/* Label */}
+      <p style={{
+        fontFamily: "var(--font-ui)",
+        fontSize: 10,
+        fontWeight: 600,
+        textTransform: "uppercase",
+        letterSpacing: "0.10em",
+        color: "var(--text-muted)",
+        marginBottom: 10,
+        lineHeight: 1,
+      }}>
+        {title}
+      </p>
+
+      {/* Number — Cormorant Garamond */}
+      <p className="leading-none" style={{
+        fontFamily: "var(--font-serif)",
+        fontSize: 52,
+        fontWeight: 400,
+        letterSpacing: "-0.02em",
+        color: numColor,
+        lineHeight: 1,
+      }}>
         {compact
           ? <AnimatedNumber value={value} format={formatCompact} />
           : currency
@@ -219,17 +245,24 @@ function KpiCard({ title, value, icon: Icon, sub, currency, compact, progress, r
       </p>
 
       {sub && (
-        <p className="text-[12px] text-ink-3 mt-1.5">{sub}</p>
+        <p style={{
+          fontFamily: "var(--font-ui)",
+          fontSize: 12,
+          color: "var(--text-muted)",
+          marginTop: 6,
+        }}>
+          {sub}
+        </p>
       )}
 
       {progress !== undefined && (
-        <div className="mt-auto pt-3">
-          <div className="h-[3px] bg-canvas-2 rounded-full overflow-hidden">
+        <div style={{ marginTop: "auto", paddingTop: 12 }}>
+          <div style={{ height: 2, background: "var(--canvas-2)", borderRadius: 99, overflow: "hidden" }}>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${Math.min(100, progress)}%` }}
               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-              className="h-full bg-primary rounded-full"
+              style={{ height: "100%", background: "var(--accent-gold)", borderRadius: 99 }}
             />
           </div>
         </div>
@@ -266,11 +299,16 @@ function StatusBadge({ estado }: { estado: string }) {
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 5,
-      padding: "3px 10px", borderRadius: 50,
-      fontSize: 11, fontWeight: 600,
+      padding: "2px 8px", borderRadius: 4,
+      fontSize: 10, fontWeight: 500,
       background: cfg.badge.bg, color: cfg.badge.text,
+      border: `1px solid ${cfg.badge.border}`,
+      fontFamily: "var(--font-ui)",
+      textTransform: "uppercase",
+      letterSpacing: "0.06em",
+      whiteSpace: "nowrap",
     }}>
-      <span style={{ width: 5, height: 5, borderRadius: "50%", background: cfg.bar }} />
+      <span style={{ width: 5, height: 5, borderRadius: "50%", background: cfg.bar, flexShrink: 0 }} />
       {cfg.label}
     </span>
   )
@@ -352,14 +390,14 @@ function FacturasPendientesCard({ facturas, total, onNavigate }: {
           display: "flex", alignItems: "center", gap: 12,
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
+            <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-mono)" }}>
               #{f.numero}
             </p>
             <p style={{ fontSize: 11, color: "var(--text-muted)" }}>
               {f.proyecto?.nombre ?? "—"} · {hace(f.fechaEmision)}
             </p>
           </div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "var(--warning)", fontFamily: "'JetBrains Mono', monospace" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "var(--warning)", fontFamily: "var(--font-mono)" }}>
             {formatCOP(Number(f.monto))}
           </p>
         </div>
@@ -432,7 +470,7 @@ function MiniGantt({ proyectos, onNavigate }: { proyectos: Proyecto[]; onNavigat
                 ))}
                 {todayPct > 0 && todayPct < 100 && (
                   <div style={{ position: "absolute", top: 4, left: `${todayPct}%`, transform: "translateX(-50%)" }}>
-                    <span style={{ fontSize: 9, background: "var(--accent)", color: "white", padding: "2px 6px", borderRadius: 4, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", boxShadow: "0 2px 6px rgba(249,115,22,0.4)" }}>HOY</span>
+                    <span style={{ fontSize: 9, background: "var(--accent)", color: "white", padding: "2px 6px", borderRadius: 4, fontWeight: 700, fontFamily: "var(--font-mono)", boxShadow: "0 2px 6px rgba(249,115,22,0.4)" }}>HOY</span>
                   </div>
                 )}
               </div>
@@ -498,7 +536,7 @@ function ProximosVencimientos({ entregables, reuniones, onNavigate }: {
                   <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.nombre}</p>
                   <span style={{ fontSize: 10, padding: "1px 7px", borderRadius: 99, background: "var(--primary-light)", color: "var(--primary-dark)", fontWeight: 600 }}>{e.proyecto.nombre}</span>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 700, flexShrink: 0, color: isUrgent ? "var(--danger)" : "var(--info)", fontFamily: "'JetBrains Mono', monospace" }}>{label}</span>
+                <span style={{ fontSize: 11, fontWeight: 700, flexShrink: 0, color: isUrgent ? "var(--danger)" : "var(--info)", fontFamily: "var(--font-mono)" }}>{label}</span>
               </div>
             )
           })}
@@ -510,12 +548,12 @@ function ProximosVencimientos({ entregables, reuniones, onNavigate }: {
           ) : reuns.map((r, i) => (
             <div key={r.id} onClick={() => onNavigate(`/projects/${r.proyecto.id}`)} style={{ display: "flex", alignItems: "flex-start", gap: 10, paddingBottom: i < reuns.length - 1 ? 10 : 0, marginBottom: i < reuns.length - 1 ? 10 : 0, borderBottom: i < reuns.length - 1 ? "1px solid var(--card-border)" : "none", cursor: "pointer" }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", fontFamily: "'JetBrains Mono', monospace" }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-mono)" }}>
                   {new Date(r.proximaReunion).toLocaleDateString("es-CO", { weekday: "short", day: "numeric", month: "short" })}
                 </p>
                 <p style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.proyecto.nombre}</p>
               </div>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", flexShrink: 0, fontFamily: "'JetBrains Mono', monospace" }}>{enDias(r.proximaReunion)}</span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", flexShrink: 0, fontFamily: "var(--font-mono)" }}>{enDias(r.proximaReunion)}</span>
             </div>
           ))}
         </div>
@@ -666,7 +704,7 @@ export default function Dashboard() {
                 <motion.div key={p.id} variants={itemVariants} whileHover={{ y: -2 }} className="card-surface card-surface-hover p-4 cursor-pointer" onClick={() => navigate(`/projects/${p.id}`)}>
                   <p className="text-[14px] font-semibold text-ink mb-2">{p.nombre}</p>
                   <StatusBadge estado={p.estado} />
-                  <p className="text-[11px] text-ink-3 mt-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  <p className="text-[11px] text-ink-3 mt-2" style={{ fontFamily: "var(--font-mono)" }}>
                     Fin: {new Date(p.fechaFin).toLocaleDateString("es-CO")}
                   </p>
                 </motion.div>
@@ -690,7 +728,7 @@ export default function Dashboard() {
                     <p className="text-[13px] text-ink truncate">{c.descripcion}</p>
                     <p className="text-[11px] text-ink-3">{c.proyecto.nombre}</p>
                   </div>
-                  <span className="text-[12px] font-bold text-state-red flex-shrink-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  <span className="text-[12px] font-bold text-state-red flex-shrink-0" style={{ fontFamily: "var(--font-mono)" }}>
                     +{diasRetraso(c.fechaActual)}d
                   </span>
                 </div>
@@ -830,7 +868,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <StatusBadge estado={p.estado} />
-                    <span className="text-[11px] text-ink-3 flex-shrink-0 min-w-[40px] text-right" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    <span className="text-[11px] text-ink-3 flex-shrink-0 min-w-[40px] text-right" style={{ fontFamily: "var(--font-mono)" }}>
                       {hace(p.createdAt)}
                     </span>
                     <ArrowRight size={13} className="text-ink-4 flex-shrink-0" />
@@ -880,7 +918,7 @@ export default function Dashboard() {
                         <p className="text-[12px] text-ink truncate">{c.descripcion}</p>
                         {proy && <p className="text-[10px] text-state-red font-semibold mt-0.5">{proy.nombre}</p>}
                       </div>
-                      <span className="text-[11px] font-bold text-state-red flex-shrink-0" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                      <span className="text-[11px] font-bold text-state-red flex-shrink-0" style={{ fontFamily: "var(--font-mono)" }}>
                         +{diasRetraso(c.fechaActual)}d
                       </span>
                     </div>
@@ -905,12 +943,12 @@ export default function Dashboard() {
                 {factsPendientes.map((f, i) => (
                   <div key={f.id} className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: i < factsPendientes.length - 1 ? "1px solid var(--card-border)" : "none" }}>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[12px] font-semibold text-ink" style={{ fontFamily: "'JetBrains Mono', monospace" }}>#{f.numero}</p>
+                      <p className="text-[12px] font-semibold text-ink" style={{ fontFamily: "var(--font-mono)" }}>#{f.numero}</p>
                       <p className="text-[11px] text-ink-3 truncate">{f.proyecto?.nombre ?? "—"}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-[12px] font-bold text-state-amber" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formatCOP(Number(f.monto))}</p>
-                      <p className="text-[10px] text-ink-3" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{hace(f.fechaEmision)}</p>
+                      <p className="text-[12px] font-bold text-state-amber" style={{ fontFamily: "var(--font-mono)" }}>{formatCOP(Number(f.monto))}</p>
+                      <p className="text-[10px] text-ink-3" style={{ fontFamily: "var(--font-mono)" }}>{hace(f.fechaEmision)}</p>
                     </div>
                   </div>
                 ))}

@@ -42,18 +42,20 @@ const ESTADO_LABELS: Record<string, string> = {
   FINALIZADO:  "Finalizado",
 }
 
-const ESTADO_COLORS: Record<string, string> = {
-  EN_CURSO:    "bg-green-100 text-green-700",
-  ADVERTENCIA: "bg-yellow-100 text-yellow-700",
-  EN_RIESGO:   "bg-red-100 text-red-700",
-  FINALIZADO:  "bg-gray-100 text-gray-600",
+import React from "react"
+
+const ESTADO_STYLE: Record<string, React.CSSProperties> = {
+  EN_CURSO:    { background: "transparent", color: "var(--state-green)",  border: "1px solid var(--state-green)" },
+  ADVERTENCIA: { background: "transparent", color: "var(--state-amber)",  border: "1px solid var(--state-amber)" },
+  EN_RIESGO:   { background: "transparent", color: "var(--state-red)",    border: "1px solid var(--state-red)" },
+  FINALIZADO:  { background: "transparent", color: "var(--state-zinc)",   border: "1px solid var(--state-zinc)" },
 }
 
-const FACTURA_COLORS: Record<string, string> = {
-  PENDIENTE: "bg-yellow-100 text-yellow-700",
-  APROBADA:  "bg-blue-100 text-blue-700",
-  PAGADA:    "bg-green-100 text-green-700",
-  RECHAZADA: "bg-red-100 text-red-700",
+const FACTURA_STYLE: Record<string, React.CSSProperties> = {
+  PENDIENTE: { background: "transparent", color: "var(--state-amber)",     border: "1px solid var(--state-amber)" },
+  APROBADA:  { background: "transparent", color: "var(--accent-forest)",   border: "1px solid var(--accent-forest)" },
+  PAGADA:    { background: "transparent", color: "var(--state-green)",     border: "1px solid var(--state-green)" },
+  RECHAZADA: { background: "transparent", color: "var(--state-red)",       border: "1px solid var(--state-red)" },
 }
 
 function pct(a: number, b: number) {
@@ -85,49 +87,46 @@ export default function Reportes() {
     fetch()
   }, [])
 
-  if (loading) return <div className="flex items-center justify-center h-64 text-gray-400">Cargando reporte...</div>
-  if (error) return <div className="flex items-center justify-center h-64 text-red-500">{error}</div>
+  if (loading) return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256, color: "var(--text-muted)" }}>Cargando reporte...</div>
+  if (error) return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256, color: "var(--state-red)" }}>{error}</div>
   if (!data) return null
 
   const { resumen, financiero, pagosPorProyecto, performanceLideres } = data
 
   return (
-    <div className="space-y-10">
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
 
       {/* HEADER */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-[#0B355A] rounded-3xl p-8 text-white"
-      >
-        <h1 className="text-3xl font-bold">Reportes Ejecutivos</h1>
-        <p className="text-[#9FB3C8] mt-1">Resumen general del portafolio de proyectos</p>
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <p style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.15em", color: "var(--accent-gold)", marginBottom: 6 }}>Analítica</p>
+        <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(36px, 4vw, 48px)", fontWeight: 300, color: "var(--text-primary)", lineHeight: 1.05 }}>Reportes Ejecutivos</h1>
+        <p style={{ fontFamily: "var(--font-ui)", fontSize: 14, color: "var(--text-secondary)", marginTop: 6 }}>Resumen general del portafolio de proyectos</p>
       </motion.div>
 
       {/* RESUMEN GENERAL */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard label="Total Proyectos" value={resumen.totalProyectos} color="text-[#0B355A]" />
-        <StatCard label="% Compromisos cumplidos" value={`${resumen.pctCompromisosCumplidos}%`} color="text-green-600" />
-        <StatCard label="% Entregables aprobados" value={`${resumen.pctEntregablesAprobados}%`} color="text-blue-600" />
-        <StatCard label="Total facturado" value={formatCOP(financiero.totalFacturado)} color="text-[#F58220]" />
+        <StatCard label="Total Proyectos" value={resumen.totalProyectos} />
+        <StatCard label="Compromisos cumplidos" value={`${resumen.pctCompromisosCumplidos}%`} valueColor="var(--state-green)" />
+        <StatCard label="Entregables aprobados" value={`${resumen.pctEntregablesAprobados}%`} valueColor="var(--accent-forest)" />
+        <StatCard label="Total facturado" value={formatCOP(financiero.totalFacturado)} valueColor="var(--accent-gold)" />
       </div>
 
       {/* PROYECTOS POR ESTADO */}
-      <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Proyectos por Estado</h2>
+      <div className="card-surface" style={{ padding: 32 }}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 300, color: "var(--text-primary)", marginBottom: 20 }}>Proyectos por Estado</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {Object.entries(resumen.porEstado).map(([estado, count]) => (
-            <div key={estado} className={`p-4 rounded-2xl ${ESTADO_COLORS[estado] ?? "bg-gray-100 text-gray-600"}`}>
-              <p className="text-2xl font-bold">{count}</p>
-              <p className="text-sm font-medium mt-1">{ESTADO_LABELS[estado] ?? estado}</p>
+            <div key={estado} style={{ ...(ESTADO_STYLE[estado] ?? { background: "transparent", color: "var(--state-zinc)", border: "1px solid var(--state-zinc)" }), padding: "16px 20px", borderRadius: 10 }}>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: 36, fontWeight: 400, lineHeight: 1, margin: "0 0 6px" }}>{count}</p>
+              <p style={{ fontFamily: "var(--font-ui)", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>{ESTADO_LABELS[estado] ?? estado}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* FINANCIERO */}
-      <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 space-y-6">
-        <h2 className="text-xl font-bold text-gray-800">Resumen Financiero</h2>
+      <div className="card-surface" style={{ padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 300, color: "var(--text-primary)" }}>Resumen Financiero</h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <FinCard label="Total facturado" value={formatCOP(financiero.totalFacturado)} sub="Todas las facturas" />
@@ -136,13 +135,13 @@ export default function Reportes() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-gray-600 mb-3">Facturas por estado</h3>
+          <h3 style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Facturas por estado</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {Object.entries(financiero.facturasPorEstado).map(([estado, { count, monto }]) => (
-              <div key={estado} className={`p-4 rounded-2xl ${FACTURA_COLORS[estado] ?? "bg-gray-100 text-gray-600"}`}>
-                <p className="text-xs font-semibold uppercase tracking-wide opacity-70">{estado}</p>
-                <p className="text-xl font-bold mt-1">{count}</p>
-                <p className="text-sm font-medium">{formatCOP(monto)}</p>
+              <div key={estado} style={{ ...(FACTURA_STYLE[estado] ?? { background: "transparent", color: "var(--state-zinc)", border: "1px solid var(--state-zinc)" }), padding: "14px 16px", borderRadius: 10 }}>
+                <p style={{ fontFamily: "var(--font-ui)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>{estado}</p>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: 28, fontWeight: 400, lineHeight: 1, margin: "0 0 4px" }}>{count}</p>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 600 }}>{formatCOP(monto)}</p>
               </div>
             ))}
           </div>
@@ -151,39 +150,34 @@ export default function Reportes() {
 
       {/* PAGOS POR PROYECTO */}
       {pagosPorProyecto.length > 0 && (
-        <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">Cobros por Proyecto</h2>
-          <div className="overflow-x-auto rounded-2xl border border-gray-100">
+        <div className="card-surface" style={{ padding: 32 }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 300, color: "var(--text-primary)", marginBottom: 20 }}>Cobros por Proyecto</h2>
+          <div style={{ overflowX: "auto", borderRadius: 10, border: "1px solid var(--border-subtle)" }}>
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
+              <thead style={{ background: "var(--canvas)" }}>
                 <tr>
-                  <th className="px-4 py-3 text-left">Proyecto</th>
-                  <th className="px-4 py-3 text-center">Cuotas</th>
-                  <th className="px-4 py-3 text-right">Esperado</th>
-                  <th className="px-4 py-3 text-right">Recibido</th>
-                  <th className="px-4 py-3 text-right">Pendiente</th>
-                  <th className="px-4 py-3 text-center">%</th>
+                  {["Proyecto","Cuotas","Esperado","Recibido","Pendiente","%"].map((h, i) => (
+                    <th key={h} style={{ padding: "10px 16px", textAlign: i >= 2 ? "right" : i === 1 ? "center" : "left", fontSize: 10, fontWeight: 600, color: "var(--text-muted)", fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.08em", borderBottom: "1px solid var(--border-subtle)" }}>{h}</th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody>
                 {pagosPorProyecto.map((p) => {
                   const pendiente = p.montoEsperado - p.montoRecibido
                   const porcentaje = pct(p.montoRecibido, p.montoEsperado)
                   return (
-                    <tr key={p.proyectoId} className="bg-white hover:bg-gray-50 transition">
-                      <td className="px-4 py-3 font-medium text-gray-800">{p.proyectoNombre}</td>
-                      <td className="px-4 py-3 text-center text-gray-500">
-                        {p.cuotasRecibidas}/{p.cuotasEsperadas}
-                      </td>
-                      <td className="px-4 py-3 text-right text-gray-700">{formatCOP(p.montoEsperado)}</td>
-                      <td className="px-4 py-3 text-right text-green-700 font-semibold">{formatCOP(p.montoRecibido)}</td>
-                      <td className="px-4 py-3 text-right text-red-600">{formatCOP(pendiente)}</td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div className="h-2 bg-green-500 rounded-full" style={{ width: `${porcentaje}%` }} />
+                    <tr key={p.proyectoId} style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)", transition: "background 150ms" }} onMouseEnter={e => (e.currentTarget.style.background = "var(--canvas)")} onMouseLeave={e => (e.currentTarget.style.background = "var(--bg-card)")}>
+                      <td style={{ padding: "10px 16px", fontWeight: 600, color: "var(--text-primary)", fontSize: 13 }}>{p.proyectoNombre}</td>
+                      <td style={{ padding: "10px 16px", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-mono)", fontSize: 12 }}>{p.cuotasRecibidas}/{p.cuotasEsperadas}</td>
+                      <td style={{ padding: "10px 16px", textAlign: "right", color: "var(--text-primary)", fontFamily: "var(--font-mono)", fontSize: 12 }}>{formatCOP(p.montoEsperado)}</td>
+                      <td style={{ padding: "10px 16px", textAlign: "right", color: "var(--state-green)", fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 600 }}>{formatCOP(p.montoRecibido)}</td>
+                      <td style={{ padding: "10px 16px", textAlign: "right", color: pendiente > 0 ? "var(--state-red)" : "var(--state-green)", fontFamily: "var(--font-mono)", fontSize: 12 }}>{formatCOP(pendiente)}</td>
+                      <td style={{ padding: "10px 16px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ flex: 1, height: 4, background: "var(--border-subtle)", borderRadius: 99, overflow: "hidden" }}>
+                            <div style={{ height: 4, background: "var(--accent-gold)", borderRadius: 99, width: `${porcentaje}%` }} />
                           </div>
-                          <span className="text-xs text-gray-500 w-8">{porcentaje}%</span>
+                          <span style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-mono)", minWidth: 32, textAlign: "right" }}>{porcentaje}%</span>
                         </div>
                       </td>
                     </tr>
@@ -197,32 +191,32 @@ export default function Reportes() {
 
       {/* PERFORMANCE LÍDERES */}
       {performanceLideres.length > 0 && (
-        <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">Performance por Líder / Socio</h2>
+        <div className="card-surface" style={{ padding: 32 }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 300, color: "var(--text-primary)", marginBottom: 20 }}>Performance por Líder / Socio</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {performanceLideres.map((l) => {
               const pctCompromisos = pct(l.compromisosCumplidos, l.compromisosTotal)
               const pctEntregables = pct(l.entregablesAprobados, l.entregablesTotal)
               return (
-                <div key={l.liderId} className="p-6 border border-gray-100 rounded-2xl space-y-4">
-                  <p className="font-bold text-gray-800">{l.liderNombre}</p>
-                  <div className="space-y-2">
+                <div key={l.liderId} style={{ padding: 20, border: "1px solid var(--border-subtle)", borderRadius: 10, display: "flex", flexDirection: "column", gap: 16 }}>
+                  <p style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{l.liderNombre}</p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     <div>
-                      <div className="flex justify-between text-xs text-gray-500 mb-1">
-                        <span>Compromisos cumplidos</span>
-                        <span>{l.compromisosCumplidos}/{l.compromisosTotal}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>Compromisos cumplidos</span>
+                        <span style={{ fontSize: 11, color: "var(--text-secondary)", fontFamily: "var(--font-mono)" }}>{l.compromisosCumplidos}/{l.compromisosTotal}</span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-2 bg-green-500 rounded-full transition-all" style={{ width: `${pctCompromisos}%` }} />
+                      <div style={{ height: 4, background: "var(--border-subtle)", borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ height: 4, background: "var(--state-green)", borderRadius: 99, width: `${pctCompromisos}%`, transition: "width 600ms" }} />
                       </div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-xs text-gray-500 mb-1">
-                        <span>Entregables aprobados</span>
-                        <span>{l.entregablesAprobados}/{l.entregablesTotal}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>Entregables aprobados</span>
+                        <span style={{ fontSize: 11, color: "var(--text-secondary)", fontFamily: "var(--font-mono)" }}>{l.entregablesAprobados}/{l.entregablesTotal}</span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-2 bg-blue-500 rounded-full transition-all" style={{ width: `${pctEntregables}%` }} />
+                      <div style={{ height: 4, background: "var(--border-subtle)", borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ height: 4, background: "var(--accent-gold)", borderRadius: 99, width: `${pctEntregables}%`, transition: "width 600ms" }} />
                       </div>
                     </div>
                   </div>
@@ -237,21 +231,21 @@ export default function Reportes() {
   )
 }
 
-function StatCard({ label, value, color }: { label: string; value: string | number; color: string }) {
+function StatCard({ label, value, valueColor }: { label: string; value: string | number; valueColor?: string }) {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-2">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className={`text-3xl font-bold ${color}`}>{value}</p>
+    <div className="card-surface" style={{ padding: 24 }}>
+      <p style={{ fontFamily: "var(--font-ui)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-muted)", marginBottom: 8 }}>{label}</p>
+      <p style={{ fontFamily: "var(--font-serif)", fontSize: 44, fontWeight: 400, color: valueColor ?? "var(--text-primary)", lineHeight: 1 }}>{value}</p>
     </div>
   )
 }
 
 function FinCard({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div className="bg-gray-50 rounded-2xl p-5 space-y-1">
-      <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">{label}</p>
-      <p className="text-2xl font-bold text-gray-800">{value}</p>
-      <p className="text-xs text-gray-400">{sub}</p>
+    <div style={{ padding: 20, background: "var(--canvas)", borderRadius: 10, border: "1px solid var(--border-subtle)", display: "flex", flexDirection: "column", gap: 4 }}>
+      <p style={{ fontFamily: "var(--font-ui)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-muted)" }}>{label}</p>
+      <p style={{ fontFamily: "var(--font-mono)", fontSize: 22, fontWeight: 700, color: "var(--text-primary)" }}>{value}</p>
+      <p style={{ fontSize: 11, color: "var(--text-muted)" }}>{sub}</p>
     </div>
   )
 }

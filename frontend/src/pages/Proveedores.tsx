@@ -270,7 +270,7 @@ export default function Proveedores() {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <p className="text-red-500 font-medium">{error}</p>
-        <button onClick={loadData} className="px-5 py-2 bg-[#0B355A] text-white rounded-xl font-medium hover:bg-[#0a2e4e] transition">
+        <button onClick={loadData} className="btn-primary" style={{ height: 36, padding: "0 20px", fontSize: 14 }}>
           Reintentar
         </button>
       </div>
@@ -278,74 +278,53 @@ export default function Proveedores() {
   }
 
   return (
-    <div className="space-y-8 bg-[#F3FBF6] p-6 rounded-3xl">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
 
       {/* HEADER */}
-      <div className="flex justify-between items-center bg-[#DDF7E6] px-6 py-4 rounded-2xl shadow-sm">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <h1 className="text-3xl font-bold text-[#14532D]">Proveedores</h1>
-          <p className="text-sm text-green-900/70 mt-1">Gestión de proveedores del sistema</p>
+          <p style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.15em", color: "var(--accent-gold)", marginBottom: 4 }}>Administración</p>
+          <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(36px, 4vw, 48px)", fontWeight: 300, color: "var(--text-primary)", lineHeight: 1.05 }}>Proveedores</h1>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-[#0B355A] hover:bg-[#0a2e4e] text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm"
-        >
+        <button onClick={() => setShowModal(true)} className="btn-primary" style={{ height: 38, padding: "0 16px", fontSize: 13 }}>
           + Nuevo Proveedor
         </button>
       </div>
 
       {/* LISTADO */}
-      <div className="grid gap-4">
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {proveedores.map((p) => (
-          <div
-            key={p.id}
-            className="bg-white border border-green-100 p-5 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex justify-between items-center"
-          >
-            <div>
-              <p className="font-semibold text-gray-800">{p.nombre}</p>
-              <p className="text-sm text-gray-500">NIT: {p.nit}</p>
-              {p.email && <p className="text-xs text-gray-400">{p.email}</p>}
-              {p.telefono && <p className="text-xs text-gray-400">{p.telefono}</p>}
-              {p.categoriaProveedor && <p className="text-xs text-gray-500 font-medium">{p.categoriaProveedor}</p>}
+          <div key={p.id} className="card-surface" style={{ padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <p style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{p.nombre}</p>
+              <p style={{ fontSize: 12, color: "var(--text-secondary)" }}>NIT: {p.nit}</p>
+              {p.email && <p style={{ fontSize: 12, color: "var(--text-muted)" }}>{p.email}</p>}
+              {p.telefono && <p style={{ fontSize: 12, color: "var(--text-muted)" }}>{p.telefono}</p>}
+              {p.categoriaProveedor && <p style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 500 }}>{p.categoriaProveedor}</p>}
               {p._count !== undefined && (
-                <p className="text-xs mt-1">
-                  <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
+                <p style={{ marginTop: 4 }}>
+                  <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: "var(--accent-forest)", border: "1px solid var(--accent-forest)", fontFamily: "var(--font-ui)" }}>
                     {p._count.facturas} factura{p._count.facturas !== 1 ? "s" : ""}
                   </span>
                 </p>
               )}
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${p.activo ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+              <span style={{ padding: "2px 10px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "transparent", color: p.activo ? "var(--state-green)" : "var(--state-zinc)", border: `1px solid ${p.activo ? "var(--state-green)" : "var(--state-zinc)"}`, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {p.activo ? "Activo" : "Inactivo"}
               </span>
-              <button
-                onClick={() => setEditando(p)}
-                className="px-3 py-1.5 rounded-xl text-sm font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
-              >
-                Editar
-              </button>
+              <button onClick={() => setEditando(p)} className="btn-secondary" style={{ height: 30, padding: "0 12px", fontSize: 12 }}>Editar</button>
               {p.activo ? (
-                <button
-                  onClick={() => handleDesactivar(p)}
-                  className="px-3 py-1.5 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition"
-                >
-                  Desactivar
-                </button>
+                <button onClick={() => handleDesactivar(p)} className="btn-secondary" style={{ height: 30, padding: "0 12px", fontSize: 12, color: "var(--state-red)", borderColor: "var(--state-red)" }}>Desactivar</button>
               ) : (
-                <button
-                  onClick={() => handleActivar(p)}
-                  className="px-3 py-1.5 rounded-xl text-sm font-medium bg-green-50 text-green-600 hover:bg-green-100 transition"
-                >
-                  Activar
-                </button>
+                <button onClick={() => handleActivar(p)} className="btn-secondary" style={{ height: 30, padding: "0 12px", fontSize: 12, color: "var(--state-green)", borderColor: "var(--state-green)" }}>Activar</button>
               )}
             </div>
           </div>
         ))}
         {proveedores.length === 0 && (
-          <p className="text-center text-gray-400 py-8">No hay proveedores registrados.</p>
+          <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 14, padding: "32px 0" }}>No hay proveedores registrados.</p>
         )}
       </div>
 

@@ -28,11 +28,11 @@ const EMPTY_FORM: FormData = {
 }
 
 const SECCIONES = [
-  { key: "resumenEjecutivo",       icon: FileText,     label: "Resumen Ejecutivo",       emoji: "📋", color: "#1e2a3a" },
-  { key: "alcance",                icon: Target,       label: "Alcance del Proyecto",    emoji: "🎯", color: "#059669" },
-  { key: "entregables",            icon: Package,      label: "Entregables Propuestos",  emoji: "📦", color: "#f97316" },
-  { key: "cronograma",             icon: CalendarDays, label: "Cronograma Sugerido",     emoji: "📅", color: "#0284c7" },
-  { key: "condicionesComerciales", icon: Briefcase,    label: "Condiciones Comerciales", emoji: "💼", color: "#7c3aed" },
+  { key: "resumenEjecutivo",       icon: FileText,     label: "Resumen Ejecutivo",       emoji: "📋", color: "var(--accent-forest)" },
+  { key: "alcance",                icon: Target,       label: "Alcance del Proyecto",    emoji: "🎯", color: "var(--state-green)" },
+  { key: "entregables",            icon: Package,      label: "Entregables Propuestos",  emoji: "📦", color: "var(--accent-gold)" },
+  { key: "cronograma",             icon: CalendarDays, label: "Cronograma Sugerido",     emoji: "📅", color: "var(--text-secondary)" },
+  { key: "condicionesComerciales", icon: Briefcase,    label: "Condiciones Comerciales", emoji: "💼", color: "var(--state-amber)" },
 ] as const
 
 const KEYFRAMES = `
@@ -47,21 +47,21 @@ const KEYFRAMES = `
 `
 
 const shimmerStyle: React.CSSProperties = {
-  background: "linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%)",
+  background: "linear-gradient(90deg, var(--border-subtle) 25%, var(--canvas) 50%, var(--border-subtle) 75%)",
   backgroundSize: "400% 100%",
   animation: "skeleton-shimmer 1.5s ease-in-out infinite",
 }
 
 function SkeletonCard({ color, lines = 3 }: { color: string; lines?: number }) {
   return (
-    <div style={{ background: "white", borderRadius: 12, overflow: "hidden", borderLeft: `4px solid ${color}`, boxShadow: "0 1px 8px rgba(0,0,0,0.06)" }}>
-      <div style={{ padding: "14px 20px", background: color, display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 22, height: 22, borderRadius: 6, background: "rgba(255,255,255,0.25)", flexShrink: 0 }} />
-        <div style={{ width: 140, height: 13, borderRadius: 7, background: "rgba(255,255,255,0.3)" }} />
+    <div style={{ background: "var(--bg-card)", borderRadius: 12, overflow: "hidden", borderTop: "1px solid var(--border-subtle)", borderRight: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)", borderLeft: `3px solid ${color}`, boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+      <div style={{ padding: "12px 20px", background: "var(--canvas)", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 22, height: 22, borderRadius: 6, background: "var(--border-subtle)", flexShrink: 0 }} />
+        <div style={{ width: 140, height: 12, borderRadius: 6, background: "var(--border-subtle)" }} />
       </div>
-      <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
         {Array.from({ length: lines }).map((_, i) => (
-          <div key={i} style={{ height: 13, borderRadius: 6, width: i === lines - 1 ? "62%" : "100%", ...shimmerStyle }} />
+          <div key={i} style={{ height: 12, borderRadius: 6, width: i === lines - 1 ? "62%" : "100%", ...shimmerStyle }} />
         ))}
       </div>
     </div>
@@ -85,10 +85,10 @@ function EmptyState() {
         <path d="M57 64 L62 69 L71 58" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
       <div>
-        <p style={{ fontSize: 16, fontWeight: 600, color: "#374151", margin: "0 0 8px" }}>
+        <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-ui)", margin: "0 0 8px" }}>
           Tu propuesta aparecerá aquí
         </p>
-        <p style={{ fontSize: 13, color: "#9ca3af", margin: 0, maxWidth: 280, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "var(--font-ui)", margin: 0, maxWidth: 280, lineHeight: 1.6 }}>
           Completa el formulario a la izquierda y haz clic en "Generar Propuesta con IA"
         </p>
       </div>
@@ -116,11 +116,11 @@ export default function Propuestas() {
     setForm(prev => ({ ...prev, [field]: e.target.value }))
 
   const applyFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.currentTarget.style.borderColor = "#f97316"
-    e.currentTarget.style.boxShadow   = "0 0 0 3px rgba(249,115,22,0.12)"
+    e.currentTarget.style.borderColor = "var(--accent-gold)"
+    e.currentTarget.style.boxShadow   = "0 0 0 3px rgba(200,169,110,0.15)"
   }
   const applyBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.currentTarget.style.borderColor = "#e2e8f0"
+    e.currentTarget.style.borderColor = "var(--border-subtle)"
     e.currentTarget.style.boxShadow   = "none"
   }
 
@@ -213,83 +213,71 @@ export default function Propuestas() {
   const mostrarTextarea = modoManual  || (!cargandoSug && sugerencias.length === 0)
 
   const inputBase: React.CSSProperties = {
-    width: "100%", padding: "10px 14px", borderRadius: 10,
-    border: "1.5px solid #e2e8f0",
-    background: "white", color: "#374151",
-    fontSize: 14,    outline: "none", transition: "border-color 0.15s, box-shadow 0.15s",
+    width: "100%", padding: "10px 14px", borderRadius: 8,
+    border: "1px solid var(--border-subtle)",
+    background: "var(--bg-card)", color: "var(--text-primary)",
+    fontSize: 14, fontFamily: "var(--font-ui)", outline: "none",
+    transition: "border-color 0.15s, box-shadow 0.15s",
     boxSizing: "border-box",
   }
 
   const labelBase: React.CSSProperties = {
-    fontSize: 13, fontWeight: 600, color: "#374151",
-    display: "block", marginBottom: 7,
+    fontSize: 12, fontWeight: 600, color: "var(--text-secondary)",
+    fontFamily: "var(--font-ui)", display: "block", marginBottom: 7,
   }
 
   const canSugerir = !cargandoSug && form.tipoProyecto.trim().length >= 3
 
   return (
-    <div style={{ margin: "-24px -28px", background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
       <style>{KEYFRAMES}</style>
 
-      {/* ── PAGE HEADER ── */}
-      <div style={{
-        background: "linear-gradient(135deg, #1e2a3a 0%, #243650 60%, #1a3a5c 100%)",
-        padding: "40px 36px 44px",
-        position: "relative", overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "radial-gradient(circle at 80% 20%, rgba(249,115,22,0.13) 0%, transparent 50%), radial-gradient(circle at 15% 80%, rgba(249,115,22,0.06) 0%, transparent 40%)",
-          pointerEvents: "none",
-        }} />
-        <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{
-            width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-            background: "rgba(249,115,22,0.18)",
-            border: "1px solid rgba(249,115,22,0.35)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <Sparkles size={22} color="#f97316" />
-          </div>
+      {/* ── PAGE HEADER — editorial, sin banner ── */}
+      <div style={{ borderBottom: "1px solid var(--border-subtle)", paddingBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16 }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: "white", margin: 0 }}>
-              Propuestas Comerciales
-            </h1>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.60)", margin: "4px 0 0" }}>
-              Genera propuestas profesionales con inteligencia artificial en segundos
-            </p>
+            <p style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.15em", color: "var(--accent-gold)", marginBottom: 6 }}>IA · Asistente</p>
+            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(36px, 4vw, 48px)", fontWeight: 300, color: "var(--text-primary)", lineHeight: 1.05, margin: 0 }}>Propuestas Comerciales</h1>
+            <p style={{ fontFamily: "var(--font-ui)", fontSize: 14, color: "var(--text-secondary)", marginTop: 6 }}>Genera propuestas profesionales con inteligencia artificial en segundos</p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(200,169,110,0.12)", border: "1px solid rgba(200,169,110,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Sparkles size={16} color="var(--accent-gold)" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── TWO-COLUMN LAYOUT ── */}
-      <div style={{ padding: "32px 36px", display: "flex", gap: 28, alignItems: "flex-start" }}>
+      <div style={{ display: "flex", gap: 28, alignItems: "flex-start" }}>
 
         {/* ── LEFT: FORM 45% ── */}
         <div style={{ width: "45%", flexShrink: 0 }}>
           <div style={{
-            background: "white", borderRadius: 16,
-            boxShadow: "0 2px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04)",
+            background: "var(--bg-card)", borderRadius: 12,
+            border: "1px solid var(--border-subtle)",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             overflow: "hidden",
           }}>
             {/* Card header */}
             <div style={{
-              padding: "20px 24px 16px",
-              borderBottom: "1px solid #f1f5f9",
+              padding: "18px 24px 16px",
+              borderBottom: "1px solid var(--border-subtle)",
+              background: "var(--canvas)",
               display: "flex", alignItems: "center", gap: 12,
             }}>
               <div style={{
-                width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                background: "#fff7ed", border: "1px solid rgba(249,115,22,0.25)",
+                width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+                background: "transparent", border: "1px solid var(--accent-gold)",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <FileText size={16} color="#f97316" />
+                <FileText size={15} color="var(--accent-gold)" />
               </div>
               <div>
-                <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#1e2a3a" }}>
+                <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-ui)" }}>
                   Nueva Propuesta
                 </p>
-                <p style={{ margin: 0, fontSize: 12, color: "#9ca3af" }}>
+                <p style={{ margin: 0, fontSize: 12, color: "var(--text-muted)", fontFamily: "var(--font-ui)" }}>
                   Completa los campos para generar con IA
                 </p>
               </div>
@@ -301,7 +289,7 @@ export default function Propuestas() {
               {/* Nombre cliente */}
               <div>
                 <label style={labelBase}>
-                  Nombre del cliente <span style={{ color: "#ef4444" }}>*</span>
+                  Nombre del cliente <span style={{ color: "var(--state-red)" }}>*</span>
                 </label>
                 <input
                   value={form.nombreCliente} onChange={set("nombreCliente")}
@@ -313,7 +301,7 @@ export default function Propuestas() {
               {/* Tipo de proyecto + Sugerir */}
               <div>
                 <label style={labelBase}>
-                  Tipo de proyecto <span style={{ color: "#ef4444" }}>*</span>
+                  Tipo de proyecto <span style={{ color: "var(--state-red)" }}>*</span>
                 </label>
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
@@ -329,16 +317,16 @@ export default function Propuestas() {
                     title="Sugerir objetivos con IA"
                     style={{
                       padding: "10px 14px", borderRadius: 10, flexShrink: 0,
-                      border: "1.5px solid #f97316",
-                      background: "white", color: "#f97316",
-                      fontSize: 12, fontWeight: 600,
+                      border: "1px solid var(--accent-gold)",
+                      background: "transparent", color: "var(--accent-gold)",
+                      fontSize: 12, fontWeight: 600, fontFamily: "var(--font-ui)",
                       cursor: canSugerir ? "pointer" : "not-allowed",
                       opacity: canSugerir ? 1 : 0.4,
                       display: "flex", alignItems: "center", gap: 5,
                       transition: "all 0.15s", whiteSpace: "nowrap",
                     }}
-                    onMouseEnter={(e) => { if (canSugerir) e.currentTarget.style.background = "#fff7ed" }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "white" }}
+                    onMouseEnter={(e) => { if (canSugerir) { e.currentTarget.style.background = "rgba(200,169,110,0.08)"; e.currentTarget.style.borderColor = "var(--accent-gold)" } }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent" }}
                   >
                     <Wand2 size={13} />
                     Sugerir
@@ -349,7 +337,7 @@ export default function Propuestas() {
               {/* Duración */}
               <div>
                 <label style={labelBase}>
-                  Duración estimada <span style={{ color: "#ef4444" }}>*</span>
+                  Duración estimada <span style={{ color: "var(--state-red)" }}>*</span>
                 </label>
                 <input
                   value={form.duracionEstimada} onChange={set("duracionEstimada")}
@@ -361,7 +349,7 @@ export default function Propuestas() {
               {/* Presupuesto */}
               <div>
                 <label style={labelBase}>
-                  Presupuesto aproximado <span style={{ color: "#ef4444" }}>*</span>
+                  Presupuesto aproximado <span style={{ color: "var(--state-red)" }}>*</span>
                 </label>
                 <input
                   value={form.presupuesto} onChange={set("presupuesto")}
@@ -373,18 +361,18 @@ export default function Propuestas() {
               {/* ── OBJETIVOS ── */}
               <div>
                 <label style={labelBase}>
-                  Objetivos principales <span style={{ color: "#ef4444" }}>*</span>
+                  Objetivos principales <span style={{ color: "var(--state-red)" }}>*</span>
                 </label>
 
                 {/* Loading indicator */}
                 {cargandoSug && (
                   <div style={{
                     padding: "11px 14px", borderRadius: 10,
-                    background: "#fff7ed", border: "1px solid rgba(249,115,22,0.22)",
+                    background: "rgba(200,169,110,0.06)", border: "1px solid rgba(200,169,110,0.25)",
                     display: "flex", alignItems: "center", gap: 9,
                   }}>
-                    <Wand2 size={14} color="#f97316" style={{ animation: "spin 1.2s linear infinite", flexShrink: 0 }} />
-                    <span style={{ fontSize: 12, color: "#f97316", fontWeight: 500 }}>
+                    <Wand2 size={14} color="var(--accent-gold)" style={{ animation: "spin 1.2s linear infinite", flexShrink: 0 }} />
+                    <span style={{ fontSize: 12, color: "var(--accent-gold)", fontWeight: 500, fontFamily: "var(--font-ui)" }}>
                       Generando objetivos sugeridos con IA...
                     </span>
                   </div>
@@ -402,9 +390,10 @@ export default function Propuestas() {
                             onClick={() => toggleSugerida(obj)}
                             style={{
                               padding: "7px 13px", borderRadius: 20,
-                              border: activo ? "1.5px solid #f97316" : "1.5px solid rgba(249,115,22,0.35)",
-                              background: activo ? "#f97316" : "#fff7ed",
-                              color: activo ? "white" : "#c2410c",
+                              border: activo ? "1.5px solid var(--accent-gold)" : "1.5px solid var(--border-subtle)",
+                              background: activo ? "var(--accent-gold)" : "transparent",
+                              color: activo ? "var(--bg-card)" : "var(--text-secondary)",
+                              fontFamily: "var(--font-ui)",
                               fontSize: 12, fontWeight: activo ? 600 : 400,
                               cursor: "pointer", transition: "all 0.18s",
                               textAlign: "left", lineHeight: 1.4,
@@ -429,13 +418,13 @@ export default function Propuestas() {
                       <button
                         type="button" onClick={agregarCustom}
                         disabled={!objetivoInput.trim()}
+                        className="btn-primary"
                         style={{
-                          padding: "9px 14px", borderRadius: 10, border: "none",
-                          background: objetivoInput.trim() ? "#f97316" : "rgba(249,115,22,0.2)",
-                          color: "white", fontSize: 12, fontWeight: 600,
-                          cursor: objetivoInput.trim() ? "pointer" : "not-allowed",
+                          height: "auto", padding: "9px 14px", fontSize: 12,
                           display: "flex", alignItems: "center", gap: 5,
-                          flexShrink: 0, transition: "background 0.15s",
+                          flexShrink: 0,
+                          opacity: objetivoInput.trim() ? 1 : 0.35,
+                          cursor: objetivoInput.trim() ? "pointer" : "not-allowed",
                         }}
                       >
                         <Plus size={13} />
@@ -452,8 +441,8 @@ export default function Propuestas() {
                             style={{
                               display: "flex", alignItems: "center", gap: 5,
                               padding: "5px 11px", borderRadius: 20,
-                              background: "#1e2a3a", color: "white",
-                              fontSize: 11, fontWeight: 500,
+                              background: "var(--accent-forest)", color: "white",
+                              fontSize: 11, fontWeight: 500, fontFamily: "var(--font-ui)",
                             }}
                           >
                             {obj}
@@ -491,7 +480,7 @@ export default function Propuestas() {
               <div>
                 <label style={labelBase}>
                   Contexto adicional
-                  <span style={{ fontSize: 11, color: "#9ca3af", marginLeft: 6, fontWeight: 400 }}>opcional</span>
+                  <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 6, fontWeight: 400 }}>opcional</span>
                 </label>
                 <textarea
                   rows={3}
@@ -506,11 +495,11 @@ export default function Propuestas() {
               {error && (
                 <div style={{
                   padding: "11px 14px", borderRadius: 10,
-                  background: "#fef2f2", border: "1px solid #fecaca",
+                  background: "rgba(220,38,38,0.05)", border: "1px solid rgba(220,38,38,0.2)",
                   display: "flex", alignItems: "flex-start", gap: 9,
                 }}>
                   <span style={{ fontSize: 15, flexShrink: 0 }}>⚠️</span>
-                  <p style={{ margin: 0, fontSize: 13, color: "#dc2626" }}>
+                  <p style={{ margin: 0, fontSize: 13, color: "var(--state-red)", fontFamily: "var(--font-ui)" }}>
                     {error}
                   </p>
                 </div>
@@ -520,26 +509,13 @@ export default function Propuestas() {
               <button
                 onClick={handleGenerar}
                 disabled={generando || !camposValidos}
+                className="btn-primary"
                 style={{
-                  width: "100%", padding: "13px 0", borderRadius: 12, border: "none",
-                  background: generando || !camposValidos
-                    ? "rgba(249,115,22,0.28)"
-                    : "linear-gradient(135deg, #f97316 0%, #ea6c0a 100%)",
-                  color: "white", fontSize: 14, fontWeight: 700,
-                  cursor: generando || !camposValidos ? "not-allowed" : "pointer",
+                  width: "100%", height: "auto", padding: "13px 0", borderRadius: 12,
+                  fontSize: 14, fontWeight: 700, marginTop: 4,
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  boxShadow: generando || !camposValidos ? "none" : "0 4px 20px rgba(249,115,22,0.35)",
-                  transition: "all 0.2s", marginTop: 4,
-                }}
-                onMouseEnter={(e) => {
-                  if (!generando && camposValidos) {
-                    e.currentTarget.style.transform = "scale(1.02)"
-                    e.currentTarget.style.boxShadow = "0 6px 26px rgba(249,115,22,0.45)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)"
-                  e.currentTarget.style.boxShadow = generando || !camposValidos ? "none" : "0 4px 20px rgba(249,115,22,0.35)"
+                  opacity: generando || !camposValidos ? 0.4 : 1,
+                  cursor: generando || !camposValidos ? "not-allowed" : "pointer",
                 }}
               >
                 {generando ? (
@@ -568,9 +544,8 @@ export default function Propuestas() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 style={{
-                  background: "white", borderRadius: 16,
-                  boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
-                  border: "1.5px dashed #e2e8f0",
+                  background: "var(--bg-card)", borderRadius: 12,
+                  border: "1.5px dashed var(--border-subtle)",
                 }}
               >
                 <EmptyState />
@@ -608,19 +583,14 @@ export default function Propuestas() {
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
                   <button
                     onClick={handleCopiar}
+                    className="btn-secondary"
                     style={{
                       display: "flex", alignItems: "center", gap: 7,
-                      padding: "9px 18px", borderRadius: 10,
-                      border: "1px solid #e2e8f0",
-                      background: copiado ? "#f0fdf4" : "white",
-                      color: copiado ? "#16a34a" : "#374151",
+                      height: "auto", padding: "9px 18px",
                       fontSize: 13, fontWeight: 600,
-                      cursor: "pointer",
-                      boxShadow: "0 1px 5px rgba(0,0,0,0.07)",
-                      transition: "all 0.18s",
+                      color: copiado ? "var(--state-green)" : undefined,
+                      borderColor: copiado ? "var(--state-green)" : undefined,
                     }}
-                    onMouseEnter={(e) => { if (!copiado) e.currentTarget.style.background = "#f8fafc" }}
-                    onMouseLeave={(e) => { if (!copiado) e.currentTarget.style.background = "white" }}
                   >
                     {copiado ? <Check size={14} /> : <Copy size={14} />}
                     {copiado ? "¡Copiado!" : "Copiar propuesta"}
@@ -658,30 +628,39 @@ function SeccionCard({ emoji, icon: Icon, label, contenido, color }: {
 }) {
   return (
     <div style={{
-      background: "white", borderRadius: 12,
-      borderLeft: `4px solid ${color}`,
-      boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
+      background: "var(--bg-card)",
+      borderTop: "1px solid var(--border-subtle)",
+      borderRight: "1px solid var(--border-subtle)",
+      borderBottom: "1px solid var(--border-subtle)",
+      borderLeft: `3px solid ${color}`,
+      borderRadius: 12,
       overflow: "hidden",
     }}>
       <div style={{
-        padding: "14px 20px",
-        background: color,
+        padding: "12px 20px",
+        background: "var(--canvas)",
+        borderBottom: "1px solid var(--border-subtle)",
         display: "flex", alignItems: "center", gap: 10,
       }}>
         <div style={{
-          width: 28, height: 28, borderRadius: 7, flexShrink: 0,
-          background: "rgba(255,255,255,0.18)",
+          width: 26, height: 26, borderRadius: 7, flexShrink: 0,
+          background: "transparent", border: `1px solid ${color}`,
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-          <Icon size={14} color="white" />
+          <Icon size={13} color={color} />
         </div>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "white" }}>
-          {emoji} {label}
+        <span style={{
+          fontSize: 11, fontWeight: 600, color: color,
+          fontFamily: "var(--font-ui)",
+          textTransform: "uppercase", letterSpacing: "0.10em",
+        }}>
+          {label}
         </span>
       </div>
       <div style={{ padding: "16px 20px" }}>
         <p style={{
-          margin: 0, fontSize: 14, color: "#374151",
+          margin: 0, fontSize: 14, color: "var(--text-primary)",
+          fontFamily: "var(--font-ui)",
           lineHeight: 1.75,
           whiteSpace: "pre-wrap",
         }}>

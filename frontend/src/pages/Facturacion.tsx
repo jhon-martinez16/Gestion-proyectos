@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { api } from "../services/api"
 import CrearFacturaModal from "../components/facturas/CrearFacturaModal"
+import PageHeader from "../components/ui/PageHeader"
 
 type EstadoFactura = "PENDIENTE" | "APROBADA" | "PAGADA" | "RECHAZADA"
 
@@ -20,11 +21,11 @@ interface Factura {
   proveedor?: { id: string; nombre: string } | null
 }
 
-const ESTADO_STYLES: Record<EstadoFactura, string> = {
-  PENDIENTE:  "bg-yellow-100 text-yellow-700",
-  APROBADA:   "bg-blue-100 text-blue-700",
-  PAGADA:     "bg-green-100 text-green-700",
-  RECHAZADA:  "bg-red-100 text-red-700",
+const ESTADO_STYLES: Record<EstadoFactura, React.CSSProperties> = {
+  PENDIENTE:  { background: "transparent", color: "var(--state-amber)", border: "1px solid var(--state-amber)" },
+  APROBADA:   { background: "transparent", color: "var(--state-blue)",  border: "1px solid var(--state-blue)" },
+  PAGADA:     { background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)" },
+  RECHAZADA:  { background: "transparent", color: "var(--state-red)",   border: "1px solid var(--state-red)" },
 }
 
 const ESTADO_LABELS: Record<EstadoFactura, string> = {
@@ -151,44 +152,46 @@ export default function Facturacion() {
   }))
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64 text-gray-400">Cargando...</div>
+    return <div className="flex items-center justify-center h-64 text-ink-3">Cargando...</div>
   }
 
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <p className="text-red-500 font-medium">{error}</p>
-        <button onClick={loadData} className="px-5 py-2 bg-[#0B355A] text-white rounded-xl font-medium hover:bg-[#0a2e4e] transition">
-          Reintentar
-        </button>
+        <p style={{ color: "var(--danger)" }} className="font-medium">{error}</p>
+        <button onClick={loadData} className="btn-primary">Reintentar</button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8 bg-[#F3FBF6] p-6 rounded-3xl">
+    <div className="space-y-8">
 
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#DDF7E6] px-6 py-5 rounded-2xl shadow-sm gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-[#14532D]">Facturación</h1>
-          <p className="text-sm text-green-900/70 mt-1">Gestión de facturas por proyecto</p>
-        </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-[#0B355A] hover:bg-[#0a2e4e] text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm"
-        >
-          + Nueva Factura
-        </button>
-      </div>
+      <PageHeader
+        eyebrow="Finanzas"
+        title="Facturación"
+        subtitle="Gestión de facturas por proyecto"
+        actions={
+          <button onClick={() => setShowModal(true)} className="btn-primary">
+            + Nueva Factura
+          </button>
+        }
+      />
 
       {/* TOTALIZADOR POR ESTADO */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {totalesPorEstado.map(({ estado, monto, count }) => (
-          <div key={estado} className={`p-4 rounded-2xl border shadow-sm ${ESTADO_STYLES[estado]} bg-white`}>
-            <p className="text-xs font-semibold uppercase tracking-wide">{ESTADO_LABELS[estado]}</p>
-            <p className="text-2xl font-bold mt-1">{count}</p>
-            <p className="text-xs mt-0.5 opacity-80">${monto.toLocaleString("es-CO", { minimumFractionDigits: 0 })}</p>
+          <div key={estado} className="card" style={{ padding: "16px 20px" }}>
+            <p style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-muted)", marginBottom: 8 }}>
+              {ESTADO_LABELS[estado]}
+            </p>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 40, fontWeight: 400, color: "var(--text-primary)", lineHeight: 1 }}>
+              {count}
+            </p>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4, fontFamily: "var(--font-mono)" }}>
+              ${monto.toLocaleString("es-CO", { minimumFractionDigits: 0 })}
+            </p>
           </div>
         ))}
       </div>
@@ -199,7 +202,8 @@ export default function Facturacion() {
           <select
             value={filtroEstado}
             onChange={(e) => setFiltroEstado(e.target.value)}
-            className="border border-gray-200 rounded-xl px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0B355A]"
+            className="form-input"
+            style={{ width: "auto", minWidth: 150 }}
           >
             <option value="todos">Todos los estados</option>
             <option value="PENDIENTE">Pendiente</option>
@@ -211,7 +215,8 @@ export default function Facturacion() {
           <select
             value={filtroProyecto}
             onChange={(e) => setFiltroProyecto(e.target.value)}
-            className="border border-gray-200 rounded-xl px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0B355A]"
+            className="form-input"
+            style={{ width: "auto", minWidth: 180 }}
           >
             <option value="todos">Todos los proyectos</option>
             {proyectosUnicos.map(([id, nombre]) => (
@@ -220,9 +225,9 @@ export default function Facturacion() {
           </select>
         </div>
 
-        <div className="bg-white border border-green-100 px-5 py-2.5 rounded-2xl shadow-sm">
-          <span className="text-sm text-gray-500">Total filtrado: </span>
-          <span className="font-bold text-[#0B355A] text-lg">
+        <div className="card" style={{ padding: "10px 20px", display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 13, color: "var(--text-muted)" }}>Total filtrado:</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 500, fontSize: 15, color: "var(--text-primary)" }}>
             ${totalMonto.toLocaleString("es-CO", { minimumFractionDigits: 2 })}
           </span>
         </div>
@@ -230,50 +235,66 @@ export default function Facturacion() {
 
       {/* TABLA */}
       {facturasFiltradas.length === 0 ? (
-        <div className="text-center text-gray-400 py-12">No hay facturas que mostrar.</div>
+        <div style={{ textAlign: "center", color: "var(--text-muted)", padding: "48px 0", fontSize: 14 }}>
+          No hay facturas que mostrar.
+        </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-green-100 shadow-sm">
+        <div className="card" style={{ overflow: "hidden" }}>
           <table className="w-full text-sm">
-            <thead className="bg-[#DDF7E6] text-[#14532D] text-xs uppercase tracking-wider">
-              <tr>
-                <th className="px-5 py-3 text-left">N°</th>
-                <th className="px-5 py-3 text-left">Proyecto</th>
-                <th className="px-5 py-3 text-left">Concepto / Obs.</th>
-                <th className="px-5 py-3 text-left">Proveedor</th>
-                <th className="px-5 py-3 text-right">Monto</th>
-                <th className="px-5 py-3 text-center">Estado</th>
-                <th className="px-5 py-3 text-left">Emisión</th>
-                <th className="px-5 py-3 text-right">Acciones</th>
+            <thead>
+              <tr style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                {["N°", "Proyecto", "Concepto / Obs.", "Proveedor", "Monto", "Estado", "Emisión", "Acciones"].map((h, i) => (
+                  <th key={h} className="px-5 py-3" style={{
+                    textAlign: i >= 7 ? "right" : i === 4 ? "right" : i === 5 ? "center" : "left",
+                    fontFamily: "var(--font-ui)",
+                    fontSize: 10, fontWeight: 600,
+                    textTransform: "uppercase", letterSpacing: "0.08em",
+                    color: "var(--text-muted)",
+                    background: "var(--canvas)",
+                  }}>
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-50">
+            <tbody style={{ background: "var(--bg-card)" }}>
               {facturasFiltradas.map((f) => (
                 <React.Fragment key={f.id}>
-                  <tr className="hover:bg-gray-50 transition">
-                    <td className="px-5 py-4 font-mono font-semibold text-gray-700">{f.numero}</td>
-                    <td className="px-5 py-4 text-gray-600">{f.proyecto.nombre}</td>
-                    <td className="px-5 py-4 text-gray-700 max-w-[180px]">
+                  <tr style={{ borderBottom: "1px solid var(--border-subtle)", transition: "background 120ms ease" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = "var(--canvas)")}
+                    onMouseLeave={e => (e.currentTarget.style.background = "var(--bg-card)")}
+                  >
+                    <td className="px-5 py-4" style={{ fontFamily: "var(--font-mono)", fontWeight: 500, color: "var(--text-primary)" }}>{f.numero}</td>
+                    <td className="px-5 py-4" style={{ color: "var(--text-secondary)" }}>{f.proyecto.nombre}</td>
+                    <td className="px-5 py-4" style={{ color: "var(--text-primary)", maxWidth: 180 }}>
                       <div className="truncate">{f.concepto}</div>
                       {f.observaciones && (
                         <button
                           onClick={() => setExpandObs(expandObs === f.id ? null : f.id)}
-                          className="text-xs text-blue-500 hover:underline mt-0.5"
+                          style={{ fontSize: 11, color: "var(--accent-gold)", background: "none", border: "none", cursor: "pointer", padding: 0, marginTop: 2 }}
                         >
                           {expandObs === f.id ? "Ocultar obs." : "Ver obs."}
                         </button>
                       )}
                     </td>
-                    <td className="px-5 py-4 text-gray-500 text-sm">{f.proveedor?.nombre ?? "—"}</td>
-                    <td className="px-5 py-4 text-right font-semibold text-gray-800">
+                    <td className="px-5 py-4" style={{ color: "var(--text-muted)", fontSize: 13 }}>{f.proveedor?.nombre ?? "—"}</td>
+                    <td className="px-5 py-4" style={{ textAlign: "right", fontFamily: "var(--font-mono)", fontWeight: 500, color: "var(--text-primary)" }}>
                       ${Number(f.monto).toLocaleString("es-CO", { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="px-5 py-4 text-center">
+                    <td className="px-5 py-4" style={{ textAlign: "center" }}>
                       <div className="flex flex-col items-center gap-1">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${ESTADO_STYLES[f.estado]}`}>
+                        <span style={{
+                          ...ESTADO_STYLES[f.estado],
+                          padding: "2px 8px", borderRadius: 4,
+                          fontSize: 10, fontWeight: 500,
+                          fontFamily: "var(--font-ui)",
+                          textTransform: "uppercase", letterSpacing: "0.06em",
+                          whiteSpace: "nowrap",
+                        }}>
                           {ESTADO_LABELS[f.estado]}
                         </span>
                         {f.fechaProgramadaPago && (
-                          <span className="text-xs text-indigo-600 whitespace-nowrap">
+                          <span style={{ fontSize: 11, color: "var(--state-violet)", whiteSpace: "nowrap", fontFamily: "var(--font-mono)" }}>
                             Prog. {new Date(f.fechaProgramadaPago).toLocaleDateString("es-CO")}
                             {f.pagoEjecutado && " · Ejec."}
                             {f.confirmacionFinanciera && " · Conf."}
@@ -281,59 +302,48 @@ export default function Facturacion() {
                         )}
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-gray-500">
+                    <td className="px-5 py-4" style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: 12 }}>
                       {new Date(f.fechaEmision).toLocaleDateString("es-CO")}
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex justify-end gap-2 flex-wrap">
-                        {/* Editar siempre que no esté pagada/rechazada */}
                         {(f.estado === "PENDIENTE" || f.estado === "APROBADA") && (
-                          <button onClick={() => setEditandoFactura(f)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-gray-50 text-gray-600 hover:bg-gray-100 transition">
+                          <button onClick={() => setEditandoFactura(f)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>
                             Editar
                           </button>
                         )}
-
-                        {/* PASO 1: Aprobar */}
                         {f.estado === "PENDIENTE" && (
-                          <button onClick={() => handleAprobar(f.id)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition">
+                          <button onClick={() => handleAprobar(f.id)} className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-blue)", borderColor: "var(--state-blue)" }}>
                             Aprobar
                           </button>
                         )}
-
-                        {/* PASO 2: Programar pago (solo si APROBADA y sin fecha) */}
                         {f.estado === "APROBADA" && !f.fechaProgramadaPago && (
-                          <button
-                            onClick={() => { setProgramandoPagoId(f.id); setFechaProgramada("") }}
-                            className="px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition"
-                          >
+                          <button onClick={() => { setProgramandoPagoId(f.id); setFechaProgramada("") }}
+                            className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-violet)", borderColor: "var(--state-violet)" }}>
                             Programar pago
                           </button>
                         )}
-
-                        {/* PASO 3: Ejecutar pago (fecha programada y no ejecutado) */}
                         {f.estado === "APROBADA" && f.fechaProgramadaPago && !f.pagoEjecutado && (
-                          <button onClick={() => handleEjecutarPago(f.id)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-purple-50 text-purple-600 hover:bg-purple-100 transition">
+                          <button onClick={() => handleEjecutarPago(f.id)}
+                            className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-violet)", borderColor: "var(--state-violet)" }}>
                             Ejecutar pago
                           </button>
                         )}
-
-                        {/* PASO 4: Confirmar pago */}
                         {f.pagoEjecutado && !f.confirmacionFinanciera && (
-                          <button onClick={() => handleConfirmarPago(f.id)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition">
+                          <button onClick={() => handleConfirmarPago(f.id)}
+                            className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-green)", borderColor: "var(--state-green)" }}>
                             Confirmar
                           </button>
                         )}
-
-                        {/* Rechazar */}
                         {(f.estado === "PENDIENTE" || (f.estado === "APROBADA" && !f.pagoEjecutado)) && (
-                          <button onClick={() => handleRechazar(f.id)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-600 hover:bg-orange-100 transition">
+                          <button onClick={() => handleRechazar(f.id)}
+                            className="btn-secondary" style={{ height: 28, padding: "0 10px", fontSize: 11, color: "var(--state-amber)", borderColor: "var(--state-amber)" }}>
                             Rechazar
                           </button>
                         )}
-
-                        {/* Eliminar */}
                         {(f.estado === "PENDIENTE" || f.estado === "RECHAZADA") && (
-                          <button onClick={() => handleEliminar(f.id, f.numero)} className="px-3 py-1 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition">
+                          <button onClick={() => handleEliminar(f.id, f.numero)}
+                            className="btn-danger" style={{ height: 28, padding: "0 10px", fontSize: 11 }}>
                             Eliminar
                           </button>
                         )}
@@ -341,26 +351,22 @@ export default function Facturacion() {
                     </td>
                   </tr>
 
-                  {/* Inline: programar fecha */}
                   {programandoPagoId === f.id && (
-                    <tr className="bg-indigo-50">
+                    <tr style={{ background: "var(--canvas)" }}>
                       <td colSpan={8} className="px-5 py-3">
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-medium text-indigo-700">Fecha de pago programada:</span>
+                          <span style={{ fontSize: 12, fontWeight: 500, color: "var(--text-secondary)" }}>Fecha de pago programada:</span>
                           <input
                             type="date"
                             value={fechaProgramada}
                             onChange={(e) => setFechaProgramada(e.target.value)}
-                            className="border border-indigo-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            className="form-input"
+                            style={{ width: "auto" }}
                           />
-                          <button
-                            disabled={!fechaProgramada}
-                            onClick={() => handleProgramarPago(f.id)}
-                            className="px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-40"
-                          >
+                          <button disabled={!fechaProgramada} onClick={() => handleProgramarPago(f.id)} className="btn-primary" style={{ height: 32, padding: "0 14px", fontSize: 12 }}>
                             Guardar
                           </button>
-                          <button onClick={() => setProgramandoPagoId(null)} className="text-xs text-gray-400 hover:text-gray-600">
+                          <button onClick={() => setProgramandoPagoId(null)} style={{ fontSize: 12, color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer" }}>
                             Cancelar
                           </button>
                         </div>
@@ -368,11 +374,10 @@ export default function Facturacion() {
                     </tr>
                   )}
 
-                  {/* Observaciones expandidas */}
                   {expandObs === f.id && f.observaciones && (
-                    <tr className="bg-blue-50">
-                      <td colSpan={8} className="px-5 py-3 text-sm text-blue-700">
-                        <span className="font-semibold">Observaciones: </span>{f.observaciones}
+                    <tr style={{ background: "var(--canvas)" }}>
+                      <td colSpan={8} className="px-5 py-3" style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+                        <span style={{ fontWeight: 600 }}>Observaciones: </span>{f.observaciones}
                       </td>
                     </tr>
                   )}
@@ -434,24 +439,24 @@ function EditarFacturaModal({ factura, onClose }: { factura: Factura; onClose: (
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-8 rounded-3xl w-full max-w-md shadow-2xl space-y-5">
-        <h2 className="text-2xl font-bold text-gray-800">Editar Factura {factura.numero}</h2>
+      <div style={{ background: "var(--bg-card)", padding: "32px", borderRadius: 16, width: "100%", maxWidth: 448, boxShadow: "0 20px 60px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: 20 }}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 24, fontWeight: 300, color: "var(--text-primary)", margin: 0 }}>Editar Factura {factura.numero}</h2>
         <div>
-          <label className="text-sm font-medium text-gray-600">Concepto *</label>
-          <input type="text" value={concepto} onChange={(e) => setConcepto(e.target.value)} className="w-full mt-1 p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0B355A]" />
+          <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Concepto *</label>
+          <input type="text" value={concepto} onChange={(e) => setConcepto(e.target.value)} className="form-input w-full" />
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-600">Monto *</label>
-          <input type="number" min="0" step="0.01" value={monto} onChange={(e) => setMonto(e.target.value)} className="w-full mt-1 p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0B355A]" />
+          <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Monto *</label>
+          <input type="number" min="0" step="0.01" value={monto} onChange={(e) => setMonto(e.target.value)} className="form-input w-full" />
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-600">Observaciones</label>
-          <textarea rows={2} value={observaciones} onChange={(e) => setObservaciones(e.target.value)} className="w-full mt-1 p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0B355A] resize-none" />
+          <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Observaciones</label>
+          <textarea rows={2} value={observaciones} onChange={(e) => setObservaciones(e.target.value)} className="form-input w-full resize-none" style={{ height: "auto" }} />
         </div>
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <div className="flex justify-end gap-3">
-          <button onClick={onClose} className="px-5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 font-medium transition">Cancelar</button>
-          <button onClick={handleSubmit} disabled={loading} className="px-5 py-2 rounded-xl bg-[#0B355A] hover:bg-[#0a2e4e] text-white font-semibold transition disabled:opacity-50">
+        {error && <p style={{ fontSize: 13, color: "var(--state-red)" }}>{error}</p>}
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 12 }}>
+          <button onClick={onClose} className="btn-secondary" style={{ height: 38, padding: "0 20px", fontSize: 14 }}>Cancelar</button>
+          <button onClick={handleSubmit} disabled={loading} className="btn-primary" style={{ height: 38, padding: "0 20px", fontSize: 14, opacity: loading ? 0.6 : 1 }}>
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>

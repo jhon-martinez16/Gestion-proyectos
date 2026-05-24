@@ -8,62 +8,66 @@ export default {
     extend: {
       // ── Tipografía ──────────────────────────────────────────────
       fontFamily: {
-        sans:  ["Inter", "system-ui", "-apple-system", "sans-serif"],
-        serif: ["Instrument Serif", "Georgia", "serif"],
-        mono:  ["JetBrains Mono", "Courier New", "monospace"],
+        sans:  ["DM Sans", "system-ui", "-apple-system", "sans-serif"],
+        serif: ["Cormorant Garamond", "Georgia", "serif"],
+        mono:  ["DM Mono", "Courier New", "monospace"],
       },
 
       // ── Paleta ──────────────────────────────────────────────────
       colors: {
-        // Texto (warm zinc, no slate)
-        "ink":      "#18181B",
-        "ink-2":    "#71717A",
-        "ink-3":    "#A1A1AA",
-        "ink-4":    "#D4D4D8",
+        // Texto (warm, no zinc frío)
+        "ink":      "#1A1A1A",
+        "ink-2":    "#6B6560",
+        "ink-3":    "#9A9490",
+        "ink-4":    "#C8C3BC",
 
-        // Fondos warm
-        "canvas":   "#FAFAF9",
-        "canvas-2": "#F4F4F5",
+        // Fondos warm off-white
+        "canvas":   "#FAFAF8",
+        "canvas-2": "#F4F0EB",
 
         // Borders
-        "ui-border":       "#E7E5E4",
-        "ui-border-strong": "#D4D4D8",
+        "ui-border":        "#E8E4DC",
+        "ui-border-strong": "#C8C3BC",
 
-        // Acción primaria positiva (verde profundo)
-        "primary":       "#15803D",
-        "primary-dark":  "#166534",
-        "primary-light": "#F0FDF4",
+        // Acción primaria (forest green)
+        "primary":       "#2D4A3E",
+        "primary-dark":  "#1E3329",
+        "primary-light": "#EDF4F0",
 
-        // Acento (naranja — IA, HOY, highlights)
-        "accent":        "#F97316",
-        "accent-light":  "#FFF7ED",
-        "accent-dark":   "#EA6C0A",
+        // Acento gold — nuevo acento de marca
+        "accent-gold":   "#C8A96E",
+        "accent-forest": "#2D4A3E",
 
-        // Estados semánticos (saturados, no pasteles)
+        // Acento naranja legacy — IA / HOY (preservado en alias)
+        "accent":        "#C8A96E",
+        "accent-light":  "#FDF8EF",
+        "accent-dark":   "#B8955A",
+
+        // Estados semánticos
         "state-blue":        "#2563EB",
         "state-blue-bg":     "#EFF6FF",
-        "state-red":         "#DC2626",
+        "state-red":         "#C0392B",
         "state-red-bg":      "#FEF2F2",
-        "state-amber":       "#D97706",
-        "state-amber-bg":    "#FFFBEB",
+        "state-amber":       "#D4851A",
+        "state-amber-bg":    "#FFF8EE",
         "state-violet":      "#7C3AED",
         "state-violet-bg":   "#F5F3FF",
-        "state-zinc":        "#52525B",
-        "state-zinc-bg":     "#F4F4F5",
-        "state-green":       "#15803D",
-        "state-green-bg":    "#F0FDF4",
+        "state-zinc":        "#6B6560",
+        "state-zinc-bg":     "#F0EDE8",
+        "state-green":       "#2D6A4F",
+        "state-green-bg":    "#EDF4F0",
 
-        // Aliases para backward-compat con código existente
-        "danger":        "#DC2626",
+        // Aliases backward-compat
+        "danger":        "#C0392B",
         "danger-light":  "#FEF2F2",
-        "warning":       "#D97706",
-        "warning-light": "#FFFBEB",
+        "warning":       "#D4851A",
+        "warning-light": "#FFF8EE",
         "info":          "#2563EB",
         "info-light":    "#EFF6FF",
-        "surface":       "#FAFAF9",
+        "surface":       "#FAFAF8",
 
-        // Sidebar (dark navy)
-        "sidebar":       "#0F172A",
+        // Sidebar (carbon black)
+        "sidebar":       "#0F0F0F",
       },
 
       // ── Sombras multi-capa ───────────────────────────────────────

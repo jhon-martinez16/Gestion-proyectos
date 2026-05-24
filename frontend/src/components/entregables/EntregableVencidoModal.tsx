@@ -93,7 +93,7 @@ export default function EntregableVencidoModal({ entregable, onClose }: Props) {
           )}
           <p style={{
             fontSize: 12, color: "var(--danger)", fontWeight: 600,
-            fontFamily: "'JetBrains Mono', monospace", marginTop: 6, paddingLeft: 42,
+            fontFamily: "var(--font-mono)", marginTop: 6, paddingLeft: 42,
           }}>
             Venció el {fechaLimite.toLocaleDateString("es-CO")}
             {diasRetraso > 0 && ` · ${diasRetraso} día${diasRetraso === 1 ? "" : "s"} de retraso`}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { api } from "../services/api"
 import { getUserIdFromToken } from "../utils/auth"
 
@@ -68,104 +68,106 @@ export default function Settings() {
     }
   }
 
-  return (
-    <div className="space-y-8 bg-[#F3FBF6] p-6 rounded-3xl">
+  const ROL_BADGE: Record<string, React.CSSProperties> = {
+    ADMIN:          { background: "transparent", color: "var(--accent-gold)", border: "1px solid var(--accent-gold)" },
+    ADMINISTRATIVO: { background: "transparent", color: "var(--accent-forest)", border: "1px solid var(--accent-forest)" },
+    SOCIO:          { background: "transparent", color: "var(--state-green)", border: "1px solid var(--state-green)" },
+  }
 
-      {/* HEADER */}
-      <div className="bg-[#DDF7E6] px-6 py-5 rounded-2xl shadow-sm">
-        <h1 className="text-3xl font-bold text-[#14532D]">Configuración</h1>
-        <p className="text-green-900/70 mt-2">Administra tu perfil y credenciales.</p>
-      </div>
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
 
       {perfil && (
         <>
           {/* DATOS DEL PERFIL */}
-          <div className="bg-white border border-green-100 rounded-2xl p-6 shadow-sm space-y-5">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-800">Datos del perfil</h2>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                perfil.rol === "ADMIN" ? "bg-orange-100 text-orange-700"
-                : perfil.rol === "ADMINISTRATIVO" ? "bg-blue-100 text-blue-700"
-                : "bg-green-100 text-green-700"
-              }`}>
+          <div className="card-surface" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 300, color: "var(--text-primary)", margin: 0 }}>Datos del perfil</h2>
+              <span style={{ ...ROL_BADGE[perfil.rol], padding: "2px 10px", borderRadius: 4, fontSize: 11, fontWeight: 600, fontFamily: "var(--font-ui)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 {perfil.rol === "ADMIN" ? "Administrador" : perfil.rol === "ADMINISTRATIVO" ? "Administrativo" : "Socio"}
               </span>
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Nombre</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Nombre</label>
               <input
                 type="text"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
+                className="form-input w-full"
               />
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Email</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
+                className="form-input w-full"
               />
             </div>
 
             {mensajePerfil && (
-              <p className={`text-sm font-medium ${mensajePerfil.includes("Error") ? "text-red-500" : "text-green-600"}`}>
+              <p style={{ fontSize: 13, fontWeight: 500, color: mensajePerfil.includes("Error") ? "var(--state-red)" : "var(--state-green)" }}>
                 {mensajePerfil}
               </p>
             )}
 
-            <button
-              onClick={handleGuardarPerfil}
-              disabled={savingPerfil}
-              className="bg-[#16A34A] hover:bg-[#15803D] text-white px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50"
-            >
-              {savingPerfil ? "Guardando..." : "Guardar cambios"}
-            </button>
+            <div>
+              <button
+                onClick={handleGuardarPerfil}
+                disabled={savingPerfil}
+                className="btn-primary"
+                style={{ height: 38, padding: "0 20px", fontSize: 14, opacity: savingPerfil ? 0.6 : 1 }}
+              >
+                {savingPerfil ? "Guardando..." : "Guardar cambios"}
+              </button>
+            </div>
           </div>
 
           {/* CAMBIAR CONTRASEÑA */}
-          <div className="bg-white border border-green-100 rounded-2xl p-6 shadow-sm space-y-5">
-            <h2 className="text-xl font-bold text-gray-800">Cambiar contraseña</h2>
+          <div className="card-surface" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 20 }}>
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 300, color: "var(--text-primary)", margin: 0 }}>Cambiar contraseña</h2>
 
             <div>
-              <label className="text-sm text-gray-600">Nueva contraseña</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Nueva contraseña</label>
               <input
                 type="password"
                 placeholder="Mínimo 6 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
+                className="form-input w-full"
               />
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Confirmar contraseña</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Confirmar contraseña</label>
               <input
                 type="password"
                 placeholder="Repite la contraseña"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-[#16A34A]"
+                className="form-input w-full"
               />
             </div>
 
             {mensajePassword && (
-              <p className={`text-sm font-medium ${mensajePassword.includes("Error") || mensajePassword.includes("no coinciden") || mensajePassword.includes("menos") ? "text-red-500" : "text-green-600"}`}>
+              <p style={{ fontSize: 13, fontWeight: 500, color: mensajePassword.includes("Error") || mensajePassword.includes("no coinciden") || mensajePassword.includes("menos") ? "var(--state-red)" : "var(--state-green)" }}>
                 {mensajePassword}
               </p>
             )}
 
-            <button
-              onClick={handleCambiarPassword}
-              disabled={savingPassword}
-              className="bg-[#F58220] hover:bg-[#d96f18] text-white px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50"
-            >
-              {savingPassword ? "Guardando..." : "Cambiar contraseña"}
-            </button>
+            <div>
+              <button
+                onClick={handleCambiarPassword}
+                disabled={savingPassword}
+                className="btn-primary"
+                style={{ height: 38, padding: "0 20px", fontSize: 14, opacity: savingPassword ? 0.6 : 1 }}
+              >
+                {savingPassword ? "Guardando..." : "Cambiar contraseña"}
+              </button>
+            </div>
           </div>
         </>
       )}

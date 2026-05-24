@@ -57,13 +57,13 @@ export default function ProjectCard({ proyecto, onEdit, onDelete }: Props) {
     <motion.div
       role="link"
       tabIndex={0}
-      initial={{ borderColor: "#E7E5E4" }}
       whileHover={{
-        y: -3,
-        borderColor: STATE_HOVER_BORDER[proyecto.estado] ?? "rgba(0,0,0,0.10)",
+        y: -2,
+        boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
       }}
-      transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-      className="group card-surface card-surface-hover overflow-hidden cursor-pointer flex flex-col"
+      transition={{ duration: 0.20, ease: [0.16, 1, 0.3, 1] }}
+      className="group card-surface overflow-hidden cursor-pointer flex flex-col"
+      style={{ transition: "box-shadow 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1)" }}
       onClick={() => navigate(`/projects/${proyecto.id}`)}
       onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${proyecto.id}`)}
     >

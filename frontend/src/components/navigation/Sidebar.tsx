@@ -1,4 +1,4 @@
-﻿import { NavLink, useLocation, useNavigate } from "react-router-dom"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import {
   LayoutDashboard, FolderOpen, CalendarDays, Users, Tag,
@@ -29,6 +29,55 @@ const NAV_FIN = [
   { to: "/reportes",    label: "Reportes",    icon: BarChart3 },
 ]
 
+const S = {
+  sidebar: {
+    width: 240,
+    background: "#0F0F0F",
+    minHeight: "100vh",
+    display: "flex" as const,
+    flexDirection: "column" as const,
+    padding: "20px 12px",
+    flexShrink: 0,
+    borderRight: "1px solid rgba(255,255,255,0.06)",
+    position: "sticky" as const,
+    top: 0,
+    alignSelf: "flex-start" as const,
+    height: "100vh",
+    overflowY: "auto" as const,
+  },
+  logoWrap: {
+    padding: "24px 16px 32px 16px",
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "flex-start",
+    gap: 4,
+  },
+  logoTitle: {
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontSize: 28,
+    fontWeight: 400,
+    color: "#C8A96E",
+    lineHeight: 1.0,
+    letterSpacing: "-0.01em",
+  },
+  logoSub: {
+    fontFamily: "'DM Sans', system-ui, sans-serif",
+    fontSize: 10,
+    color: "#6B6560",
+    lineHeight: 1,
+    letterSpacing: "0.22em",
+    textTransform: "uppercase" as const,
+  },
+  nav: { flex: 1, display: "flex" as const, flexDirection: "column" as const, gap: 1 },
+  divider: { height: 1, background: "rgba(255,255,255,0.06)", margin: "8px 4px" },
+  footerText: {
+    fontSize: 10,
+    color: "rgba(148,163,184,0.25)",
+    textAlign: "center" as const,
+    marginTop: 10,
+  },
+}
+
 export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpenNotif }: Props) {
   const navigate = useNavigate()
   const rol    = getRolFromToken()
@@ -41,104 +90,50 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
     : "?"
 
   const rolLabel = esAdmin ? "Administrador" : rol === "ADMINISTRATIVO" ? "Administrativo" : "Socio"
-  const rolColor = esAdmin ? "var(--accent)" : rol === "ADMINISTRATIVO" ? "#93c5fd" : "#4ade80"
 
   return (
-    <aside style={{
-      width: 220,
-      background: "linear-gradient(160deg, #1a3560 0%, #1e3f73 60%, #1b3461 100%)",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      padding: "20px 12px",
-      flexShrink: 0,
-      borderRight: "1px solid rgba(255,255,255,0.08)",
-      position: "sticky",
-      top: 0,
-      alignSelf: "flex-start",
-      height: "100vh",
-      overflowY: "auto",
-      boxShadow: "4px 0 24px rgba(10,20,60,0.18)",
-    }}>
+    <aside style={S.sidebar}>
 
       {/* ── LOGO ── */}
-      <div style={{ padding: "20px 16px 28px 16px", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ textAlign: "center" }}>
-            <div style={{
-              fontFamily: "'Instrument Serif', Georgia, serif",
-              fontSize: 26,
-              color: "white",
-              lineHeight: 1.1,
-              letterSpacing: "-0.01em",
-            }}>
-              Logique
-            </div>
-            <div style={{
-              fontSize: 12,
-              color: "var(--sidebar-text)",
-              lineHeight: 1,
-              marginTop: 3,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}>
-              Consulting
-            </div>
-          </div>
-          <div style={{ position: "relative", width: 9, height: 9, flexShrink: 0 }}>
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "50%",
-              background: "var(--accent)",
-              opacity: 0.7,
-              animation: "ping 1.8s cubic-bezier(0,0,0.2,1) infinite",
-            }} />
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "50%",
-              background: "var(--accent)",
-              animation: "pulse-dot 3s ease-in-out infinite",
-            }} />
-          </div>
-        </div>
+      <div style={S.logoWrap}>
+        <span style={S.logoTitle}>Logique</span>
+        <span style={S.logoSub}>Consulting</span>
       </div>
 
       {/* ── NAVIGATION ── */}
-      <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+      <nav style={S.nav}>
         {NAV_MAIN.map(item => <NavItem key={item.to} {...item} />)}
 
         {esAdmin && (
           <>
-            <Divider />
+            <div style={S.divider} />
             {NAV_ADMIN.map(item => <NavItem key={item.to} {...item} />)}
           </>
         )}
 
         {esAdminOAdministrativo && (
           <>
-            <Divider />
+            <div style={S.divider} />
             {NAV_FIN.map(item => <NavItem key={item.to} {...item} />)}
           </>
         )}
 
-        <Divider />
+        <div style={S.divider} />
         <NavItem to="/settings" label="Configuración" icon={Settings2} />
       </nav>
 
       {/* ── BOTTOM ACTIONS ── */}
       <div style={{ marginTop: 16 }}>
-        <SidebarAction icon={Mail} label="Notificaciones" onClick={onOpenNotif} badge={notifCount} badgeColor="#3b82f6" />
-        <SidebarAction icon={Bell} label="Alertas" onClick={onOpenPanel} badge={criticalCount} badgeColor="#ef4444" pulse />
+        <SidebarAction icon={Mail} label="Notificaciones" onClick={onOpenNotif} badge={notifCount} badgeColor="#C8A96E" />
+        <SidebarAction icon={Bell} label="Alertas" onClick={onOpenPanel} badge={criticalCount} badgeColor="#C0392B" pulse />
 
-        <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "10px 0" }} />
+        <div style={S.divider} />
 
         {/* User card */}
         <div style={{
-          background: "rgba(255,255,255,0.08)",
-          border: "1px solid rgba(255,255,255,0.10)",
-          borderRadius: 10,
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 8,
           padding: "10px 12px",
           display: "flex",
           alignItems: "center",
@@ -146,47 +141,47 @@ export default function Sidebar({ criticalCount, notifCount, onOpenPanel, onOpen
         }}>
           <div style={{
             width: 32, height: 32, borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--primary), var(--accent))",
+            background: "linear-gradient(135deg, #2D4A3E, #C8A96E)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 12, fontWeight: 700, color: "white", flexShrink: 0,
+            fontSize: 12, fontWeight: 600, color: "white", flexShrink: 0,
+            fontFamily: "'DM Sans', sans-serif",
           }}>
             {initials}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{
-              fontSize: 13, fontWeight: 600, color: "white",
+              fontSize: 13, fontWeight: 500, color: "#E8E4DC",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              fontFamily: "'DM Sans', sans-serif",
             }}>
               {nombre ?? "Usuario"}
             </p>
-            <p style={{ fontSize: 11, color: rolColor }}>
+            <p style={{
+              fontSize: 11, color: "#6B6560",
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
               {rolLabel}
             </p>
           </div>
           <motion.button
             onClick={() => { localStorage.removeItem("token"); navigate("/login") }}
-            whileHover={{ scale: 1.15 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             title="Cerrar sesión"
             style={{
               background: "none", border: "none", cursor: "pointer",
-              color: "rgba(255,255,255,0.35)", flexShrink: 0,
+              color: "rgba(255,255,255,0.25)", flexShrink: 0,
               display: "flex", alignItems: "center", padding: 0,
               transition: "color 0.15s",
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#f87171")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+            onMouseEnter={e => (e.currentTarget.style.color = "#C0392B")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.25)")}
           >
             <LogOut size={14} />
           </motion.button>
         </div>
 
-        <p style={{
-          fontSize: 10, color: "rgba(148,163,184,0.4)",
-          textAlign: "center", marginTop: 10,
-        }}>
-          © 2026 Logique
-        </p>
+        <p style={S.footerText}>© 2026 Logique</p>
       </div>
     </aside>
   )
@@ -204,68 +199,65 @@ function NavItem({ to, label, icon: Icon, matchPrefix }: {
 
   return (
     <NavLink to={to} end={!matchPrefix && to !== "/"} style={{ textDecoration: "none" }}>
-      <motion.div
-        whileHover={{ x: 3 }}
-        whileTap={{ scale: 0.98 }}
+      <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: 10,
           padding: "8px 12px",
-          borderRadius: 8,
-          fontSize: 14,
-          fontWeight: isActive ? 600 : 500,
-          color: isActive ? "white" : "var(--sidebar-text)",
-          background: isActive ? "rgba(255,255,255,0.10)" : "transparent",
-          borderLeft: isActive ? "2px solid var(--sidebar-accent)" : "2px solid transparent",
-          transition: "all 0.15s ease",
+          borderRadius: 6,
+          fontSize: 13.5,
+          fontWeight: isActive ? 500 : 400,
+          color: isActive ? "#FFFFFF" : "#9A9490",
+          background: isActive ? "#1A1A1A" : "transparent",
+          borderLeft: isActive ? "2px solid #C8A96E" : "2px solid transparent",
+          transition: "color 150ms ease, background 150ms ease",
           cursor: "pointer",
-          marginLeft: isActive ? 0 : 0,
+          fontFamily: "'DM Sans', system-ui, sans-serif",
         }}
         onMouseEnter={e => {
-          if (!isActive) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.05)"
+          if (!isActive) {
+            (e.currentTarget as HTMLDivElement).style.color = "#E8E4DC"
+          }
         }}
         onMouseLeave={e => {
-          if (!isActive) (e.currentTarget as HTMLDivElement).style.background = "transparent"
+          if (!isActive) {
+            (e.currentTarget as HTMLDivElement).style.color = "#9A9490"
+          }
         }}
       >
         <Icon
           size={15}
-          style={{ flexShrink: 0, color: isActive ? "var(--sidebar-accent)" : "inherit" }}
+          style={{ flexShrink: 0, color: isActive ? "#C8A96E" : "#6B6560" }}
         />
         {label}
-      </motion.div>
+      </div>
     </NavLink>
   )
 }
 
-/* ── Divider ── */
-function Divider() {
-  return <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "6px 4px" }} />
-}
-
-/* ── SidebarAction (Notif / Alerta buttons) ── */
+/* ── SidebarAction ── */
 function SidebarAction({ icon: Icon, label, onClick, badge, badgeColor, pulse }: {
   icon: React.ElementType; label: string; onClick: () => void
   badge: number; badgeColor: string; pulse?: boolean
 }) {
   return (
-    <motion.button
+    <button
       onClick={onClick}
-      whileHover={{ x: 3 }}
       style={{
         width: "100%", display: "flex", alignItems: "center", gap: 10,
-        padding: "8px 12px", borderRadius: 8, border: "none",
-        background: "transparent", color: "var(--sidebar-text)",
+        padding: "8px 12px", borderRadius: 6, border: "none",
+        background: "transparent", color: "#9A9490",
         cursor: "pointer", marginBottom: 2,
-        fontSize: 14, fontWeight: 500,
-        transition: "background 0.15s",
+        fontSize: 13.5, fontWeight: 400,
+        transition: "color 150ms ease",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
       }}
-      onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
-      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+      onMouseEnter={e => (e.currentTarget.style.color = "#E8E4DC")}
+      onMouseLeave={e => (e.currentTarget.style.color = "#9A9490")}
     >
       <span style={{ position: "relative", flexShrink: 0 }}>
-        <Icon size={15} />
+        <Icon size={15} style={{ color: "#6B6560" }} />
         {badge > 0 && (
           <>
             <span style={{
@@ -284,13 +276,13 @@ function SidebarAction({ icon: Icon, label, onClick, badge, badgeColor, pulse }:
                 background: badgeColor, borderRadius: 99,
                 minWidth: 16, height: 16,
                 animation: "ping 1.2s cubic-bezier(0,0,0.2,1) infinite",
-                opacity: 0.6,
+                opacity: 0.5,
               }} />
             )}
           </>
         )}
       </span>
       <span>{label}</span>
-    </motion.button>
+    </button>
   )
 }

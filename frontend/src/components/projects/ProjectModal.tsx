@@ -218,7 +218,7 @@ function SummaryRow({ label, value, mono }: { label: string; value: string; mono
       </span>
       <span style={{
         fontSize: 13, fontWeight: 500, color: "var(--text-primary)", flex: 1,
-        fontFamily: mono ? "'JetBrains Mono', monospace" : undefined,
+        fontFamily: mono ? "var(--font-mono)" : undefined,
       }}>
         {value || "—"}
       </span>

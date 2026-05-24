@@ -40,13 +40,13 @@ const BAR_COLOR: Record<string, string> = {
   ADVERTENCIA: "#f59e0b",
   EN_RIESGO:   "#ef4444",
   FINALIZADO:  "#10b981",
-  PROPUESTA:   "#94a3b8",
+  PROPUESTA:   "var(--text-muted)",
 }
 
 const BADGE: Record<string, { bg: string; color: string }> = {
   EN_CURSO:    { bg: "#dbeafe", color: "#1d4ed8" },
   ADVERTENCIA: { bg: "#fef9c3", color: "#a16207" },
-  EN_RIESGO:   { bg: "#fee2e2", color: "#dc2626" },
+  EN_RIESGO:   { bg: "#fee2e2", color: "var(--state-red)" },
   FINALIZADO:  { bg: "#dcfce7", color: "#15803d" },
   PROPUESTA:   { bg: "#f1f5f9", color: "#475569" },
 }
@@ -67,7 +67,7 @@ const ETAPA_LABEL: Record<string, string> = {
 }
 
 const ETAPA_COLOR: Record<string, string> = {
-  PROPUESTA:    "#94a3b8",
+  PROPUESTA:    "var(--text-muted)",
   KICK_OFF:     "#3b82f6",
   EN_EJECUCION: "#10b981",
   CIERRE:       "#f59e0b",
@@ -413,7 +413,7 @@ export default function Cronograma() {
                     padding: "5px 13px", borderRadius: 7, border: "none",
                     fontSize: 12, fontWeight: view === v ? 600 : 500,
                     background: view === v ? "#1e293b" : "transparent",
-                    color: view === v ? "white" : "#64748b",
+                    color: view === v ? "white" : "var(--text-secondary)",
                     cursor: "pointer", transition: "all 0.15s",
                     whiteSpace: "nowrap",
                   }}>
@@ -439,7 +439,7 @@ export default function Cronograma() {
               ["ADVERTENCIA", "#f59e0b", "Advertencia"],
               ["EN_RIESGO",   "#ef4444", "En riesgo"],
               ["FINALIZADO",  "#10b981", "Finalizado"],
-              ["PROPUESTA",   "#94a3b8", "Propuesta"],
+              ["PROPUESTA",   "var(--text-muted)", "Propuesta"],
             ] as const).map(([k, c, l]) => (
               <span key={k} style={{ display: "flex", alignItems: "center", gap: 5, marginRight: 12 }}>
                 <span style={{ width: 14, height: 4, borderRadius: 2, background: c, flexShrink: 0 }} />
@@ -506,7 +506,7 @@ export default function Cronograma() {
                         borderRight: "1px solid #e2e8f0", background: "#f8fafc",
                         display: "flex", alignItems: "center", padding: "0 14px",
                       }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.10em", color: "#64748b", textTransform: "uppercase" }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.10em", color: "var(--text-secondary)", textTransform: "uppercase" }}>
                           Proyecto / Líder
                         </span>
                       </div>
@@ -552,7 +552,7 @@ export default function Cronograma() {
                               left: `${d.pct + (100 / days.length / 2)}%`,
                               top: "50%", transform: "translate(-50%, -50%)",
                               fontSize: 9, fontWeight: 300,
-                              color: d.isWeekend ? "#d1d5db" : "#94a3b8",
+                              color: d.isWeekend ? "#d1d5db" : "var(--text-muted)",
                               pointerEvents: "none", userSelect: "none",
                             }}>
                               {d.label}
@@ -562,7 +562,7 @@ export default function Cronograma() {
                             <span key={i} style={{
                               position: "absolute", left: `${sw.pct}%`, top: "50%",
                               transform: "translate(-50%, -50%)",
-                              fontSize: 9, fontWeight: 300, color: "#94a3b8",
+                              fontSize: 9, fontWeight: 300, color: "var(--text-muted)",
                               pointerEvents: "none", userSelect: "none",
                             }}>
                               {sw.label}
@@ -660,8 +660,8 @@ export default function Cronograma() {
                                 <span style={{
                                   fontSize: 9, fontWeight: 600,
                                   padding: "1px 6px", borderRadius: 99,
-                                  background: (ETAPA_COLOR[p.etapa] ?? "#94a3b8") + "22",
-                                  color: ETAPA_COLOR[p.etapa] ?? "#94a3b8",
+                                  background: (ETAPA_COLOR[p.etapa] ?? "var(--text-muted)") + "22",
+                                  color: ETAPA_COLOR[p.etapa] ?? "var(--text-muted)",
                                   whiteSpace: "nowrap",
                                 }}>
                                   {ETAPA_LABEL[p.etapa] ?? p.etapa}
@@ -801,7 +801,7 @@ export default function Cronograma() {
               <TrendingUp size={14} color="#1d4ed8" />
             </span>
             <span style={{ color: "#1d4ed8", fontWeight: 700 }}>{statEnCurso}</span>
-            <span style={{ color: "#64748b" }}>proyectos en curso</span>
+            <span style={{ color: "var(--text-secondary)" }}>proyectos en curso</span>
           </div>
           <span style={{ width: 1, height: 20, background: "#e2e8f0", flexShrink: 0 }} />
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -809,7 +809,7 @@ export default function Cronograma() {
               <Clock size={14} color="#16a34a" />
             </span>
             <span style={{ color: "#16a34a", fontWeight: 700 }}>{statProximos}</span>
-            <span style={{ color: "#64748b" }}>entregables próximos 7 días</span>
+            <span style={{ color: "var(--text-secondary)" }}>entregables próximos 7 días</span>
           </div>
           <span style={{ width: 1, height: 20, background: "#e2e8f0", flexShrink: 0 }} />
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -818,10 +818,10 @@ export default function Cronograma() {
               background: statVencidos > 0 ? "#fee2e2" : "#f1f5f9",
               display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
             }}>
-              <AlertCircle size={14} color={statVencidos > 0 ? "#dc2626" : "#94a3b8"} />
+              <AlertCircle size={14} color={statVencidos > 0 ? "var(--state-red)" : "var(--text-muted)"} />
             </span>
-            <span style={{ color: statVencidos > 0 ? "#dc2626" : "#64748b", fontWeight: 700 }}>{statVencidos}</span>
-            <span style={{ color: "#64748b" }}>vencidos</span>
+            <span style={{ color: statVencidos > 0 ? "var(--state-red)" : "var(--text-secondary)", fontWeight: 700 }}>{statVencidos}</span>
+            <span style={{ color: "var(--text-secondary)" }}>vencidos</span>
           </div>
         </div>
       </div>
@@ -864,7 +864,7 @@ export default function Cronograma() {
                   }}>
                     {initials(tooltip.lider)}
                   </div>
-                  <span style={{ fontSize: 11, color: "#94a3b8" }}>
+                  <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
                     {tooltip.lider}
                   </span>
                 </div>
@@ -872,7 +872,7 @@ export default function Cronograma() {
                 {/* % Avance */}
                 <div style={{ marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontSize: 10, color: "#64748b" }}>Avance temporal</span>
+                    <span style={{ fontSize: 10, color: "var(--text-secondary)" }}>Avance temporal</span>
                     <span style={{ fontSize: 10, fontWeight: 700, color: "white" }}>
                       {tooltip.pctAvance}%
                     </span>
@@ -898,10 +898,10 @@ export default function Cronograma() {
                       ? "Vence hoy"
                       : `${tooltip.diasRestantes} días restantes`}
                   </p>
-                  <p style={{ fontSize: 10, color: "#64748b", margin: 0, fontFamily: "'JetBrains Mono', monospace" }}>
+                  <p style={{ fontSize: 10, color: "var(--text-secondary)", margin: 0, fontFamily: "var(--font-mono)" }}>
                     {tooltip.inicio} → {tooltip.fin}
                   </p>
-                  <p style={{ fontSize: 10, color: "#64748b", margin: "3px 0 0" }}>
+                  <p style={{ fontSize: 10, color: "var(--text-secondary)", margin: "3px 0 0" }}>
                     {tooltip.estadoLabel} · {tooltip.numEntregables} entregable{tooltip.numEntregables !== 1 ? "s" : ""}
                   </p>
                 </div>
@@ -919,8 +919,8 @@ export default function Cronograma() {
                 }}>
                   {tooltip.nombre}
                 </p>
-                <p style={{ fontSize: 11, color: "#94a3b8", marginTop: 4, fontFamily: "'JetBrains Mono', monospace" }}>{tooltip.fecha}</p>
-                <p style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>{tooltip.estadoLabel}</p>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4, fontFamily: "var(--font-mono)" }}>{tooltip.fecha}</p>
+                <p style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 2 }}>{tooltip.estadoLabel}</p>
               </div>
             )}
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -1019,7 +1019,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
           <h2 style={{ fontSize: 18, fontWeight: 700, color: "#1e293b", margin: 0, textTransform: "capitalize" }}>
             {monthLabel}
           </h2>
-          <p style={{ fontSize: 12, color: "#94a3b8", margin: "3px 0 0" }}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "3px 0 0" }}>
             Haz clic en un día para ver sus eventos
           </p>
         </div>
@@ -1043,7 +1043,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
       <div style={{ padding: "16px 24px 0" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", marginBottom: 6 }}>
           {DOW.map(d => (
-            <div key={d} style={{ textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#94a3b8", paddingBottom: 8, textTransform: "uppercase" }}>{d}</div>
+            <div key={d} style={{ textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "var(--text-muted)", paddingBottom: 8, textTransform: "uppercase" }}>{d}</div>
           ))}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
@@ -1089,7 +1089,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
                       <span key={`d${j}`} style={{ width: 6, height: 6, transform: "rotate(45deg)", flexShrink: 0, background: "#f97316" }} />
                     ))}
                     {events.length > 7 && (
-                      <span style={{ fontSize: 8, color: "#94a3b8" }}>+{events.length - 7}</span>
+                      <span style={{ fontSize: 8, color: "var(--text-muted)" }}>+{events.length - 7}</span>
                     )}
                   </div>
                 )}
@@ -1099,7 +1099,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 24px 0", fontSize: 11, color: "#94a3b8" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 24px 0", fontSize: 11, color: "var(--text-muted)" }}>
         <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
           Inicio proyecto
@@ -1138,7 +1138,7 @@ function CalendarioMensual({ proyectos, today }: { proyectos: ProyectoGantt[]; t
                       <div style={{ width: 8, height: 8, flexShrink: 0, marginTop: 5, borderRadius: isEnt ? 1 : "50%", transform: isEnt ? "rotate(45deg)" : "none", background: isFin ? "transparent" : fixedDot, border: isFin ? `2px solid ${fixedDot}` : "none", boxSizing: "border-box" }} />
                       <div style={{ minWidth: 0 }}>
                         <p style={{ fontSize: 12, fontWeight: 600, color: "#1e293b", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 480 }}>{ev.nombre}</p>
-                        <p style={{ fontSize: 11, color: "#94a3b8", margin: "2px 0 0" }}>{typeLabel} · {stateLabel}</p>
+                        <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "2px 0 0" }}>{typeLabel} · {stateLabel}</p>
                       </div>
                     </div>
                   )

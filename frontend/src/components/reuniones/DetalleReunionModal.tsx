@@ -221,7 +221,7 @@ export default function DetalleReunionModal({ reunion, onClose, onUpdate, proyec
                           <p style={{ fontSize: 13, color: "var(--text-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {c.descripcion}
                           </p>
-                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace", margin: 0, marginTop: 2 }}>
+                          <p style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-mono)", margin: 0, marginTop: 2 }}>
                             {new Date(c.fechaActual).toLocaleDateString("es-CO")}
                           </p>
                         </div>
